@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iMandro — Editor</title>
+<style>
+.chipmod{flex:1;text-align:center;padding:7px 0;border:1px solid var(--borde2);border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--suave);background:var(--panel2)}
+.chipmod.on{background:#2f6db3;border-color:#2f6db3;color:#fff}
+:root{--fondo:#0b0f16;--panel:#101623;--panel2:#0d1420;--tarjeta:#171f30;--tarjeta2:#1b2740;--borde:#222c42;--borde2:#2c3852;--texto:#eef2f8;--suave:#8b98b0;--tenue:#728198;--ambar:#f6b73c;--ambar2:#f5a623;--verde:#3ddc97;--rojo:#ff7a7a}
+[data-tema="claro"]{--fondo:#eef2f7;--panel:#ffffff;--panel2:#f7fafc;--tarjeta:#f2f5fa;--tarjeta2:#e8eef6;--borde:#d3dce8;--borde2:#c3d0e0;--texto:#17203a;--suave:#5a6b84;--tenue:#71809a}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+body{background:var(--fondo);color:var(--texto);height:100vh;overflow:hidden}
+.barra{height:54px;background:var(--panel);border-bottom:1px solid var(--borde);display:flex;align-items:center;padding:0 16px;gap:12px}
+.logo{width:34px;height:34px;border-radius:9px;background:#f4f7fc;border:1px solid var(--borde);display:flex;align-items:center;justify-content:center;flex:none}
+.logo svg{width:26px;height:26px}
+.barra h1{font-size:16px;font-weight:700}
+.barra .der{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--suave)}
+select,input[type=text],input[type=number],textarea{background:var(--panel2);border:1px solid var(--borde2);border-radius:9px;color:var(--texto);padding:8px 10px;font-size:13.5px;width:100%}
+select:focus,input:focus,textarea:focus{outline:2px solid var(--ambar);outline-offset:0}
+.cuerpo{display:flex;height:calc(100vh - 54px - 30px)}
+.lateral{width:270px;background:var(--panel);border-right:1px solid var(--borde);padding:14px 12px;overflow-y:auto;flex:none}
+.lateral h3,.derecha h3{font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--tenue);margin:4px 2px 8px}
+.lateral h3{letter-spacing:1px;white-space:nowrap}
+.dato{padding:7px 0;border-top:1px solid var(--borde)}
+.dato:first-child{border-top:none;padding-top:1px}
+.dato .etq{display:block;font-size:9.5px;font-weight:700;letter-spacing:1.1px;color:var(--tenue);margin-bottom:2px}
+.dato .val{color:var(--texto);font-weight:600;font-size:12.5px;line-height:1.35}
+.dato .val.grande{font-size:18px;letter-spacing:.4px}
+.lateral .tarjeta p{margin-top:9px}
+.botonesCopia{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.pag{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:11px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid transparent;margin-bottom:3px;color:var(--suave)}
+.pag svg{width:17px;height:17px;flex:none}
+.pag .mv{margin-left:auto;display:flex;gap:3px;flex:none}
+.pag .mv button{width:24px;height:24px;border-radius:7px;border:1px solid var(--borde2);background:transparent;color:var(--suave);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.pag .mv button svg{width:13px;height:13px}
+.pag .mv button:hover{color:#f6b73c;border-color:#f6b73c}
+.pag .mv button.off{opacity:.28;pointer-events:none}
+.pag.on{background:var(--tarjeta2);color:var(--texto);border-color:var(--borde2);box-shadow:inset 3px 0 0 var(--ambar)}
+.nueva{border:1.5px dashed var(--borde2);border-radius:11px;padding:9px;text-align:center;font-size:13px;color:var(--suave);cursor:pointer;margin-top:6px}
+.sep{height:1px;background:var(--borde);margin:14px 2px}
+.tarjeta{background:var(--panel2);border:1px solid var(--borde);border-radius:13px;padding:11px 12px;font-size:12.5px;color:var(--suave);line-height:1.55;margin-bottom:10px}
+.tarjeta b{color:var(--texto)}
+.btn{display:block;text-align:center;padding:10px;border-radius:11px;font-size:13.5px;font-weight:700;cursor:pointer;border:1px solid transparent;width:100%}
+.btn.prim{background:linear-gradient(135deg,#ffd97a,var(--ambar2));color:#231600}
+.btn.sec{background:transparent;border-color:var(--ambar);color:var(--ambar)}
+.btn.peligro{background:transparent;border-color:var(--rojo);color:var(--rojo)}
+.btn.chico{padding:7px;font-size:12.5px}
+.fila{display:flex;gap:8px}.fila>*{flex:1}
+.centro{flex:1;padding:16px 18px;overflow-y:auto}
+.cab-pag{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.cab-pag h2{font-size:21px}
+.chip{font-size:11.5px;color:var(--suave);border:1px solid var(--borde2);padding:5px 10px;border-radius:99px}
+.cab-pag .der{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--suave)}
+.opcionesPag .btn{flex:0 0 auto;width:auto}
+.opcionesPag{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;background:var(--panel);border:1px solid var(--borde);border-radius:12px;padding:9px 12px;margin:10px 0 2px;font-size:12.5px;color:var(--suave)}
+.seg{display:flex;border:1px solid var(--borde2);border-radius:9px;overflow:hidden}
+.seg button{background:transparent;border:none;color:var(--suave);padding:6px 11px;font-size:12.5px;font-weight:700;cursor:pointer}
+.seg button.on{background:var(--ambar);color:#231600}
+.grid{display:grid;gap:10px;margin-top:14px}
+.tile{position:relative;height:104px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;cursor:pointer;border:1px solid var(--borde2);background:linear-gradient(180deg,var(--tarjeta2),var(--tarjeta));text-align:center}
+.tile svg{width:29px;height:29px}
+.tile img.icimg{width:29px;height:29px;object-fit:contain}
+.tile span{font-size:12px;font-weight:600;line-height:1.18;color:var(--texto)}
+.tile.sel{border-color:var(--ambar);box-shadow:0 0 0 1px var(--ambar),0 8px 20px rgba(246,183,60,.20)}
+.tile .bdg{position:absolute;top:7px;right:7px;width:17px;height:17px;border-radius:50%;background:var(--tarjeta2);display:flex;align-items:center;justify-content:center}
+.tile .bdg svg{width:10px;height:10px}
+.tile.vacio{opacity:.45;border-style:dashed}
+/* Botón con imagen (1.9): en la rejilla del editor la imagen es la
+   cara del botón, igual que en el teléfono — llena la casilla y el
+   nombre se lee abajo sobre la franja con degradado oscuro. */
+.tile.conimg{padding:0;overflow:hidden}
+.tile.conimg>img.cara{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tile.conimg>span.nomimg{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:15px 6px 6px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.62));color:#fff;font-size:12px;font-weight:700;line-height:1.18;text-shadow:0 1px 3px rgba(0,0,0,.65)}
+.tile.conimg .fav,.tile.conimg .bdg{z-index:2}
+/* Miniaturas de la biblioteca «Mis botones» (1.9): la imagen entera
+   de cara, más anchas que las de iconos; la elegida lleva el anillo
+   ámbar, como en la maqueta aprobada. */
+.btile{width:64px;height:56px;border-radius:10px;overflow:hidden;background:var(--panel2);border:2px solid var(--borde2);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;padding:0}
+.btile img{width:100%;height:100%;object-fit:cover;display:block}
+.btile.on{border-color:var(--ambar);box-shadow:0 0 0 1px var(--ambar)}
+.btile.add{border:1.5px dashed var(--ambar);color:var(--ambar);flex-direction:column;font-size:9.5px;font-weight:700;line-height:1.25;text-align:center;gap:1px;padding:2px}
+.tile.arrastrando{opacity:.4}
+.aviso{display:flex;gap:9px;margin-top:16px;background:rgba(246,183,60,.08);border:1px solid rgba(246,183,60,.35);border-radius:12px;padding:11px 13px;font-size:12.5px;color:#e8d9b8;line-height:1.5}
+[data-tema="claro"] .aviso{color:#8a6d1f}
+.aviso svg{width:17px;height:17px;flex:none;margin-top:1px}
+.derecha{width:336px;background:var(--panel);border-left:1px solid var(--borde);padding:13px 14px;overflow-y:auto;flex:none}
+.campo{margin-bottom:10px}
+.campo label{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--tenue);margin-bottom:5px}
+.pestanas{display:flex;gap:6px;margin-bottom:11px}
+.pestanas button{flex:1;padding:8px;border-radius:9px;border:1px solid var(--borde2);background:transparent;color:var(--suave);font-weight:700;font-size:12.5px;cursor:pointer}
+.pestanas button.on{background:var(--ambar);border-color:var(--ambar);color:#231600}
+.colores{display:flex;gap:7px;flex-wrap:wrap}
+.muestra{width:29px;height:29px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+.muestra.on{border-color:var(--texto);box-shadow:0 0 0 2px var(--panel),0 0 0 4px currentColor}
+input[type=color]{width:40px;height:29px;border:1px solid var(--borde2);border-radius:8px;background:var(--panel2);padding:2px;cursor:pointer}
+.paquetes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.pk{font-size:11px;font-weight:700;padding:5px 10px;border-radius:99px;border:1px solid var(--borde2);color:var(--suave);cursor:pointer}
+.pk.on{background:var(--ambar);border-color:var(--ambar);color:#231600}
+.igrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.itile{height:42px;border-radius:10px;background:var(--panel2);border:1px solid var(--borde2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--suave)}
+.itile svg{width:21px;height:21px}
+.itile img{width:23px;height:23px;object-fit:contain}
+.itile.on{border-color:var(--ambar);color:var(--ambar);box-shadow:0 0 0 1px var(--ambar)}
+.misrow{display:flex;gap:6px;flex-wrap:wrap}
+.mtile{width:52px;height:52px;border-radius:10px;background:var(--panel2);border:1px solid var(--borde2);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.mtile img{width:27px;height:27px;object-fit:contain}
+.mtile.on{border-color:var(--ambar);box-shadow:0 0 0 1px var(--ambar)}
+.mtile.add{border:1.5px dashed var(--ambar);color:var(--ambar);flex-direction:column;font-size:10px;font-weight:700;gap:2px;width:52px}
+.nota{font-size:11.5px;color:var(--tenue);line-height:1.55;margin-top:9px}
+.estado{height:30px;background:var(--panel);border-top:1px solid var(--borde);display:flex;align-items:center;padding:0 14px;font-size:11.5px;color:var(--suave)}
+.estado .dot{width:8px;height:8px;border-radius:50%;background:var(--verde);margin-right:8px}
+.estado .der{margin-left:auto}
+.act{font-size:11.5px;color:var(--tenue);line-height:1.7}
+.grabando{background:var(--rojo)!important;color:#fff!important;border-color:var(--rojo)!important}
+/* Fase 6 (1.7): buscador de acciones, favoritos y estrella, como en la maqueta aprobada */
+.tipos{border:1px solid var(--borde2);border-radius:9px;background:var(--panel2);overflow:hidden;margin-top:7px}
+.tipos div{padding:7px 10px;font-size:13.5px;color:var(--suave);cursor:pointer;border-top:1px solid var(--borde)}
+.tipos div:first-child{border-top:none}
+.tipos div.on{background:var(--ambar);color:#231600;font-weight:700}
+.buscaWrap{position:relative}
+.buscaWrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:15px;height:15px}
+.buscaWrap input{padding-left:30px}
+.itile{position:relative}
+.itile .st,.mtile .st{position:absolute;top:3px;right:3px;width:13px;height:13px;display:flex;opacity:0;transition:opacity .15s;z-index:2}
+.itile:hover .st,.mtile:hover .st{opacity:.9}
+.itile .st svg,.mtile .st svg{width:13px;height:13px}
+.itile.favtile .st,.mtile.favtile .st{opacity:1}
+.tile .fav{position:absolute;top:7px;left:7px;width:19px;height:19px;border-radius:50%;background:var(--tarjeta2);display:flex;align-items:center;justify-content:center}
+.tile .fav svg{width:11px;height:11px}
+/* Elegir aplicación (1.7.4): ventana con la lista de aplicaciones instaladas */
+.modalApps{position:fixed;inset:0;background:rgba(2,6,16,.72);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
+.modalApps .caja{background:var(--panel);border:1px solid var(--borde2);border-radius:16px;width:620px;max-width:100%;max-height:88%;display:flex;flex-direction:column;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.modalApps h2{font-size:19px;margin:0}
+.modalApps .sub2{color:var(--suave);font-size:13px;margin:5px 0 13px}
+.listaApps{overflow-y:auto;border:1px solid var(--borde);border-radius:12px;margin-top:12px}
+.appFila{display:flex;align-items:center;gap:11px;padding:10px 12px;border-top:1px solid var(--borde);cursor:pointer}
+.appFila:first-child{border-top:none}
+.appFila:hover{background:var(--panel2)}
+.appFila.sel{background:rgba(245,166,35,.14);outline:1px solid var(--ambar);outline-offset:-1px}
+.appFila.no{opacity:.55}
+.appFila .ava{width:34px;height:34px;flex:none;border-radius:9px;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.appFila .nom{font-weight:600;font-size:14.5px}
+.appFila .det{color:var(--suave);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:390px}
+.chipApp{margin-left:auto;flex:none;font-size:10px;font-weight:700;letter-spacing:.6px;padding:4px 8px;border-radius:20px;border:1px solid var(--ambar);color:var(--ambar)}
+.chipApp.store{border-color:#4cc3ff;color:#4cc3ff}
+.modalApps .pies{display:flex;gap:9px;justify-content:flex-end;margin-top:14px}
+/* Columna lateral ensanchable (1.8): tirador sobre la divisoria que la separa del centro; el ancho elegido se recuerda SOLO en este navegador (localStorage), no viaja en la configuración ni toca el panel ni los teléfonos */
+.tirador{width:8px;flex:none;cursor:ew-resize;touch-action:none;position:relative;margin:0 -4px;z-index:6}
+.tirador::after{content:"";position:absolute;top:0;bottom:0;left:3px;width:2px;background:transparent;transition:background .15s}
+.tirador:hover::after,.tirador.activo::after{background:var(--ambar)}
+.pag .nomp{flex:1;min-width:0;line-height:1.3;overflow-wrap:break-word}
+/* Mover/copiar botones entre páginas (1.7.10, maqueta aprobada): contador en cada página, destino iluminado al arrastrar, selector de destino y fantasma del arrastre táctil */
+.pag .cuenta{margin-left:auto;background:var(--tarjeta2);border:1px solid var(--borde2);border-radius:20px;font-size:11px;padding:1px 8px;color:var(--suave);font-weight:700;flex:none}
+.pag .cuenta + .mv{margin-left:0}
+.pag.destino{border-color:var(--ambar);background:rgba(246,183,60,.13);color:var(--texto)}
+.pag.destino .cuenta{border-color:var(--ambar);color:var(--ambar)}
+.dest{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:11px 12px;border:1px solid var(--borde2);border-radius:10px;background:var(--panel2);color:var(--texto);font-size:13.5px;font-weight:600;cursor:pointer;margin-bottom:7px}
+.dest .cuenta{margin-left:auto;background:var(--tarjeta2);border:1px solid var(--borde2);border-radius:20px;font-size:11px;padding:1px 8px;color:var(--suave)}
+.dest.aqui{opacity:.45;cursor:default}
+.dest .marca{margin-left:auto;font-size:11.5px;color:var(--ambar);font-weight:700}
+.tile{touch-action:none}
+.tile.fantasma{opacity:.35}
+.flotante{position:fixed;z-index:95;pointer-events:none;width:150px;height:104px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;border:1px solid var(--ambar);background:linear-gradient(180deg,var(--tarjeta2),var(--tarjeta));text-align:center;box-shadow:0 14px 30px rgba(0,0,0,.5);opacity:.94}
+.flotante svg{width:29px;height:29px}
+.flotante img.icimg{width:29px;height:29px;object-fit:contain}
+.flotante span{font-size:12px;font-weight:600;color:var(--texto)}
+</style>
+</head>
+<body>
+<div class="barra">
+  <div class="logo"><svg viewBox="0 0 96 96"><circle cx="29" cy="25" r="8" fill="#f5a623"/><rect x="21" y="41" width="16" height="39" rx="8" fill="#17203a"/><path d="M49 80V41l13 18 13-18v39" fill="none" stroke="#17203a" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M71 23l7-8M83 29l8-4" stroke="#3ddc97" stroke-width="6" stroke-linecap="round"/></svg></div>
+  <h1>iMandro — Editor</h1>
+  <div class="der">
+    <span>Tema</span>
+    <div class="seg" id="segTema"><button data-t="oscuro">Oscuro</button><button data-t="claro">Claro</button></div>
+    <span id="reloj"></span>
+  </div>
+</div>
+<div class="cuerpo">
+  <aside class="lateral">
+    <h3>PÁGINAS</h3>
+    <div id="listaPaginas"></div>
+    <div class="nueva" id="btnNuevaPagina">+ Nueva página</div>
+    <div class="sep"></div>
+    <h3>CONEXIÓN</h3>
+    <div class="tarjeta">
+      <div class="dato"><span class="etq">ESTA PC</span><span class="val" id="nombrePC">—</span></div>
+      <div class="dato"><span class="etq">DIRECCIÓN EN TU RED · IP Y PUERTO</span><span class="val grande" id="direccionRed">…</span></div>
+      <div class="dato"><span class="etq">CABLE USB</span><span class="val" id="estadoUSB">…</span></div>
+      <div class="dato"><span class="etq">BLUETOOTH</span><span class="val" id="estadoBT">…</span></div>
+      <div class="dato"><span class="etq">BANDEJA</span><span class="val" id="estadoBandeja">…</span></div>
+      <p>Es la dirección de esta PC en tu Wi-Fi: con ella abres el panel a mano en el navegador de un teléfono. Los teléfonos de tu mismo Wi-Fi encuentran la PC solos al abrir iMandro.</p>
+      <p>El icono vive en la bandeja, junto al reloj; si no lo ves, puede estar tras la flecha <b>^</b> de iconos ocultos.</p>
+    </div>
+    <h3>EMPAREJAMIENTO</h3>
+    <div class="tarjeta">
+      <div class="dato"><span class="etq">CÓDIGO PARA EMPAREJAR TELÉFONOS</span><span class="val" id="codigoEmparejar" style="font-size:19px;letter-spacing:3px">······</span></div>
+      <p>Un teléfono solo puede controlar esta PC si se empareja una vez con este código. El emparejamiento está pausado: pulsa «Permitir emparejar» y escribe el código en el teléfono dentro de los 2 minutos.</p>
+      <div class="dato" style="margin-top:8px"><span class="etq">EMPAREJAMIENTO</span><span class="val" id="estadoEmparejar">pausado</span></div>
+      <div class="botonesCopia"><a class="btn sec chico" id="btnPermitirEmparejar">Permitir emparejar (2 minutos)</a><a class="btn sec chico" id="btnRegenerarCodigo">Cambiar el código</a></div>
+      <div class="dato" style="margin-top:8px"><span class="etq">TELÉFONOS AUTORIZADOS</span></div>
+      <div id="listaDispositivos"><span class="val">—</span></div>
+    </div>
+    <h3>COPIA DE MI CONFIGURACIÓN</h3>
+    <div class="tarjeta">Todo (páginas, botones, colores y tus iconos) en un solo archivo, para restaurarlo si reinstalas la PC.
+      <div class="botonesCopia"><a class="btn sec chico" id="btnExportar">Guardar copia</a><a class="btn sec chico" id="btnImportar">Restaurar</a></div>
+      <input type="file" id="archivoCopia" accept=".json,application/json" hidden>
+    </div>
+    <h3>ACTIVIDAD RECIENTE</h3>
+    <div class="act" id="actividad">—</div>
+    <div class="sep"></div>
+    <div class="tarjeta"><b>Información</b><br>iMandro v1.9.2<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3
+      <div class="campo" style="margin-top:10px"><label>RUTA DE PHOTOSHOP (OPCIONAL)</label><input type="text" id="rutaPhotoshop" placeholder="Automática"></div>
+      <div class="campo"><label>RUTA DE LIGHTROOM CLASSIC (OPCIONAL)</label><input type="text" id="rutaLightroom" placeholder="Automática"></div>
+      <p style="font-size:11.5px;line-height:1.5">Si están en una carpeta rara, escribe aquí la ruta de su programa (.exe). En vacío, iMandro los busca solo — también en el registro de Windows — y usa el más nuevo.</p>
+    </div>
+    <div class="tarjeta"><b>Novedades de la versión 1.9.2</b><br><b>Emparejar, solo cuando tú lo abras:</b> el emparejamiento está pausado y se abre durante 2 minutos con el botón «Permitir emparejar» de la tarjeta EMPAREJAMIENTO; fuera de ese rato, ningún teléfono nuevo puede entrar.<br><b>Photoshop y Lightroom se encuentran mejor:</b> también se buscan en el registro de Windows, se usa el más nuevo por su número de versión, y puedes fijar su ruta en la tarjeta de Información.<br><b>El selector «Buscar…» ya no usa PowerShell:</b> es el diálogo de Windows llamado directamente.<br><b>Diseño y accesibilidad:</b> los nombres de página se leen enteros en la lista, el botón «Añadir desde la PC» ya no sale recortado, la acción elegida se marca en ámbar, el texto de CONEXIÓN es más corto, las pestañas del teléfono se leen mejor, el panel respeta «reducir movimiento» y ya no bloquea el zoom del teléfono.<br>Y en Android, los permisos guardados de tus teléfonos quedan cifrados con la llave del propio teléfono, y antes de enviar el código a una PC encontrada, el panel te enseña su nombre y su dirección para que confirmes que es la tuya.</div>
+    <div class="tarjeta"><b>Iniciar con Windows</b><br>Si lo activas, iMandro arranca solo al encender la PC y los teléfonos pueden conectar sin que tengas que abrir nada primero. Nace apagado.
+      <div class="seg" id="segAutoinicio" style="margin-top:8px"><button data-a="1">Activado</button><button data-a="0">Apagado</button></div>
+      <div id="estadoAutoinicio" style="margin-top:6px"></div>
+    </div>
+  </aside>
+  <div class="tirador" id="tiradorLateral" title="Arrastra para ensanchar o estrechar la columna de páginas"></div>
+
+  <main class="centro">
+    <div class="cab-pag">
+      <h2>Página:</h2>
+      <input type="text" id="nombrePagina" style="width:170px;font-size:16px;font-weight:700">
+      <span class="chip" id="chipColumnas"></span>
+    </div>
+    <div class="opcionesPag">
+        <span>Columnas</span>
+        <div class="seg" id="segColumnas"><button data-c="3">3</button><button data-c="4">4</button><button data-c="5">5</button></div>
+        <span>Icono</span><select id="iconoPagina" style="width:150px"></select>
+        <span>Programa</span><input type="text" id="appPagina" list="listaApps" placeholder="Ninguno" style="width:160px" title="Si le pones un programa, el teléfono salta solo a esta página cuando lo abras en la PC"> <a class="btn sec chico" id="appBuscar" style="margin-left:6px">Buscar…</a> <a class="btn sec chico" id="appElegir" style="margin-left:6px">Elegir aplicación…</a>
+        <datalist id="listaApps"><option value="Photoshop.exe"></option><option value="lightroom.exe"></option><option value="Bridge.exe"></option><option value="explorer.exe"></option><option value="chrome.exe"></option><option value="msedge.exe"></option><option value="firefox.exe"></option><option value="Code.exe"></option><option value="notepad.exe"></option></datalist>
+        <a class="btn sec chico" id="btnDuplicarPagina" style="width:auto">Duplicar página</a>
+        <a class="btn sec chico" id="btnBorrarPagina" style="width:auto">Borrar página</a>
+    </div>
+    <div class="nota" id="ahoraDelante" style="margin:0 0 8px"></div>
+    <div class="grid" id="rejilla"></div>
+    <a class="btn sec" id="btnNuevoBoton" style="margin-top:12px">+ Añadir botón a esta página</a>
+    <div class="aviso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.8"/><path d="M12 11v5M12 7.8v.2"/></svg><span>Así se ve el teléfono. Toca un botón para cambiarlo a la derecha; arrastra un botón sobre otro para intercambiarlos, o hasta el nombre de otra página de la lista para moverlo a esa página (en su tarjeta, «Mover a…» y «Copiar a…» hacen lo mismo por menú). Todo lo que cambies aquí se guarda solo y llega al teléfono al momento, sin cables. Si le pones un <b>programa</b> a la página (arriba), el teléfono salta solo a ella cuando abras ese programa en la PC.</span></div>
+  </main>
+
+  <aside class="derecha">
+    <div class="pestanas"><button id="pestBoton" class="on">Botón</button><button id="pestIcono">Icono</button></div>
+    <div id="panelBoton">
+      <div class="campo"><label>NOMBRE DEL BOTÓN</label><input type="text" id="fNombre"></div>
+      <div class="campo"><label>COLOR DEL BOTÓN</label>
+        <div class="colores" id="fColores"></div>
+      </div>
+      <div class="campo"><label>IMAGEN DEL BOTÓN</label>
+        <div class="misrow" id="misBotones"></div>
+        <p class="nota">Si le pones una imagen a este botón, la imagen llena la casilla entera en el teléfono y el nombre se lee encima, abajo, con sombra. Sin imagen, el botón se ve con su icono y su color, como siempre. Las imágenes que subas quedan en tu biblioteca «Mis botones» y viajan dentro de tu copia de configuración, como tus iconos.</p>
+        <a class="btn sec" id="btnQuitarImg">Quitar la imagen de este botón</a>
+        <input type="file" id="archivoBotones" accept="image/png,image/jpeg" multiple hidden>
+      </div>
+      <div class="campo"><label>QUÉ HACE</label>
+        <div class="buscaWrap"><svg viewBox="0 0 24 24" fill="none" stroke="#8b98b0" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20.5 20.5-4.6-4.6"/></svg><input type="text" id="buscarAccion" placeholder="Buscar acción…"></div>
+        <div class="tipos" id="fTipos"></div>
+      </div>
+      <div id="fDetalle"></div>
+      <div class="fila" style="margin-top:6px"><a class="btn prim" id="btnProbar">Probar ahora</a></div>
+      <div class="fila" style="margin-top:8px"><a class="btn sec chico" id="btnDuplicar">Duplicar botón</a><a class="btn peligro chico" id="btnBorrarBoton">Borrar botón</a></div>
+      <div class="fila" style="margin-top:8px"><a class="btn sec chico" id="btnMoverPag">Mover a…</a><a class="btn sec chico" id="btnCopiarPag">Copiar a…</a></div>
+      <div class="fila" style="margin-top:8px"><a class="btn sec chico" id="btnFavBoton">Marcar como botón favorito</a></div>
+      <p class="nota">Los botones favoritos enseñan una estrellita dorada en el teléfono, en todos los teléfonos. Los cambios se guardan solos al momento y se envían a los teléfonos conectados.</p>
+    </div>
+    <div id="panelIcono" style="display:none">
+      <div class="campo"><input type="text" id="buscarIcono" placeholder="Buscar un icono…"></div>
+      <div class="paquetes" id="tabsPaquetes"></div>
+      <div class="igrid" id="rejillaIconos"></div>
+      <div class="sep"></div>
+      <h3>MIS ICONOS · LOS QUE TRAIGAS TÚ</h3>
+      <div class="misrow" id="misIconos"></div>
+      <input type="file" id="archivoIconos" accept="image/png,image/svg+xml,image/jpeg,image/webp" multiple hidden>
+      <p class="nota">Trae los iconos que descargues de internet (<b>PNG o SVG</b>, mejor con fondo transparente). Quedan guardados en tu biblioteca, se ven igual en el teléfono y viajan dentro de tu copia de configuración.</p>
+    </div>
+  </aside>
+</div>
+<div class="estado"><span class="dot"></span><span id="estadoIzq">Conectado</span><a class="btn sec chico" id="btnDeshacer" style="width:auto;margin-left:auto;opacity:.45;padding:2px 12px;font-size:11.5px">Deshacer</a><span class="der" id="estadoDer" style="margin-left:12px;width:330px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</span></div>
+
+<script src="/static/icons.js"></script>
+<script src="/static/packs.js"></script>
+<div class="modalApps" id="modalApps" style="display:none">
+  <div class="caja">
+    <h2>Elegir aplicación</h2>
+    <p class="sub2" id="appsSub">Aplicaciones instaladas en esta PC — toca una para ponerla en el botón.</p>
+    <div class="buscaWrap"><svg viewBox="0 0 24 24" fill="none" stroke="#8b98b0" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20.5 20.5-4.6-4.6"/></svg><input type="text" id="appsBuscar" placeholder="Buscar aplicación…"></div>
+    <div class="listaApps" id="appsLista"></div>
+    <p class="nota" id="appsNota"></p>
+    <div class="pies"><a class="btn sec" id="appsCancelar">Cancelar</a><a class="btn prim" id="appsConfirmar">Poner en el botón</a></div>
+  </div>
+</div>
+<div class="modalApps" id="modalDestino" style="display:none">
+  <div class="caja" style="width:420px">
+    <h2 id="destTitulo">Mover a otra página</h2>
+    <p class="sub2" id="destTexto"></p>
+    <div id="destLista"></div>
+    <div class="pies"><a class="btn sec" id="destCancelar">Cancelar</a></div>
+  </div>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+// Escapa los textos de la configuración antes de meterlos en HTML (1.7):
+// un nombre con <, > o comillas ya no puede romper un atributo ni colar código.
+function esc(s){ return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+// Emparejamiento (1.7): el servidor entrega el token del editor solo a
+// peticiones que vienen de esta misma PC (/api/token-local); a partir de
+// ahí, todas las llamadas del editor llevan ese token en la cabecera.
+let TOKEN_ED = '';
+async function tokenLocal(){
+  try { const r = await fetch('/api/token-local'); const j = await r.json(); if(j && j.ok) TOKEN_ED = j.token || ''; } catch(e){}
+}
+function api(url, opts){
+  opts = opts || {};
+  opts.headers = Object.assign({}, opts.headers || {}, TOKEN_ED ? {'X-iMandro-Token': TOKEN_ED} : {});
+  return fetch(url, opts);
+}
+// Estrella dibujada (SVG, sin emoji) para los favoritos (1.7): dorada y
+// rellena cuando está marcado; solo el contorno cuando se puede marcar.
+const ESTRELLA_ON = '<svg viewBox="0 0 24 24" fill="#f6b73c" stroke="#f6b73c" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.6l2.5 5.2 5.7.7-4.2 3.9 1.1 5.6L12 16.3l-5.1 2.7L8 13.4 3.8 9.5l5.7-.7L12 3.6Z"/></svg>';
+const ESTRELLA_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="#8b98b0" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.6l2.5 5.2 5.7.7-4.2 3.9 1.1 5.6L12 16.3l-5.1 2.7L8 13.4 3.8 9.5l5.7-.7L12 3.6Z"/></svg>';
+let cfg = null, pagIdx = 0, btnIdx = 0, paquete = "Todos", guardarTimer = null;
+let pilaDeshacer = [], ultimoJSON = '', deshaciendo = false, grabandoDe = null;
+function jsonSinRev(){ const c = {...cfg}; delete c._rev; delete c._fg; return JSON.stringify(c); }
+function actualizarDeshacer(){ const b = $('#btnDeshacer'); if(b) b.style.opacity = pilaDeshacer.length ? '1' : '.45'; }
+const PALETA = ["#4cc3ff","#b18cff","#3ddc97","#f6b73c","#ff7eb6","#ff9f43","#ff7a7a","#8492ab"];
+
+function pagina(){ return cfg.pages[pagIdx]; }
+function botonSel(){ return pagina().buttons[btnIdx]; }
+
+async function cargar(){
+  const r = await api('/api/config'); cfg = await r.json();
+  ultimoJSON = jsonSinRev(); pilaDeshacer = []; actualizarDeshacer();
+  $('#nombrePC').textContent = cfg.pcName || 'esta PC';
+  const rp = $('#rutaPhotoshop'); if(rp) rp.value = cfg.rutaPhotoshop || '';
+  const rl = $('#rutaLightroom'); if(rl) rl.value = cfg.rutaLightroom || '';
+  if(pagIdx >= cfg.pages.length) pagIdx = 0;
+  if(btnIdx >= pagina().buttons.length) btnIdx = 0;
+  pintarTodo();
+}
+function guardar(){
+  clearTimeout(guardarTimer);
+  $('#estadoDer').textContent = 'Guardando…';
+  guardarTimer = setTimeout(async () => {
+    const r = await api('/api/config', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({config: cfg})});
+    const j = await r.json();
+    if(j.ok){ cfg._rev = j.rev; $('#estadoDer').textContent = 'Guardado · enviado a los teléfonos (rev ' + j.rev + ')';
+      const ahora = jsonSinRev();
+      if(!deshaciendo && ultimoJSON && ahora !== ultimoJSON){ pilaDeshacer.push(ultimoJSON); if(pilaDeshacer.length > 40) pilaDeshacer.shift(); }
+      deshaciendo = false; ultimoJSON = ahora; actualizarDeshacer(); }
+    else if(j.conflicto){ $('#estadoDer').textContent = 'Otro editor cambió la configuración: se recarga la suya para no pisarla'; cargar(); }
+    else $('#estadoDer').textContent = 'No se pudo guardar';
+  }, 350);
+}
+function iconoHTML(b, tam){
+  const c = b.color || '#4cc3ff';
+  if(b.icon && b.icon.startsWith('custom:')){
+    const d = (cfg.customIcons||{})[b.icon.slice(7)];
+    if(d) return '<img class="icimg" src="' + esc(d) + '" alt="">';
+  }
+  if(b.icon && b.icon.startsWith('pack:') && typeof PACK_ICONOS !== 'undefined'){
+    const pk = PACK_ICONOS[b.icon.slice(5)];
+    if(pk) return '<img class="icimg" src="' + esc(pk.d) + '" alt="">';
+  }
+  return svgIcono(b.icon || 'pagina', c, '#171f30');
+}
+function pintarPaginas(){
+  const el = $('#listaPaginas'); el.innerHTML = '';
+  cfg.pages.forEach((p, i) => {
+    const d = document.createElement('div');
+    d.className = 'pag' + (i === pagIdx ? ' on' : '');
+    d.dataset.pagidx = i;
+    d.innerHTML = svgIcono(p.icon || 'pagina', i === pagIdx ? '#f6b73c' : 'currentColor') + '<span class="nomp">' + esc(p.name) + '</span>' +
+      '<span class="cuenta">' + p.buttons.length + '</span>' +
+      '<span class="mv"><button data-mv="-1" title="Mover la página antes"' + (i === 0 ? ' class="off"' : '') + '>' + svgIcono('subir', 'currentColor') + '</button>' +
+      '<button data-mv="1" title="Mover la página después"' + (i === cfg.pages.length - 1 ? ' class="off"' : '') + '>' + svgIcono('bajar', 'currentColor') + '</button></span>';
+    d.querySelector('svg').setAttribute('width','17'); d.querySelector('svg').setAttribute('height','17');
+    d.querySelectorAll('.mv svg').forEach(sv => { sv.setAttribute('width','13'); sv.setAttribute('height','13'); });
+    d.querySelectorAll('.mv button').forEach(b => b.onclick = e => {
+      e.stopPropagation();
+      const j = i + (+b.dataset.mv);
+      if(j < 0 || j >= cfg.pages.length) return;
+      const tmp = cfg.pages[i]; cfg.pages[i] = cfg.pages[j]; cfg.pages[j] = tmp;
+      pagIdx = j; guardar(); pintarTodo();
+    });
+    d.onclick = () => { pagIdx = i; btnIdx = 0; pintarTodo(); };
+    // Destino del arrastre de botones (1.7.10): soltar un botón sobre el
+    // nombre de otra página lo mueve AL FINAL de esa página. Convive con
+    // el arrastre entre botones (intercambiar), que sigue como estaba.
+    d.ondragover = e => { if(i !== pagIdx){ e.preventDefault(); d.classList.add('destino'); } };
+    d.ondragleave = () => d.classList.remove('destino');
+    d.ondrop = e => { e.preventDefault(); d.classList.remove('destino');
+      const desde = +e.dataTransfer.getData('text/plain');
+      if(!isNaN(desde)) moverBotonAPagina(pagIdx, desde, i); };
+    el.appendChild(d);
+  });
+}
+function pintarCentro(){
+  const p = pagina();
+  $('#nombrePagina').value = p.name;
+  $('#appPagina').value = p.app || '';
+  const cols = p.columns || 3;
+  $('#chipColumnas').textContent = cols + ' columnas × ' + Math.ceil(p.buttons.length / cols) + ' filas';
+  document.querySelectorAll('#segColumnas button').forEach(b => b.classList.toggle('on', +b.dataset.c === cols));
+  const g = $('#rejilla'); g.innerHTML = '';
+  g.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+  p.buttons.forEach((b, i) => {
+    const t = document.createElement('div');
+    t.className = 'tile' + (i === btnIdx ? ' sel' : '') + (b.action && b.action.type === 'none' ? ' vacio' : '');
+    t.draggable = true;
+    // Botón con imagen (1.9): la rejilla enseña la imagen de cara,
+    // como el teléfono; el nombre va abajo sobre la franja oscura.
+    const cara = (b.img && (cfg.customButtons || {})[b.img]) || '';
+    if(cara) t.classList.add('conimg');
+    let inner = (b.fav ? '<span class="fav">' + ESTRELLA_ON + '</span>' : '') + (cara ? '<img class="cara" src="' + esc(cara) + '" alt="">' : iconoHTML(b));
+    if(b.action && b.action.type === 'psaction') inner += '<i class="bdg"><svg viewBox="0 0 24 24" fill="#b18cff"><path d="M13 3.5 5.5 13.5H11L9.8 20.5 18 10h-5.5L13 3.5Z"/></svg></i>';
+    inner += cara ? (b.name ? '<span class="nomimg">' + esc(b.name) + '</span>' : '') : '<span>' + esc(b.name) + '</span>';
+    t.innerHTML = inner;
+    t.onclick = () => { if(suprimirClick) return; btnIdx = i; pintarCentro(); pintarFicha(); };
+    // Arrastre táctil (1.7.10): con el dedo (o el lápiz) la tarjeta se
+    // puede llevar hasta el nombre de otra página, como en la maqueta
+    // aprobada. Con el ratón manda el arrastre de siempre (HTML5), que
+    // no se toca: por eso aquí solo se atiende touch/pen.
+    t.onpointerdown = e => { if(e.pointerType === 'mouse') return; iniciarArrastreTactil(e, t, i); };
+    t.ondragstart = e => { e.dataTransfer.setData('text/plain', i); t.classList.add('arrastrando'); };
+    t.ondragend = () => t.classList.remove('arrastrando');
+    t.ondragover = e => e.preventDefault();
+    t.ondrop = e => { e.preventDefault(); const desde = +e.dataTransfer.getData('text/plain');
+      const tmp = p.buttons[desde]; p.buttons[desde] = p.buttons[i]; p.buttons[i] = tmp; btnIdx = i; guardar(); pintarCentro(); pintarFicha(); };
+    g.appendChild(t);
+  });
+}
+// ---- Ancho de la columna lateral (1.8) ----
+// La columna de páginas se ensancha arrastrando el tirador de su
+// borde derecho, para leer enteros los nombres largos de página.
+// Es una preferencia de ESTA ventana: se guarda en el localStorage
+// del editor (imandro_ancho_lateral) y NO viaja en la configuración
+// ni afecta al panel ni a los teléfonos.
+(function(){
+  const lat = document.querySelector('.lateral');
+  const tir = document.getElementById('tiradorLateral');
+  if(!lat || !tir) return;
+  const MIN = 190, MAX = 420;
+  const aplica = a => { lat.style.width = Math.max(MIN, Math.min(MAX, Math.round(a))) + 'px'; };
+  const guardado = parseInt(localStorage.getItem('imandro_ancho_lateral') || '', 10);
+  if(guardado) aplica(guardado);
+  let activo = false, x0 = 0, w0 = 0;
+  tir.addEventListener('pointerdown', e => {
+    activo = true; x0 = e.clientX; w0 = lat.getBoundingClientRect().width;
+    try{ tir.setPointerCapture(e.pointerId); }catch(_){ }
+    tir.classList.add('activo');
+    document.body.style.cursor = 'ew-resize';
+    e.preventDefault();
+  });
+  tir.addEventListener('pointermove', e => { if(activo) aplica(w0 + (e.clientX - x0)); });
+  const suelta = () => {
+    if(!activo) return;
+    activo = false;
+    tir.classList.remove('activo');
+    document.body.style.cursor = '';
+    localStorage.setItem('imandro_ancho_lateral', String(Math.round(lat.getBoundingClientRect().width)));
+  };
+  tir.addEventListener('pointerup', suelta);
+  tir.addEventListener('pointercancel', suelta);
+})();
+
+// ---- Mover/copiar botones entre páginas (1.7.10, maqueta aprobada) ----
+// El botón entra siempre AL FINAL de la página destino y todo se guarda
+// por el flujo normal (guardar()): mismo formato, sin campos nuevos.
+function moverBotonAPagina(desdePag, idxBtn, destPag){
+  if(destPag === desdePag) return;
+  const origen = cfg.pages[desdePag], destino = cfg.pages[destPag];
+  if(!origen || !destino || !origen.buttons[idxBtn]) return;
+  const b = origen.buttons.splice(idxBtn, 1)[0];
+  destino.buttons.push(b);
+  if(pagIdx === desdePag && btnIdx >= origen.buttons.length) btnIdx = Math.max(0, origen.buttons.length - 1);
+  guardar(); pintarTodo();
+  $('#estadoIzq').textContent = '«' + b.name + '» se movió a ' + destino.name;
+}
+let modoDestino = null;
+function abrirDestino(modo){
+  const b = botonSel(); if(!b) return;
+  modoDestino = modo;
+  $('#destTitulo').textContent = (modo === 'mover' ? 'Mover' : 'Copiar') + ' a otra página';
+  $('#destTexto').textContent = '«' + b.name + '» está en ' + pagina().name + '. Elige la página de destino:';
+  const c = $('#destLista'); c.innerHTML = '';
+  cfg.pages.forEach((p, i) => {
+    const d = document.createElement('button');
+    if(i === pagIdx){
+      d.className = 'dest aqui'; d.disabled = true;
+      d.innerHTML = '<span>' + esc(p.name) + '</span><span class="marca">estás aquí</span>';
+    } else {
+      d.className = 'dest';
+      d.innerHTML = '<span>' + esc(p.name) + '</span><span class="cuenta">' + p.buttons.length + ' botones</span>';
+      d.onclick = () => aplicarDestino(i);
+    }
+    c.appendChild(d);
+  });
+  $('#modalDestino').style.display = 'flex';
+}
+function cerrarDestino(){ $('#modalDestino').style.display = 'none'; }
+function aplicarDestino(destIdx){
+  const origen = pagina(), destino = cfg.pages[destIdx];
+  const b = origen.buttons[btnIdx];
+  if(!b || !destino || destIdx === pagIdx){ cerrarDestino(); return; }
+  if(modoDestino === 'mover'){
+    origen.buttons.splice(btnIdx, 1); destino.buttons.push(b);
+    if(btnIdx >= origen.buttons.length) btnIdx = Math.max(0, origen.buttons.length - 1);
+  } else {
+    destino.buttons.push(JSON.parse(JSON.stringify(b)));
+  }
+  cerrarDestino(); guardar(); pintarTodo();
+  $('#estadoIzq').textContent = '«' + b.name + '» ' + (modoDestino === 'mover' ? 'se movió a ' : 'se copió a ') + destino.name;
+}
+// Arrastre con el dedo: sigue el puntero con un fantasma de la tarjeta
+// e ilumina la página bajo el dedo; al soltar sobre otra página, mueve.
+let suprimirClick = false;
+function marcarDestinoPag(x, y){
+  const el = document.elementFromPoint(x, y);
+  const fila = el ? el.closest('.pag') : null;
+  document.querySelectorAll('#listaPaginas .pag').forEach(f =>
+    f.classList.toggle('destino', f === fila && +f.dataset.pagidx !== pagIdx));
+}
+function limpiarDestinoPag(){ document.querySelectorAll('#listaPaginas .pag').forEach(f => f.classList.remove('destino')); }
+function iniciarArrastreTactil(ev, el, indice){
+  const b = pagina().buttons[indice]; if(!b) return;
+  const inicioX = ev.clientX, inicioY = ev.clientY;
+  let moviendo = false, fantasma = null;
+  function mueve(e){
+    if(!moviendo){
+      if(Math.hypot(e.clientX - inicioX, e.clientY - inicioY) < 8) return;
+      moviendo = true;
+      el.classList.add('fantasma');
+      fantasma = document.createElement('div'); fantasma.className = 'flotante';
+      fantasma.innerHTML = iconoHTML(b) + '<span>' + esc(b.name) + '</span>';
+      document.body.appendChild(fantasma);
+    }
+    fantasma.style.left = (e.clientX - 75) + 'px'; fantasma.style.top = (e.clientY - 52) + 'px';
+    marcarDestinoPag(e.clientX, e.clientY);
+    e.preventDefault();
+  }
+  function suelta(e){
+    document.removeEventListener('pointermove', mueve);
+    document.removeEventListener('pointerup', suelta);
+    document.removeEventListener('pointercancel', suelta);
+    if(!moviendo) return; // fue un toque: el clic normal selecciona el botón
+    suprimirClick = true; setTimeout(() => { suprimirClick = false; }, 400);
+    const destEl = document.elementFromPoint(e.clientX, e.clientY);
+    const fila = destEl ? destEl.closest('.pag') : null;
+    if(fantasma){ fantasma.remove(); fantasma = null; }
+    limpiarDestinoPag(); el.classList.remove('fantasma');
+    if(fila && fila.dataset.pagidx !== undefined && +fila.dataset.pagidx !== pagIdx)
+      moverBotonAPagina(pagIdx, indice, +fila.dataset.pagidx);
+  }
+  document.addEventListener('pointermove', mueve);
+  document.addEventListener('pointerup', suelta);
+  document.addEventListener('pointercancel', suelta);
+}
+function pintarFicha(){
+  const b = botonSel(); if(!b) return;
+  $('#fNombre').value = b.name;
+  // colores
+  const cc = $('#fColores'); cc.innerHTML = '';
+  PALETA.forEach(c => {
+    const m = document.createElement('div'); m.className = 'muestra' + (b.color === c ? ' on' : '');
+    m.style.background = c; m.style.color = c; m.title = c;
+    m.onclick = () => { b.color = c; guardar(); pintarCentro(); pintarFicha(); };
+    cc.appendChild(m);
+  });
+  const ci = document.createElement('input'); ci.type = 'color'; ci.value = b.color || '#4cc3ff';
+  ci.title = 'El color exacto que quieras';
+  ci.oninput = () => { b.color = ci.value; guardar(); pintarCentro(); };
+  ci.onchange = () => pintarFicha();
+  cc.appendChild(ci);
+  pintarTipos();
+  const bf = $('#btnFavBoton'); if(bf) bf.textContent = b.fav ? 'Quitar de botones favoritos' : 'Marcar como botón favorito';
+  const bm = $('#btnMoverPag'); if(bm) bm.onclick = () => abrirDestino('mover');
+  const bc = $('#btnCopiarPag'); if(bc) bc.onclick = () => abrirDestino('copiar');
+  pintarMisBotones();
+  pintarDetalle();
+}
+const HERRAMIENTAS = [["V · Mover", [["Mover", "moveTool"], ["Mesa de trabajo", "artboardTool"]]], ["M · Marcos de selección", [["Marco rectangular", "marqueeRectTool"], ["Marco elíptico", "marqueeEllipTool"], ["Marco de fila única", "marqueeSingleRowTool"], ["Marco de columna única", "marqueeSingleColumnTool"]]], ["L · Lazo", [["Lazo", "lassoTool"], ["Lazo poligonal", "polySelTool"], ["Lazo magnético", "magneticLassoTool"]]], ["W · Selección", [["Selección de objetos", "objectSelectionTool"], ["Selección rápida", "quickSelectTool"], ["Varita mágica", "magicWandTool"]]], ["C · Recortar", [["Recortar", "cropTool"], ["Recorte con perspectiva", "perspectiveCropTool"], ["Sector", "sliceTool"], ["Seleccionar sector", "sliceSelectTool"]]], ["K · Marco", [["Marco", "frameTool"]]], ["I · Medición", [["Cuentagotas", "eyedropperTool"], ["Muestra de color", "colorSamplerTool"], ["Regla", "rulerTool"], ["Nota", "textAnnotTool"], ["Conteo", "countTool"]]], ["J · Correctoras", [["Pincel corrector puntual (Quitar manchas)", "spotHealingBrushTool"], ["Pincel corrector", "magicStampTool"], ["Parche", "patchSelection"], ["Mover contenido", "recomposeSelection"], ["Ojos rojos", "redEyeTool"], ["Quitar (inteligencia artificial)", "removeTool"]]], ["B · Pincel", [["Pincel", "paintbrushTool"], ["Lápiz", "pencilTool"], ["Sustitución de color", "colorReplacementBrushTool"], ["Pincel mezclador", "wetBrushTool"], ["Pincel de ajuste", "adjustmentBrushTool"]]], ["S · Tampón", [["Tampón de clonar", "cloneStampTool"], ["Tampón de motivo", "patternStampTool"]]], ["Y · Historia", [["Pincel de historia", "historyBrushTool"], ["Pincel histórico", "artBrushTool"]]], ["E · Borrador", [["Borrador", "eraserTool"], ["Borrador de fondo", "backgroundEraserTool"], ["Borrador mágico", "magicEraserTool"]]], ["G · Relleno", [["Degradado", "gradientTool"], ["Bote de pintura", "bucketTool"]]], ["R · Enfoque", [["Desenfocar", "blurTool"], ["Enfocar", "sharpenTool"], ["Dedo", "smudgeTool"]]], ["O · Tono", [["Sobreexponer", "dodgeTool"], ["Subexponer", "burnInTool"], ["Esponja", "saturationTool"]]], ["P · Pluma", [["Pluma", "penTool"], ["Pluma de forma libre", "freeformPenTool"], ["Pluma de curvatura", "curvaturePenTool"], ["Añadir punto de ancla", "addKnotTool"], ["Eliminar punto de ancla", "deleteKnotTool"], ["Convertir punto de ancla", "convertKnotTool"]]], ["T · Texto", [["Texto horizontal", "typeCreateOrEditTool"], ["Texto vertical", "typeVerticalCreateOrEditTool"], ["Máscara de texto horizontal", "typeCreateMaskTool"], ["Máscara de texto vertical", "typeVerticalCreateMaskTool"]]], ["A · Trazado", [["Selección de trazado", "pathComponentSelectTool"], ["Selección directa", "directSelectTool"]]], ["H · Mano", [["Mano", "handTool"], ["Rotar vista", "rotateTool"]]], ["Z · Zoom", [["Zoom", "zoomTool"]]], ["U · Formas", [["Rectángulo", "rectangleTool"], ["Rectángulo redondeado", "roundedRectangleTool"], ["Elipse", "ellipseTool"], ["Triángulo", "triangleTool"], ["Polígono", "polygonTool"], ["Línea", "lineTool"], ["Forma personalizada", "customShapeTool"]]]];
+function pintarDetalle(){
+  grabandoDe = null;
+  const b = botonSel(), a = b.action, el = $('#fDetalle');
+  const campo = (label, inner) => '<div class="campo"><label>' + label + '</label>' + inner + '</div>';
+  if(a.type === 'hotkey'){
+    const MODS = ['Ctrl','Shift','Alt','Win'];
+    const partes0 = (a.keys || '').split('+').map(s => s.trim()).filter(Boolean);
+    const chips = MODS.map(m => '<a class="chipmod' + (partes0.includes(m) ? ' on' : '') + '" data-m="' + m + '">' + m + '</a>').join('');
+    el.innerHTML = campo('ATAJO (EJ.: Ctrl+Shift+Z)', '<div class="fila"><input type="text" id="dKeys" value="' + esc(a.keys || '') + '"><a class="btn sec chico" id="dGrabar" tabindex="0" style="flex:.6">Grabar</a></div>') +
+      '<div class="fila" id="dMods" style="gap:6px;margin-top:2px">' + chips + '</div>' +
+      '<p class="nota">Toca Ctrl, Shift, Alt o Win para armar la combinación y escribe la tecla final (o pulsa «Grabar» y aprieta las teclas; Esc cancela).</p>';
+    $('#dKeys').onchange = e => { a.keys = e.target.value; guardar(); pintarCentro(); };
+    $('#dKeys').oninput = e => { a.keys = e.target.value; guardar(); };
+    $('#dGrabar').onclick = e => {
+      if(grabandoDe){ terminarGrabacion(false); return; }
+      grabandoDe = {a};
+      e.target.classList.add('grabando'); e.target.textContent = 'Pulsa las teclas… (Esc cancela)';
+    };
+    $('#dKeys').tabIndex = 0;
+    document.querySelectorAll('#dMods .chipmod').forEach(ch => ch.onclick = () => {
+      ch.classList.toggle('on');
+      const act = [...document.querySelectorAll('#dMods .chipmod.on')].map(x => x.dataset.m);
+      const partes = (a.keys || '').split('+').map(s => s.trim()).filter(Boolean);
+      const final = partes.filter(p => !MODS.includes(p)).pop() || '';
+      a.keys = act.concat(final ? [final] : []).join('+');
+      $('#dKeys').value = a.keys; guardar(); pintarCentro();
+    });
+  } else if(a.type === 'psaction'){
+    el.innerHTML = campo('NOMBRE DE LA ACCIÓN', '<input type="text" id="dNombre" value="' + esc(a.name || '') + '">') +
+      campo('CONJUNTO (EL GRUPO DE LA ACCIÓN EN TU PHOTOSHOP)', '<input type="text" id="dSet" value="' + esc(a.set || '') + '" placeholder="Ej.: Mis acciones">') +
+      '<p class="nota">Los dos nombres tienen que ser <b>exactos</b> a como salen en tu panel Acciones de Photoshop. Photoshop tiene que estar abierto.</p>';
+    $('#dNombre').onchange = e => { a.name = e.target.value; guardar(); };
+    $('#dNombre').oninput = e => { a.name = e.target.value; guardar(); };
+    $('#dSet').onchange = e => { a.set = e.target.value; guardar(); };
+    $('#dSet').oninput = e => { a.set = e.target.value; guardar(); };
+  } else if(a.type === 'pstool'){
+    let ops = '';
+    HERRAMIENTAS.forEach(g => {
+      ops += '<optgroup label="' + g[0] + '">';
+      g[1].forEach(t => { ops += '<option value="' + t[1] + '"' + (a.tool === t[1] ? ' selected' : '') + '>' + t[0] + '</option>'; });
+      ops += '</optgroup>';
+    });
+    el.innerHTML = campo('HERRAMIENTA DE PHOTOSHOP', '<select id="dTool">' + ops + '</select>') +
+      '<p class="nota">El botón selecciona <b>siempre esta herramienta</b>, aunque comparta letra con las demás de su grupo. Photoshop tiene que estar abierto.</p>';
+    $('#dTool').onchange = e => { a.tool = e.target.value; guardar(); };
+  } else if(a.type === 'psscript'){
+    el.innerHTML = campo('SCRIPT DE PHOTOSHOP (JAVASCRIPT)', '<textarea id="dScript" rows="6">' + esc(a.script || '') + '</textarea>') +
+      '<p class="nota">Para usuarios avanzados: es el código que ejecuta Photoshop al tocar el botón. Los botones de fábrica de Color y Capas lo usan para crear capas de ajuste y trabajar con las capas. Photoshop tiene que estar abierto.</p>';
+    $('#dScript').onchange = e => { a.script = e.target.value; guardar(); };
+    $('#dScript').oninput = e => { a.script = e.target.value; guardar(); };
+  } else if(a.type === 'multi'){
+    const lineas = (a.steps || []).map(p => 'delay' in p ? 'espera ' + p.delay : (p.type === 'psaction' ? 'accion: ' + p.name + ' | ' + (p.set || '') : p.keys)).join('\n');
+    el.innerHTML = campo('PASOS, UNO POR LÍNEA', '<textarea id="dPasos" rows="6">' + esc(lineas) + '</textarea>') +
+      '<p class="nota">Cada línea es un atajo (Ctrl+J), una espera (<i>espera 300</i>) o una acción de Photoshop (<i>accion: Nombre | Conjunto</i>).</p>';
+    const alPasos = e => {
+      a.steps = e.target.value.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+        if(l.startsWith('espera')) return {delay: parseInt(l.replace(/\D/g, '')) || 250};
+        if(l.startsWith('accion:')){ const partes = l.slice(7).split('|').map(x => x.trim()); return {type:'psaction', name: partes[0] || '', set: partes[1] || ''}; }
+        return {keys: l};
+      }); guardar();
+    };
+    $('#dPasos').onchange = alPasos;
+    $('#dPasos').oninput = alPasos;
+  } else if(a.type === 'open'){
+    const esRapido = ['photoshop','lightroom'].includes(a.target);
+    el.innerHTML = campo('QUÉ ABRIR', '<select id="dRapido"><option value="photoshop">Photoshop</option><option value="lightroom">Lightroom Classic</option><option value="ruta">Una ruta de mi PC…</option></select>') +
+      '<div id="dRutaWrap">' + campo('RUTA DEL PROGRAMA O DE LA CARPETA', '<input type="text" id="dRuta" value="' + esc(esRapido ? '' : (a.target || '')) + '" placeholder="Escoge con los botones o escribe la ruta"><div class="fila" style="margin-top:7px"><a class="btn sec chico" id="dProg" style="flex:1">Programa…</a><a class="btn sec chico" id="dCarp" style="flex:1">Carpeta…</a><a class="btn sec chico" id="dElegirApp" style="flex:1">Elegir aplicación…</a></div><p class="nota">Cada botón abre UN solo selector: el del programa o el de la carpeta. «Elegir aplicación…» enseña todo lo instalado en esta PC, también lo de Microsoft Store, sin buscar rutas a mano.</p>') + '</div>';
+    const sel = $('#dRapido'); sel.value = esRapido ? a.target : 'ruta';
+    const act = () => { $('#dRutaWrap').style.display = sel.value === 'ruta' ? '' : 'none'; };
+    sel.onchange = () => { act(); a.target = sel.value === 'ruta' ? $('#dRuta').value : sel.value; guardar(); };
+    $('#dRuta').onchange = e => { a.target = e.target.value; guardar(); };
+    $('#dRuta').oninput = e => { a.target = e.target.value; guardar(); }; act();
+    const ponRuta = r => { $('#dRuta').value = r; a.target = r; guardar(); $('#estadoIzq').textContent = 'Ruta puesta: ' + r; };
+    const buscaWin = async modo => {
+      $('#estadoIzq').textContent = 'Escoge en la ventana de Windows que se abrió en esta PC…';
+      try {
+        const r = await api('/api/buscar-ruta', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({modo})});
+        const j = await r.json();
+        if(j.ok && j.ruta) ponRuta(j.ruta);
+        else $('#estadoIzq').textContent = j.msg || 'No escogiste nada';
+      } catch(e){ $('#estadoIzq').textContent = 'No se pudo abrir el selector'; }
+    };
+    const bpr = $('#dProg'); if(bpr) bpr.onclick = () => buscaWin('programa');
+    const bca = $('#dCarp'); if(bca) bca.onclick = () => buscaWin('carpeta');
+    const bel = $('#dElegirApp'); if(bel) bel.onclick = () => abrirElegirApp('boton', app => {
+      ponRuta(app.tipo === 'store' ? 'appid:' + app.appid : app.ruta);
+    });
+  } else if(a.type === 'mouse'){
+    const MODSM = ['Ctrl','Shift','Alt','Win'];
+    const partesM = (a.mods || '').split('+').map(s => s.trim()).filter(Boolean);
+    const chipsM = MODSM.map(m => '<a class="chipmod' + (partesM.includes(m) ? ' on' : '') + '" data-m="' + m + '">' + m + '</a>').join('');
+    el.innerHTML = campo('BOTÓN DEL RATÓN', '<select id="dMouse"><option value="left">Clic izquierdo</option><option value="right">Clic derecho</option><option value="middle">Clic central (la rueda)</option><option value="dblclick">Doble clic</option><option value="wheelup">Rueda hacia arriba</option><option value="wheeldown">Rueda hacia abajo</option></select>') +
+      campo('TECLAS ESPECIALES (SE MANTIENEN PULSADAS DURANTE EL CLIC)', '<div class="fila" id="dModsRaton" style="gap:6px">' + chipsM + '</div>') +
+      '<p class="nota">El clic se hace <b>donde esté el puntero</b> del ratón en ese momento en la PC. Si marcas una tecla especial, se mantiene pulsada durante el clic: por ejemplo, <b>Alt + clic</b> para fijar el origen del tampón de clonar.</p>';
+    const selm = $('#dMouse'); selm.value = a.btn || 'left'; selm.onchange = () => { a.btn = selm.value; guardar(); };
+    el.querySelectorAll('#dModsRaton .chipmod').forEach(ch => ch.onclick = () => {
+      ch.classList.toggle('on');
+      a.mods = [...el.querySelectorAll('#dModsRaton .chipmod.on')].map(x => x.dataset.m).join('+');
+      guardar();
+    });
+  } else if(a.type === 'media'){
+    el.innerHTML = campo('TECLA', '<select id="dMedia"><option value="volup">Subir volumen</option><option value="voldn">Bajar volumen</option><option value="mute">Silencio</option><option value="playpause">Reproducir / Pausar</option><option value="next">Siguiente pista</option><option value="prev">Pista anterior</option></select>');
+    const sel = $('#dMedia'); sel.value = a.key || 'volup'; sel.onchange = () => { a.key = sel.value; guardar(); };
+  } else if(a.type === 'system'){
+    el.innerHTML = campo('ORDEN', '<select id="dSis"><option value="screenshot">Captura de pantalla (Win+Shift+S)</option><option value="lock">Bloquear la PC</option><option value="explorer">Abrir el Explorador (Win+E)</option></select>');
+    const sel = $('#dSis'); sel.value = a.cmd || 'screenshot'; sel.onchange = () => { a.cmd = sel.value; guardar(); };
+  } else if(a.type === 'page'){
+    el.innerHTML = campo('IR A LA PÁGINA', '<select id="dPag">' + cfg.pages.map(p => '<option value="' + esc(p.id) + '">' + esc(p.name) + '</option>').join('') + '</select>');
+    const sel = $('#dPag'); sel.value = a.page || cfg.pages[0].id; sel.onchange = () => { a.page = sel.value; guardar(); };
+  } else {
+    el.innerHTML = '<p class="nota">Este botón todavía no hace nada. Elige arriba qué quieres que haga.</p>';
+  }
+}
+// ---- Favoritos de iconos (1.7): se guardan en la configuración
+// (cfg.favIconos, claves: el id del icono dibujado, «pack:<id>» o
+// «custom:<nombre>»), así que viajan con la copia de configuración y son
+// los mismos en cualquier PC. La pestaña «Favoritos» va la primera y
+// reúne los de todos los paquetes. La estrellita de cada icono (arriba a
+// la derecha, al pasar el ratón; fija y dorada si ya es favorito) lo
+// marca o lo quita sin cambiar el icono del botón.
+function favIconos(){ if(!Array.isArray(cfg.favIconos)) cfg.favIconos = []; return cfg.favIconos; }
+function esFavIcono(clave){ return favIconos().includes(clave); }
+function alternarFavIcono(clave){
+  const l = favIconos(), i = l.indexOf(clave);
+  if(i >= 0) l.splice(i, 1); else l.push(clave);
+  guardar(); pintarIconos();
+}
+function spanEstrella(clave){
+  const s = document.createElement('span'); s.className = 'st';
+  s.innerHTML = esFavIcono(clave) ? ESTRELLA_ON : ESTRELLA_OFF;
+  s.title = esFavIcono(clave) ? 'Quitar de favoritos' : 'Marcar como favorito';
+  s.onclick = e => { e.stopPropagation(); alternarFavIcono(clave); };
+  return s;
+}
+function pintarIconos(){
+  // pestañas de paquetes: «Favoritos» la primera (1.7)
+  const tabs = $('#tabsPaquetes'); tabs.innerHTML = '';
+  const PACKS_EXTRA = ['Photoshop · Moderno Oscuro', 'Photoshop · Profesional Pro'];
+  ['Favoritos', 'Todos', ...Object.keys(PAQUETES), ...PACKS_EXTRA, 'Mis iconos'].forEach(nombre => {
+    const s = document.createElement('span'); s.className = 'pk' + (paquete === nombre ? ' on' : ''); s.textContent = nombre;
+    s.onclick = () => { paquete = nombre; pintarIconos(); };
+    tabs.appendChild(s);
+  });
+  const b = botonSel(), buscar = ($('#buscarIcono').value || '').toLowerCase();
+  const g = $('#rejillaIconos'); g.innerHTML = '';
+  const tileDib = id => {
+    const t = document.createElement('div'); t.className = 'itile' + (b.icon === id ? ' on' : '') + (esFavIcono(id) ? ' favtile' : '');
+    t.title = NOMBRES_ICONO[id] || id;
+    t.innerHTML = svgIcono(id, b.icon === id ? '#f6b73c' : 'currentColor');
+    t.appendChild(spanEstrella(id));
+    t.onclick = () => { botonSel().icon = id; guardar(); pintarCentro(); pintarIconos(); };
+    return t;
+  };
+  const tilePack = id => {
+    const pk = PACK_ICONOS[id];
+    const t = document.createElement('div'); t.className = 'itile' + (b.icon === 'pack:' + id ? ' on' : '') + (esFavIcono('pack:' + id) ? ' favtile' : '');
+    t.title = pk.n;
+    t.innerHTML = '<img src="' + pk.d + '" alt="">';
+    t.appendChild(spanEstrella('pack:' + id));
+    t.onclick = () => { botonSel().icon = 'pack:' + id; guardar(); pintarCentro(); pintarIconos(); };
+    return t;
+  };
+  const tileCustom = nombre => {
+    const t = document.createElement('div'); t.className = 'itile' + (b.icon === 'custom:' + nombre ? ' on' : '') + (esFavIcono('custom:' + nombre) ? ' favtile' : '');
+    t.title = nombre;
+    t.innerHTML = '<img src="' + esc(cfg.customIcons[nombre]) + '" style="width:23px;height:23px;object-fit:contain">';
+    t.appendChild(spanEstrella('custom:' + nombre));
+    t.onclick = () => { botonSel().icon = 'custom:' + nombre; guardar(); pintarCentro(); pintarIconos(); };
+    return t;
+  };
+  if(paquete === 'Favoritos'){
+    favIconos().forEach(clave => {
+      if(clave.startsWith('pack:')){
+        const id = clave.slice(5);
+        if(typeof PACK_ICONOS !== 'undefined' && PACK_ICONOS[id] && (!buscar || PACK_ICONOS[id].n.toLowerCase().includes(buscar))) g.appendChild(tilePack(id));
+      } else if(clave.startsWith('custom:')){
+        const nombre = clave.slice(7);
+        if((cfg.customIcons || {})[nombre] && (!buscar || nombre.toLowerCase().includes(buscar))) g.appendChild(tileCustom(nombre));
+      } else if(ICONOS[clave] && (!buscar || (NOMBRES_ICONO[clave] || clave).toLowerCase().includes(buscar))){
+        g.appendChild(tileDib(clave));
+      }
+    });
+    if(!g.children.length){
+      const p = document.createElement('p'); p.className = 'nota'; p.style.gridColumn = '1 / -1';
+      p.textContent = 'Todavía no tienes iconos favoritos. En cualquier paquete, toca la estrellita de un icono (arriba a la derecha) para guardarlo aquí.';
+      g.appendChild(p);
+    }
+  } else if(typeof PACK_ICONOS !== 'undefined' && PACKS_EXTRA.includes(paquete)){
+    Object.keys(PACK_ICONOS).filter(id => PACK_ICONOS[id].p === paquete)
+      .filter(id => !buscar || PACK_ICONOS[id].n.toLowerCase().includes(buscar)).forEach(id => g.appendChild(tilePack(id)));
+  } else {
+    let ids = [];
+    if(paquete === 'Todos') ids = Object.keys(ICONOS);
+    else if(paquete === 'Mis iconos') ids = [];
+    else ids = PAQUETES[paquete] || [];
+    ids.filter(id => !buscar || (NOMBRES_ICONO[id] || id).toLowerCase().includes(buscar)).forEach(id => g.appendChild(tileDib(id)));
+  }
+  // mis iconos
+  const m = $('#misIconos'); m.innerHTML = '';
+  Object.keys(cfg.customIcons || {}).forEach(nombre => {
+    const t = document.createElement('div'); t.className = 'mtile' + (b.icon === 'custom:' + nombre ? ' on' : '') + (esFavIcono('custom:' + nombre) ? ' favtile' : '');
+    t.title = nombre; t.innerHTML = '<img src="' + esc(cfg.customIcons[nombre]) + '">';
+    t.appendChild(spanEstrella('custom:' + nombre));
+    t.onclick = () => { botonSel().icon = 'custom:' + nombre; guardar(); pintarCentro(); pintarIconos(); };
+    t.oncontextmenu = e => { e.preventDefault(); if(confirm('¿Quitar el icono «' + nombre + '» de tu biblioteca?')){ delete cfg.customIcons[nombre]; guardar(); pintarIconos(); pintarCentro(); } };
+    m.appendChild(t);
+  });
+  const add = document.createElement('div'); add.className = 'mtile add';
+  add.innerHTML = '<span style="font-size:18px">+</span>Añadir';
+  add.onclick = () => $('#archivoIconos').click();
+  m.appendChild(add);
+}
+function pintarTodo(){ pintarPaginas(); pintarCentro(); pintarFicha(); pintarIconos(); pintarIconoPagina(); }
+
+// ---- eventos fijos
+function terminarGrabacion(aplica){
+  const g = grabandoDe; grabandoDe = null; if(!g) return;
+  const btn = $('#dGrabar'); if(btn){ btn.classList.remove('grabando'); btn.textContent = 'Grabar'; }
+  if(aplica){ const inp = $('#dKeys'); if(inp) inp.value = g.a.keys; guardar(); pintarCentro(); }
+}
+document.addEventListener('keydown', e => {
+  const g = grabandoDe; if(!g) return;
+  e.preventDefault(); e.stopPropagation();
+  if(e.key === 'Escape'){ terminarGrabacion(false); return; }
+  const mods = []; if(e.ctrlKey) mods.push('Ctrl'); if(e.altKey) mods.push('Alt'); if(e.shiftKey) mods.push('Shift'); if(e.metaKey) mods.push('Win');
+  let k = e.key; if(['Control','Alt','Shift','Meta'].includes(k)) return;
+  if(k === ' ') k = 'Space'; if(k.length === 1) k = k.toUpperCase();
+  g.a.keys = mods.concat([k]).join('+');
+  terminarGrabacion(true);
+}, true);
+function deshacer(){
+  if(!pilaDeshacer.length){ $('#estadoDer').textContent = 'Nada que deshacer'; return; }
+  cfg = JSON.parse(pilaDeshacer.pop());
+  if(pagIdx >= cfg.pages.length) pagIdx = 0;
+  if(btnIdx >= pagina().buttons.length) btnIdx = 0;
+  deshaciendo = true; guardar(); pintarTodo(); actualizarDeshacer();
+  $('#estadoDer').textContent = 'Deshecho el último cambio';
+}
+$('#btnDeshacer').onclick = deshacer;
+document.addEventListener('keydown', e => {
+  if(grabandoDe) return;
+  if((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')){
+    const t = document.activeElement;
+    if(t && /INPUT|TEXTAREA/.test(t.tagName)) return;
+    e.preventDefault(); deshacer();
+  }
+});
+$('#fNombre').onchange = e => { botonSel().name = e.target.value; guardar(); pintarCentro(); };
+$('#fNombre').oninput = e => { botonSel().name = e.target.value; guardar(); pintarCentro(); };
+// «Qué hace» con buscador (1.7): la lista de tipos de siempre, con el
+// campo «Buscar acción…» encima que la filtra al escribir.
+const TIPOS_ACCION = [['hotkey','Atajo de teclado'],['psaction','Acción de Photoshop'],['pstool','Herramienta de Photoshop (exacta)'],['psscript','Script de Photoshop'],['multi','Varios pasos seguidos'],['open','Abrir programa o carpeta'],['mouse','Ratón (clic y rueda)'],['media','Volumen y multimedia'],['system','Sistema'],['page','Cambiar de página'],['none','Sin función todavía']];
+let filtroAccion = '';
+function pintarTipos(){
+  const b = botonSel(); if(!b) return;
+  const el = $('#fTipos'); if(!el) return;
+  el.innerHTML = '';
+  TIPOS_ACCION.filter(par => !filtroAccion || par[1].toLowerCase().includes(filtroAccion)).forEach(par => {
+    const d = document.createElement('div');
+    d.textContent = par[1];
+    if((b.action.type || 'none') === par[0]) d.className = 'on';
+    d.onclick = () => elegirTipo(par[0]);
+    el.appendChild(d);
+  });
+  if(!el.children.length) el.innerHTML = '<div style="cursor:default">Ninguna acción coincide con eso</div>';
+}
+function elegirTipo(t){
+  const b = botonSel();
+  const base = {hotkey:{type:'hotkey',keys:''}, psaction:{type:'psaction',name:b.name,set:''}, multi:{type:'multi',steps:[]},
+    pstool:{type:'pstool',tool:'spotHealingBrushTool'},
+    open:{type:'open',target:'photoshop'}, media:{type:'media',key:'volup'}, system:{type:'system',cmd:'screenshot'}, psscript:{type:'psscript',script:''},
+    page:{type:'page',page:cfg.pages[0].id}, mouse:{type:'mouse',btn:'left',mods:''}, none:{type:'none'}};
+  b.action = base[t]; guardar(); pintarTipos(); pintarDetalle(); pintarCentro();
+}
+$('#buscarAccion').oninput = e => { filtroAccion = e.target.value.toLowerCase(); pintarTipos(); };
+$('#btnProbar').onclick = async () => {
+  $('#estadoIzq').textContent = 'Probando «' + botonSel().name + '»…';
+  const r = await api('/api/tap', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({action: botonSel().action})});
+  const j = await r.json();
+  $('#estadoIzq').textContent = j.ok ? 'Probado: se ejecutó en esta PC' : 'No se pudo: ' + (j.msg || '');
+  setTimeout(refrescarActividad, 600);
+};
+$('#btnDuplicar').onclick = () => { const p = pagina(); p.buttons.splice(btnIdx + 1, 0, JSON.parse(JSON.stringify(botonSel()))); btnIdx++; guardar(); pintarCentro(); pintarFicha(); };
+// Duplicar página (1.7): copia entera de la página actual, con todos sus
+// botones, justo después de ella y con el nombre terminado en « copia»;
+// pasa por el guardado normal (con su control de revisiones _rev).
+$('#btnDuplicarPagina').onclick = () => {
+  const copia = JSON.parse(JSON.stringify(pagina()));
+  copia.id = 'pagina' + Date.now();
+  copia.name = (copia.name || 'Página') + ' copia';
+  cfg.pages.splice(pagIdx + 1, 0, copia);
+  pagIdx++; btnIdx = 0; guardar(); pintarTodo();
+  $('#estadoDer').textContent = 'Página duplicada: «' + copia.name + '»';
+};
+// Botón favorito (1.7): es el que enseña la estrellita dorada en los
+// teléfonos. Vive en la configuración (campo «fav» del botón), así que es
+// el mismo en todos los teléfonos y viaja con la copia de configuración.
+$('#btnFavBoton').onclick = () => {
+  const b = botonSel();
+  if(b.fav) delete b.fav; else b.fav = true;
+  guardar(); pintarCentro(); pintarFicha();
+};
+$('#btnBorrarBoton').onclick = e => { const p = pagina(); if(p.buttons.length <= 1) return;
+  if(e.target.dataset.seguro){ p.buttons.splice(btnIdx, 1); if(btnIdx >= p.buttons.length) btnIdx = p.buttons.length - 1; guardar(); pintarCentro(); pintarFicha(); e.target.textContent = 'Borrar botón'; delete e.target.dataset.seguro; }
+  else { e.target.dataset.seguro = '1'; e.target.textContent = '¿Seguro? Toca otra vez'; setTimeout(() => { delete e.target.dataset.seguro; e.target.textContent = 'Borrar botón'; }, 3000); } };
+$('#btnNuevoBoton').onclick = () => { pagina().buttons.push({name:'Nuevo botón', icon:'pagina', color:'#4cc3ff', action:{type:'none'}}); btnIdx = pagina().buttons.length - 1; guardar(); pintarCentro(); pintarFicha(); };
+$('#nombrePagina').onchange = e => { pagina().name = e.target.value; guardar(); pintarPaginas(); };
+$('#nombrePagina').oninput = e => { pagina().name = e.target.value; guardar(); pintarPaginas(); };
+$('#appPagina').onchange = async e => {
+  // 1.7.7: al guardar, el campo se ayuda solo — si lo escrito coincide
+  // sin la extensión con un programa de la lista de aplicaciones, se
+  // completa a su forma con «.exe» (y si pegó una ruta, queda el nombre).
+  const v = await normalizaPrograma(e.target.value);
+  pagina().app = v; e.target.value = v; guardar();
+};
+$('#appPagina').oninput = e => { pagina().app = e.target.value.trim(); guardar(); };
+const appB = $('#appBuscar'); if(appB) appB.onclick = async () => {
+  $('#estadoIzq').textContent = 'Escoge el programa en la ventana de Windows que se abrió en esta PC…';
+  try {
+    const r = await api('/api/buscar-ruta', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({modo: 'programa'})});
+    const j = await r.json();
+    if(j.ok && j.ruta){ const nombre = j.ruta.split('\\').pop(); $('#appPagina').value = nombre; pagina().app = nombre; guardar(); $('#estadoIzq').textContent = 'Programa de la página: ' + nombre; }
+    else $('#estadoIzq').textContent = j.msg || 'No escogiste nada';
+  } catch(e){ $('#estadoIzq').textContent = 'No se pudo abrir el selector'; }
+};
+const appE = $('#appElegir'); if(appE) appE.onclick = () => abrirElegirApp('pagina', app => {
+  $('#appPagina').value = app.exe; pagina().app = app.exe; guardar();
+  $('#estadoIzq').textContent = 'Programa de la página: ' + app.exe;
+});
+document.querySelectorAll('#segColumnas button').forEach(b => b.onclick = () => { pagina().columns = +b.dataset.c; guardar(); pintarCentro(); });
+$('#btnNuevaPagina').onclick = () => {
+  const id = 'pagina' + Date.now();
+  cfg.pages.push({id, name:'Nueva página', icon:'pagina', columns:3, buttons:[{name:'Nuevo botón', icon:'pagina', color:'#4cc3ff', action:{type:'none'}}]});
+  pagIdx = cfg.pages.length - 1; btnIdx = 0; guardar(); pintarTodo();
+};
+$('#btnBorrarPagina').onclick = e => {
+  if(cfg.pages.length <= 1) return;
+  if(e.target.dataset.seguro){ cfg.pages.splice(pagIdx, 1); pagIdx = 0; btnIdx = 0; guardar(); pintarTodo(); e.target.textContent = 'Borrar página'; delete e.target.dataset.seguro; }
+  else { e.target.dataset.seguro = '1'; e.target.textContent = '¿Seguro? Toca otra vez'; setTimeout(() => { delete e.target.dataset.seguro; e.target.textContent = 'Borrar página'; }, 3000); }
+};
+$('#pestBoton').onclick = () => { $('#panelBoton').style.display = ''; $('#panelIcono').style.display = 'none'; $('#pestBoton').classList.add('on'); $('#pestIcono').classList.remove('on'); };
+$('#pestIcono').onclick = () => { $('#panelBoton').style.display = 'none'; $('#panelIcono').style.display = ''; $('#pestIcono').classList.add('on'); $('#pestBoton').classList.remove('on'); pintarIconos(); };
+$('#buscarIcono').oninput = () => pintarIconos();
+$('#archivoIconos').onchange = e => {
+  [...e.target.files].forEach(f => {
+    const lector = new FileReader();
+    lector.onload = () => {
+      const nombre = f.name.replace(/\.[^.]+$/, '').slice(0, 30) || 'Icono';
+      cfg.customIcons = cfg.customIcons || {}; cfg.customIcons[nombre] = lector.result;
+      guardar(); pintarIconos();
+    };
+    lector.readAsDataURL(f);
+  });
+  e.target.value = '';
+};
+// ---- «Mis botones»: imágenes de cara de botón (1.9) ----
+// Biblioteca cfg.customButtons (nombre -> imagen), paralela a
+// cfg.customIcons. Al subir, cada imagen se reduce a un máximo de
+// 480 px y se guarda en JPEG, para que la configuración no pese;
+// el botón elegido guarda la clave en su campo img. Las imágenes
+// viajan dentro de la copia de configuración, como los iconos.
+function pintarMisBotones(){
+  const b = botonSel(); if(!b) return;
+  const cont = $('#misBotones'); if(!cont) return;
+  cont.innerHTML = '';
+  const lib = cfg.customButtons || {};
+  Object.keys(lib).forEach(nombre => {
+    const t = document.createElement('div');
+    t.className = 'btile' + (b.img === nombre ? ' on' : '');
+    t.title = nombre + ' — clic derecho: quitar de la biblioteca';
+    t.innerHTML = '<img src="' + esc(lib[nombre]) + '" alt="">';
+    t.onclick = () => { b.img = nombre; guardar(); pintarCentro(); pintarFicha(); };
+    t.oncontextmenu = e => { e.preventDefault();
+      if(confirm('¿Quitar «' + nombre + '» de tu biblioteca «Mis botones»? Los botones que la usen volverán a verse con su icono y su color.')){
+        delete cfg.customButtons[nombre];
+        cfg.pages.forEach(pg => pg.buttons.forEach(x => { if(x.img === nombre) delete x.img; }));
+        guardar(); pintarCentro(); pintarFicha();
+      } };
+    cont.appendChild(t);
+  });
+  const add = document.createElement('div');
+  add.className = 'btile add';
+  add.innerHTML = '<span style="font-size:15px;line-height:1">+</span><span>Añadir desde<br>la PC</span>';
+  add.onclick = () => $('#archivoBotones').click();
+  cont.appendChild(add);
+  const q = $('#btnQuitarImg'); if(q) q.style.display = b.img ? '' : 'none';
+}
+$('#btnQuitarImg').onclick = () => { const b = botonSel(); if(!b) return; delete b.img; guardar(); pintarCentro(); pintarFicha(); };
+$('#archivoBotones').onchange = e => {
+  [...e.target.files].forEach(f => {
+    const lector = new FileReader();
+    lector.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 480;
+        const k = Math.min(1, MAX / Math.max(img.width, img.height));
+        const cv = document.createElement('canvas');
+        cv.width = Math.max(1, Math.round(img.width * k));
+        cv.height = Math.max(1, Math.round(img.height * k));
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        let nombre = f.name.replace(/\.[^.]+$/, '').slice(0, 30) || 'Botón';
+        cfg.customButtons = cfg.customButtons || {};
+        if(cfg.customButtons[nombre]){ let i = 2; while(cfg.customButtons[nombre + ' ' + i]) i++; nombre = nombre + ' ' + i; }
+        cfg.customButtons[nombre] = cv.toDataURL('image/jpeg', 0.85);
+        guardar(); pintarMisBotones();
+      };
+      img.src = lector.result;
+    };
+    lector.readAsDataURL(f);
+  });
+  e.target.value = '';
+};
+$('#btnExportar').onclick = () => {
+  const copia = JSON.parse(JSON.stringify(cfg)); delete copia._rev;
+  const blob = new Blob([JSON.stringify(copia, null, 1)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'iMandro-Configuracion.json'; a.click(); URL.revokeObjectURL(a.href);
+};
+$('#btnImportar').onclick = () => $('#archivoCopia').click();
+$('#archivoCopia').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const lector = new FileReader();
+  lector.onload = async () => {
+    try {
+      const nueva = JSON.parse(lector.result);
+      if(!nueva.pages) throw new Error('no es una copia de iMandro');
+      // Confirmación antes de sustituir (1.7): el servidor guarda además
+      // una copia .bak de la configuración actual al guardar la nueva.
+      if(!confirm('¿Restaurar esta copia? Sustituirá TODA la configuración actual (páginas, botones e iconos). Antes de aplicar, el programa guarda una copia de seguridad de la de ahora.')) return;
+      cfg = nueva; pagIdx = 0; btnIdx = 0;
+      await api('/api/config', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({config: cfg})});
+      await cargar();
+      $('#estadoDer').textContent = 'Copia restaurada y enviada a los teléfonos';
+    } catch(err){ alert('Ese archivo no es una copia válida de iMandro.'); }
+  };
+  lector.readAsText(f); e.target.value = '';
+};
+document.querySelectorAll('#segTema button').forEach(b => b.onclick = () => {
+  document.documentElement.dataset.tema = b.dataset.t;
+  localStorage.setItem('imandro_tema_editor', b.dataset.t);
+  document.querySelectorAll('#segTema button').forEach(x => x.classList.toggle('on', x === b));
+});
+function pintarIconoPagina(){
+  const sel = $('#iconoPagina'); if(!sel) return;
+  sel.innerHTML = Object.keys(ICONOS).map(id => '<option value="' + id + '">' + (NOMBRES_ICONO[id] || id) + '</option>').join('');
+  sel.value = pagina().icon || 'pagina';
+  sel.onchange = () => { pagina().icon = sel.value; guardar(); pintarPaginas(); };
+}
+let ultimoDispositivos = '';
+async function refrescarDispositivos(){
+  try {
+    const r = await api('/api/dispositivos'); const j = await r.json();
+    if(!j.ok) return;
+    const firma = JSON.stringify(j);
+    if(firma === ultimoDispositivos) return;
+    ultimoDispositivos = firma;
+    $('#codigoEmparejar').textContent = j.codigo;
+    const el = $('#listaDispositivos'); el.innerHTML = '';
+    const tels = (j.dispositivos || []).filter(d => !d.editor);
+    if(!tels.length){ el.innerHTML = '<span class="val">Ninguno todavía</span>'; return; }
+    tels.forEach(d => {
+      const fila = document.createElement('div');
+      fila.className = 'dato';
+      const nom = document.createElement('span'); nom.className = 'val'; nom.textContent = d.nombre;
+      const ult = document.createElement('div'); ult.style.cssText = 'font-size:11px;color:var(--tenue)'; ult.textContent = 'Último uso: ' + (d.ultimo || '—');
+      const rev = document.createElement('a'); rev.className = 'btn peligro chico'; rev.textContent = 'Quitar permiso';
+      rev.style.cssText = 'width:auto;display:inline-block;margin-top:5px;padding:3px 10px;font-size:11.5px';
+      rev.onclick = async () => {
+        if(!confirm('¿Quitar el permiso a «' + d.nombre + '»? Ese teléfono dejará de controlar esta PC y tendrá que emparejarse de nuevo con el código.')) return;
+        await api('/api/dispositivos/revocar', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id: d.id})});
+        ultimoDispositivos = ''; refrescarDispositivos();
+      };
+      fila.appendChild(nom); fila.appendChild(ult); fila.appendChild(rev);
+      el.appendChild(fila);
+    });
+  } catch(e){}
+}
+$('#btnRegenerarCodigo').onclick = async () => {
+  if(!confirm('¿Cambiar el código de emparejamiento? Los teléfonos ya emparejados siguen funcionando; el código nuevo servirá para los próximos que se emparejen.')) return;
+  await api('/api/dispositivos/regenerar-codigo', {method:'POST', headers:{'Content-Type':'application/json'}, body: '{}'});
+  ultimoDispositivos = ''; refrescarDispositivos();
+};
+// 1.9.2 (punto 2): la ventana de emparejamiento. El estado se pinta
+// desde la respuesta del botón y desde el sondeo de /api/estado
+// (refrescarDelante), que trae los segundos que quedan.
+function pintarEstadoEmparejar(quedan){
+  const el = $('#estadoEmparejar'); if(!el) return;
+  quedan = Math.max(0, Math.round(quedan || 0));
+  el.textContent = quedan > 0
+    ? ('abierto: quedan ' + Math.floor(quedan / 60) + ':' + String(quedan % 60).padStart(2, '0'))
+    : 'pausado';
+}
+$('#btnPermitirEmparejar').onclick = async () => {
+  try {
+    const r = await api('/api/emparejar-ventana', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({segundos: 120})});
+    const j = await r.json();
+    if(j && j.ok) pintarEstadoEmparejar(j.quedan);
+  } catch(e){}
+};
+// 1.9.2 (punto 6): las rutas propias de Photoshop y Lightroom viven
+// en la configuración, como todo lo demás; vacío = búsqueda automática.
+$('#rutaPhotoshop').addEventListener('change', e => { cfg.rutaPhotoshop = e.target.value.trim(); guardar(); });
+$('#rutaLightroom').addEventListener('change', e => { cfg.rutaLightroom = e.target.value.trim(); guardar(); });
+async function refrescarActividad(){
+  try {
+    const r = await api('/api/registro'); const j = await r.json();
+    $('#actividad').innerHTML = j.registro.slice(0, 6).map(x => esc(x.hora) + ' · ' + esc(x.texto)).join('<br>') || '—';
+    const u = await (await api('/api/usb')).json();
+    $('#estadoUSB').textContent = u.estado === 'detectado' ? 'teléfono detectado, listo' : (u.estado === 'sin' ? 'sin teléfono por cable' : 'no disponible en esta PC');
+    const b = await (await api('/api/bt')).json();
+    $('#estadoBT').textContent = b.activo ? (b.conectados > 0 ? 'conectado' : 'activo, esperando') : 'sin Bluetooth en la PC';
+    const bj = await (await api('/api/bandeja')).json();
+    $('#estadoBandeja').textContent = bj.activa ? 'activa' : 'no disponible';
+    $('#estadoBandeja').title = bj.detalle || '';
+    refrescarDispositivos();
+    refrescarAutoinicio();
+    refrescarDelante();
+  } catch(e){}
+}
+// ---- Elegir aplicación (1.7.4): la lista de aplicaciones instaladas
+// en esta PC, que da /api/aplicaciones. Sirve para dos destinos: la
+// ruta de un botón «Abrir programa o carpeta» (los programas guardan
+// su ruta .exe y las de Microsoft Store, «appid:<AppID>») y el
+// Programa de una página (solo programas: se guarda el nombre del
+// .exe; las de la Store no se pueden detectar al abrirse y en ese
+// destino van marcadas, no escogibles).
+let appsCache = null, appsDestino = 'boton', appsSel = null, appsAlElegir = null;
+// 1.7.7: el campo «Programa» se corrige casi solo al guardar. Si lo
+// escrito es una ruta, queda el nombre del programa; si ya lleva
+// «.exe», se queda como está; si coincide sin la extensión con un
+// programa de la lista de aplicaciones de esta PC, se completa a su
+// forma con «.exe» (la de la lista). Y aunque algo quedara sin
+// completar, el teléfono compara sin distinguir mayúsculas ni
+// extensión, así que la página salta igual.
+async function normalizaPrograma(txt){
+  let v = (txt || '').trim();
+  if(!v) return '';
+  v = v.split(/[\\/]/).pop();
+  if(/\.exe$/i.test(v)) return v;
+  try {
+    if(!appsCache){
+      const r = await api('/api/aplicaciones'); const j = await r.json();
+      if(j.ok) appsCache = j.aplicaciones || [];
+    }
+    const buscado = v.toLowerCase();
+    const hit = (appsCache || []).find(a => a.tipo !== 'store' && (a.exe || '').toLowerCase().replace(/\.exe$/i, '') === buscado);
+    if(hit) return hit.exe;
+  } catch(e){}
+  return v;
+}
+// 1.7.7: «Ahora tienes delante: …» — el programa que la PC detecta en
+// primer plano, para poner el Programa de la página sin adivinar. Lo
+// trae el mismo sondeo ligero que usa el teléfono (/api/estado).
+async function refrescarDelante(){
+  const el = $('#ahoraDelante'); if(!el) return;
+  try {
+    const r = await api('/api/estado'); const j = await r.json();
+    // La fila «Dirección en tu red · IP y puerto» de la tarjeta
+    // CONEXIÓN viaja en el mismo sondeo: la IP principal de esta
+    // PC y el puerto del servidor (o «sin red local» si no hay).
+    const dir = $('#direccionRed');
+    if(dir) dir.textContent = (j && j.ip) ? (j.ip + ':' + j.puerto) : 'sin red local';
+    // 1.9.2 (punto 2): el estado de la ventana de emparejamiento
+    // viaja en el mismo sondeo (_empQuedan, segundos; 0 = pausado).
+    if(j && typeof j._empQuedan === 'number') pintarEstadoEmparejar(j._empQuedan);
+    const fg = (j && j._fg) || '';
+    // 1.9.1: si ese programa corre como administrador (integridad
+    // mayor que la del servidor), Windows no deja que los atajos le
+    // lleguen: aviso discreto junto al programa detectado.
+    el.textContent = fg ? ('Ahora tienes delante: ' + fg + ' — para que el teléfono salte solo a una página, su Programa tiene que ser ese programa.' + (j._fgElevado ? ' Ojo: se está ejecutando como administrador, y así los atajos del teléfono no le llegan; ciérralo y ábrelo normal, sin «Ejecutar como administrador».' : '')) : '';
+  } catch(e){}
+}
+// 1.7.7: el interruptor de «Iniciar con Windows». El estado que se
+// enseña sale de la existencia real del acceso directo en la carpeta
+// de Inicio (lo contesta el servidor), no de lo último que se tocó.
+let autoinicioVisto = null;
+async function refrescarAutoinicio(){
+  try {
+    const r = await api('/api/autoinicio'); const j = await r.json();
+    if(!j.ok || j.activo === autoinicioVisto) return;
+    autoinicioVisto = j.activo;
+    document.querySelectorAll('#segAutoinicio button').forEach(b => b.classList.toggle('on', (b.dataset.a === '1') === j.activo));
+    $('#estadoAutoinicio').textContent = j.activo ? 'Ahora mismo: activado — iMandro arranca con Windows.' : 'Ahora mismo: apagado.';
+  } catch(e){}
+}
+document.querySelectorAll('#segAutoinicio button').forEach(b => b.onclick = async () => {
+  try {
+    const r = await api('/api/autoinicio', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({activo: b.dataset.a === '1'})});
+    const j = await r.json();
+    autoinicioVisto = null;
+    if(!j.ok) $('#estadoAutoinicio').textContent = 'No se pudo cambiar: ' + (j.msg || 'inténtalo otra vez');
+    refrescarAutoinicio();
+  } catch(e){ $('#estadoAutoinicio').textContent = 'No se pudo cambiar: sin respuesta de la PC'; }
+});
+const COLORES_AVA = ['#2f6db3','#7a4fd0','#1f9d74','#c2622a','#b03a5b','#3a7bd5','#5b8c2a','#8a6d1f'];
+function inicialesApp(n){ const p = (n || '?').trim().split(/\s+/); return ((p[0][0] || '?') + (p.length > 1 ? (p[1][0] || '') : (p[0][1] || ''))).toUpperCase(); }
+function colorAva(n){ let s = 0; for(const c of (n || '')) s = (s * 31 + c.charCodeAt(0)) >>> 0; return COLORES_AVA[s % COLORES_AVA.length]; }
+async function abrirElegirApp(destino, alElegir){
+  appsDestino = destino; appsAlElegir = alElegir; appsSel = null;
+  $('#appsConfirmar').textContent = destino === 'pagina' ? 'Poner en la página' : 'Poner en el botón';
+  $('#appsSub').textContent = destino === 'pagina'
+    ? 'Aplicaciones instaladas en esta PC — toca una para ponerla como Programa de la página. Las de Microsoft Store no se pueden detectar al abrirse: aquí no sirven, solo en los botones.'
+    : 'Aplicaciones instaladas en esta PC — toca una para ponerla en el botón.';
+  $('#appsNota').textContent = '';
+  $('#appsBuscar').value = '';
+  $('#modalApps').style.display = 'flex';
+  if(!appsCache){
+    pintaApps('Leyendo las aplicaciones instaladas en esta PC…');
+    try {
+      const r = await api('/api/aplicaciones'); const j = await r.json();
+      if(!j.ok) throw new Error(j.msg || 'sin lista');
+      appsCache = j.aplicaciones || [];
+    } catch(e){
+      pintaApps('No se pudo leer la lista de aplicaciones: ' + e.message);
+      return;
+    }
+  }
+  pintaApps();
+  $('#appsBuscar').focus();
+}
+function pintaApps(aviso){
+  const caja = $('#appsLista');
+  if(aviso){ caja.innerHTML = '<div style="padding:16px;color:var(--suave)">' + esc(aviso) + '</div>'; return; }
+  const q = ($('#appsBuscar').value || '').trim().toLowerCase();
+  const filas = (appsCache || []).map((a, i) => ({a, i})).filter(x => !q || x.a.nombre.toLowerCase().includes(q));
+  if(!filas.length){ caja.innerHTML = '<div style="padding:16px;color:var(--suave)">Ninguna aplicación coincide con la búsqueda.</div>'; return; }
+  caja.innerHTML = filas.map(({a, i}) => {
+    const esStore = a.tipo === 'store';
+    const noSirve = esStore && appsDestino === 'pagina';
+    return '<div class="appFila' + (appsSel === a ? ' sel' : '') + (noSirve ? ' no' : '') + '" data-i="' + i + '">' +
+      '<div class="ava" style="background:' + colorAva(a.nombre) + '">' + esc(inicialesApp(a.nombre)) + '</div>' +
+      '<div style="min-width:0"><div class="nom">' + esc(a.nombre) + '</div>' +
+      '<div class="det">' + esc(esStore ? 'Aplicación de la tienda · se abre por su identificador, sin ruta' : a.ruta) + '</div></div>' +
+      '<span class="chipApp' + (esStore ? ' store' : '') + '">' + (esStore ? 'MICROSOFT STORE' : 'PROGRAMA') + '</span></div>';
+  }).join('');
+  caja.querySelectorAll('.appFila').forEach(f => {
+    f.onclick = () => escogeApp(+f.dataset.i, false);
+    f.ondblclick = () => escogeApp(+f.dataset.i, true);
+  });
+}
+function escogeApp(i, confirmar){
+  const a = (appsCache || [])[i]; if(!a) return;
+  if(a.tipo === 'store' && appsDestino === 'pagina'){
+    appsSel = null; pintaApps();
+    $('#appsNota').textContent = '«' + a.nombre + '» es de Microsoft Store: no se puede detectar cuándo se abre, así que no sirve como Programa de la página. En un botón sí funciona.';
+    return;
+  }
+  appsSel = a; $('#appsNota').textContent = ''; pintaApps();
+  if(confirmar) confirmaApp();
+}
+function confirmaApp(){
+  if(!appsSel){ $('#appsNota').textContent = 'Toca primero una aplicación de la lista.'; return; }
+  const cb = appsAlElegir, a = appsSel;
+  cerrarApps();
+  if(cb) cb(a);
+}
+function cerrarApps(){ $('#modalApps').style.display = 'none'; appsSel = null; appsAlElegir = null; }
+$('#appsBuscar').oninput = () => pintaApps();
+$('#appsCancelar').onclick = cerrarApps;
+$('#appsConfirmar').onclick = confirmaApp;
+$('#modalApps').addEventListener('click', e => { if(e.target.id === 'modalApps') cerrarApps(); });
+$('#destCancelar').addEventListener('click', cerrarDestino);
+$('#modalDestino').addEventListener('click', e => { if(e.target.id === 'modalDestino') cerrarDestino(); });
+
+(function inicia(){
+  const t = localStorage.getItem('imandro_tema_editor') || 'oscuro';
+  document.documentElement.dataset.tema = t;
+  document.querySelectorAll('#segTema button').forEach(x => x.classList.toggle('on', x.dataset.t === t));
+  tokenLocal().then(() => { cargar(); refrescarActividad(); });
+  setInterval(refrescarActividad, 5000);
+  setInterval(() => { $('#reloj').textContent = new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}); }, 1000);
+})();
+</script>
+</body>
+</html>

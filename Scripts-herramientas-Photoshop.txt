@@ -1,0 +1,315 @@
+SCRIPTS DE LAS HERRAMIENTAS DE PHOTOSHOP PARA iMANDRO
+======================================================
+Cada línea de script selecciona UNA herramienta exacta de Photoshop,
+aunque comparta letra con las demás de su grupo.
+
+CÓMO SE PONE EN UN BOTÓN DE iMANDRO (editor de la PC):
+1. Toca el botón y ve a «Qué hace».
+2. Elige «Script de Photoshop».
+3. Pega la línea COMPLETA de la herramienta (una sola línea, sin partirla).
+4. Se guarda solo al salir del campo. Pruébalo desde el teléfono.
+
+Si una línea tuviera algún error, no rompe nada: Photoshop no cambia de
+herramienta e iMandro te enseña el aviso de fallo en el teléfono.
+
+Lista revisada contra la última versión de Photoshop (la 27, de 2026):
+son 70 herramientas. Respecto a la primera lista se añadieron Quitar
+(grupo J), Pincel de ajuste (grupo B) y Triángulo (grupo U), que tu
+Photoshop sí trae. Los nombres internos de esas tres son los únicos que
+no aparecen en las listas de referencia publicadas: si al probar alguna
+el teléfono te enseña el aviso de fallo, dime cuál es y te la corrijo.
+
+
+— GRUPO V · MOVER —
+
+Mover:
+var r=new ActionReference();r.putClass(stringIDToTypeID("moveTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Mesa de trabajo:
+var r=new ActionReference();r.putClass(stringIDToTypeID("artboardTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO M · MARCOS DE SELECCIÓN —
+
+Marco rectangular:
+var r=new ActionReference();r.putClass(stringIDToTypeID("marqueeRectTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Marco elíptico:
+var r=new ActionReference();r.putClass(stringIDToTypeID("marqueeEllipTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Marco de fila única:
+var r=new ActionReference();r.putClass(stringIDToTypeID("marqueeSingleRowTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Marco de columna única:
+var r=new ActionReference();r.putClass(stringIDToTypeID("marqueeSingleColumnTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO L · LAZO —
+
+Lazo:
+var r=new ActionReference();r.putClass(stringIDToTypeID("lassoTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Lazo poligonal:
+var r=new ActionReference();r.putClass(stringIDToTypeID("polySelTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Lazo magnético:
+var r=new ActionReference();r.putClass(stringIDToTypeID("magneticLassoTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO W · SELECCIÓN —
+
+Selección de objetos:
+var r=new ActionReference();r.putClass(stringIDToTypeID("objectSelectionTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Selección rápida:
+var r=new ActionReference();r.putClass(stringIDToTypeID("quickSelectTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Varita mágica:
+var r=new ActionReference();r.putClass(stringIDToTypeID("magicWandTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO C · RECORTAR —
+
+Recortar:
+var r=new ActionReference();r.putClass(stringIDToTypeID("cropTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Recorte con perspectiva:
+var r=new ActionReference();r.putClass(stringIDToTypeID("perspectiveCropTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Sector:
+var r=new ActionReference();r.putClass(stringIDToTypeID("sliceTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Seleccionar sector:
+var r=new ActionReference();r.putClass(stringIDToTypeID("sliceSelectTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO K · MARCO —
+
+Marco:
+var r=new ActionReference();r.putClass(stringIDToTypeID("frameTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO I · MEDICIÓN —
+
+Cuentagotas:
+var r=new ActionReference();r.putClass(stringIDToTypeID("eyedropperTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Muestra de color:
+var r=new ActionReference();r.putClass(stringIDToTypeID("colorSamplerTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Regla:
+var r=new ActionReference();r.putClass(stringIDToTypeID("rulerTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Nota:
+var r=new ActionReference();r.putClass(stringIDToTypeID("textAnnotTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Conteo:
+var r=new ActionReference();r.putClass(stringIDToTypeID("countTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO J · CORRECTORAS —
+
+Pincel corrector puntual (Quitar manchas):
+var r=new ActionReference();r.putClass(stringIDToTypeID("spotHealingBrushTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Pincel corrector:
+var r=new ActionReference();r.putClass(stringIDToTypeID("magicStampTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Parche:
+var r=new ActionReference();r.putClass(stringIDToTypeID("patchSelection"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Mover contenido (según el contenido):
+var r=new ActionReference();r.putClass(stringIDToTypeID("recomposeSelection"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Ojos rojos:
+var r=new ActionReference();r.putClass(stringIDToTypeID("redEyeTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Quitar (la de inteligencia artificial):
+var r=new ActionReference();r.putClass(stringIDToTypeID("removeTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO B · PINCEL —
+
+Pincel:
+var r=new ActionReference();r.putClass(stringIDToTypeID("paintbrushTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Lápiz:
+var r=new ActionReference();r.putClass(stringIDToTypeID("pencilTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Sustitución de color:
+var r=new ActionReference();r.putClass(stringIDToTypeID("colorReplacementBrushTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Pincel mezclador:
+var r=new ActionReference();r.putClass(stringIDToTypeID("wetBrushTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Pincel de ajuste:
+var r=new ActionReference();r.putClass(stringIDToTypeID("adjustmentBrushTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO S · TAMPÓN —
+
+Tampón de clonar:
+var r=new ActionReference();r.putClass(stringIDToTypeID("cloneStampTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Tampón de motivo:
+var r=new ActionReference();r.putClass(stringIDToTypeID("patternStampTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO Y · HISTORIA —
+
+Pincel de historia:
+var r=new ActionReference();r.putClass(stringIDToTypeID("historyBrushTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Pincel histórico:
+var r=new ActionReference();r.putClass(stringIDToTypeID("artBrushTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO E · BORRADOR —
+
+Borrador:
+var r=new ActionReference();r.putClass(stringIDToTypeID("eraserTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Borrador de fondo:
+var r=new ActionReference();r.putClass(stringIDToTypeID("backgroundEraserTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Borrador mágico:
+var r=new ActionReference();r.putClass(stringIDToTypeID("magicEraserTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO G · RELLENO —
+
+Degradado:
+var r=new ActionReference();r.putClass(stringIDToTypeID("gradientTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Bote de pintura:
+var r=new ActionReference();r.putClass(stringIDToTypeID("bucketTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO R · ENFOQUE —
+
+Desenfocar:
+var r=new ActionReference();r.putClass(stringIDToTypeID("blurTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Enfocar:
+var r=new ActionReference();r.putClass(stringIDToTypeID("sharpenTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Dedo:
+var r=new ActionReference();r.putClass(stringIDToTypeID("smudgeTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO O · TONO —
+
+Sobreexponer:
+var r=new ActionReference();r.putClass(stringIDToTypeID("dodgeTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Subexponer:
+var r=new ActionReference();r.putClass(stringIDToTypeID("burnInTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Esponja:
+var r=new ActionReference();r.putClass(stringIDToTypeID("saturationTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO P · PLUMA —
+
+Pluma:
+var r=new ActionReference();r.putClass(stringIDToTypeID("penTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Pluma de forma libre:
+var r=new ActionReference();r.putClass(stringIDToTypeID("freeformPenTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Pluma de curvatura:
+var r=new ActionReference();r.putClass(stringIDToTypeID("curvaturePenTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Añadir punto de ancla:
+var r=new ActionReference();r.putClass(stringIDToTypeID("addKnotTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Eliminar punto de ancla:
+var r=new ActionReference();r.putClass(stringIDToTypeID("deleteKnotTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Convertir punto de ancla:
+var r=new ActionReference();r.putClass(stringIDToTypeID("convertKnotTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO T · TEXTO —
+
+Texto horizontal:
+var r=new ActionReference();r.putClass(stringIDToTypeID("typeCreateOrEditTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Texto vertical:
+var r=new ActionReference();r.putClass(stringIDToTypeID("typeVerticalCreateOrEditTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Máscara de texto horizontal:
+var r=new ActionReference();r.putClass(stringIDToTypeID("typeCreateMaskTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Máscara de texto vertical:
+var r=new ActionReference();r.putClass(stringIDToTypeID("typeVerticalCreateMaskTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO A · TRAZADO —
+
+Selección de trazado:
+var r=new ActionReference();r.putClass(stringIDToTypeID("pathComponentSelectTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Selección directa:
+var r=new ActionReference();r.putClass(stringIDToTypeID("directSelectTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO H · MANO —
+
+Mano:
+var r=new ActionReference();r.putClass(stringIDToTypeID("handTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Rotar vista:
+var r=new ActionReference();r.putClass(stringIDToTypeID("rotateTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO Z · ZOOM —
+
+Zoom:
+var r=new ActionReference();r.putClass(stringIDToTypeID("zoomTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+
+
+— GRUPO U · FORMAS —
+
+Rectángulo:
+var r=new ActionReference();r.putClass(stringIDToTypeID("rectangleTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Rectángulo redondeado:
+var r=new ActionReference();r.putClass(stringIDToTypeID("roundedRectangleTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Elipse:
+var r=new ActionReference();r.putClass(stringIDToTypeID("ellipseTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Triángulo:
+var r=new ActionReference();r.putClass(stringIDToTypeID("triangleTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Polígono:
+var r=new ActionReference();r.putClass(stringIDToTypeID("polygonTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Línea:
+var r=new ActionReference();r.putClass(stringIDToTypeID("lineTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+Forma personalizada:
+var r=new ActionReference();r.putClass(stringIDToTypeID("customShapeTool"));var d=new ActionDescriptor();d.putReference(charIDToTypeID("null"),r);executeAction(charIDToTypeID("slct"),d,DialogModes.NO);
+
+

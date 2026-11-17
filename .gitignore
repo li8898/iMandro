@@ -1,0 +1,7 @@
+*.keystore
+imandro-config.json
+__pycache__/
+build/
+build-installer/
+entrega/
+*.log

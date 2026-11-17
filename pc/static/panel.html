@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iMandro</title>
+<style>
+:root{--fondo:#0b0f16;--panel:#101623;--panel2:#0d1420;--tarjeta:#171f30;--tarjeta2:#1e2739;--borde:#222c42;--borde2:#2c3852;--texto:#eef2f8;--suave:#8b98b0;--tenue:#728198;--ambar:#f6b73c;--verde:#3ddc97;--rojo:#ff7a7a;--ic:30px;--fs:12px}
+[data-tema="claro"]{--fondo:#eef2f7;--panel:#ffffff;--panel2:#f7fafc;--tarjeta:#f2f5fa;--tarjeta2:#e8eef6;--borde:#d3dce8;--borde2:#c3d0e0;--texto:#17203a;--suave:#5a6b84;--tenue:#71809a}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--fondo);color:var(--texto);overflow:hidden}
+.app{height:100%;display:flex;flex-direction:column;padding:14px 14px 8px;max-width:760px;margin:0 auto}
+.cab{display:flex;align-items:center;gap:11px}
+.logo{width:46px;height:46px;border-radius:14px;background:#f4f7fc;border:1px solid var(--borde);display:flex;align-items:center;justify-content:center;flex:none}
+.logo svg{width:37px;height:37px}
+.nombre{font-size:19px;font-weight:800;line-height:1.1}
+.sub{font-size:11.5px;color:var(--suave)}
+.pill{margin-left:auto;display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--borde2);border-radius:999px;padding:6px 11px 6px 9px;flex:none;max-width:46%}
+.pill svg{width:14px;height:14px;color:#4cc3ff;flex:none}
+.pill .t1{font-size:11px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill .t2{font-size:9px;color:var(--suave);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--verde);flex:none}
+.dot.mal{background:var(--rojo)}
+.tabs{display:flex;border-top:1px solid var(--borde);padding-top:8px;margin-top:auto}
+.tabs.arriba{border-top:none;border-bottom:1px solid var(--borde);padding:8px 0 10px;margin:2px 0 4px}
+.tf{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:600;color:var(--suave);padding:5px 2px;cursor:pointer;text-align:center;min-width:0}
+.tf span{line-height:1.2;overflow-wrap:break-word;max-width:100%}
+.tf svg{width:21px;height:21px}
+.tf.on{color:var(--ambar)}
+.titulo{display:flex;align-items:center;margin:12px 2px 2px}
+.titulo h2{font-size:22px;font-weight:800}
+.dots{margin-left:auto;display:flex;gap:6px}
+.dots i{width:7px;height:7px;border-radius:99px;background:var(--borde2);cursor:pointer}
+.dots i.on{width:20px;background:var(--ambar)}
+.grid{display:grid;gap:10px;margin-top:12px}
+.tile{position:relative;height:104px;border-radius:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;cursor:pointer;border:1px solid var(--borde2);background:linear-gradient(180deg,var(--tarjeta2),var(--tarjeta));text-align:center;user-select:none}
+.tile>svg{width:calc(var(--ic)*var(--f,1));height:calc(var(--ic)*var(--f,1))}
+.tile>img.icimg{width:calc(var(--ic)*var(--f,1));height:calc(var(--ic)*var(--f,1));object-fit:contain}
+.tile>span{font-size:calc(var(--fs)*var(--f,1));font-weight:600;line-height:1.18;color:var(--texto)}
+.tile:active{transform:scale(.96)}
+.tile .bdg{position:absolute;top:7px;right:7px;width:17px;height:17px;border-radius:50%;background:var(--tarjeta2);display:flex;align-items:center;justify-content:center}
+.tile .bdg svg{width:10px;height:10px}
+/* Estrellita dorada de los botones favoritos (1.7), tal como la maqueta aprobada */
+.tile .fav{position:absolute;top:7px;left:7px;width:19px;height:19px;border-radius:50%;background:var(--tarjeta2);display:flex;align-items:center;justify-content:center}
+.tile .fav svg{width:11px;height:11px}
+.tile.vacio{opacity:.5;border-style:dashed}
+.tile.brillante{--c:#4cc3ff;border:1.5px solid color-mix(in srgb,var(--c) 72%,#fff 10%);background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 46%),linear-gradient(165deg,color-mix(in srgb,var(--c) 46%,#0a1322),color-mix(in srgb,var(--c) 15%,#0a1322) 58%,color-mix(in srgb,var(--c) 30%,#0a1322));box-shadow:inset 0 1px 0 rgba(255,255,255,.30),inset 0 -12px 20px rgba(0,0,0,.38),0 0 15px color-mix(in srgb,var(--c) 38%,transparent)}
+.tile.plano{--c:#4cc3ff;background:color-mix(in srgb,var(--c) 20%,#0a1322);border:1.5px solid color-mix(in srgb,var(--c) 40%,transparent)}
+.tile.brillante span,.tile.plano span{color:#f2f6fb;text-shadow:0 1px 3px rgba(0,0,0,.45)}
+body.tam-grande{--ic:40px;--fs:14px}
+body.tam-muygrande{--ic:48px;--fs:16px}
+body.vista-relleno .grid{flex:1 1 auto;grid-auto-rows:1fr}
+body.vista-relleno .tile{height:auto;min-height:104px;gap:calc(7px*var(--f,1))}
+.tile.brillante .bdg,.tile.plano .bdg{background:rgba(10,19,34,.55)}
+/* Glass Tech y 3D Soft (1.9): los dos estilos nuevos rinden el color
+   de cada botón A PLENA saturación — no tiñen sobre oscuro como
+   brillante/plano. El icono va en blanco con resplandor y la letra
+   en blanco y negrita, como en las maquetas aprobadas. */
+.tile.glass{--c:#4cc3ff;border:1.5px solid color-mix(in srgb,var(--c) 55%,#fff 45%);background:linear-gradient(180deg,rgba(255,255,255,.52),rgba(255,255,255,.10) 42%,rgba(255,255,255,0) 62%),linear-gradient(180deg,color-mix(in srgb,var(--c) 76%,#fff 24%),var(--c) 78%);box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -14px 22px color-mix(in srgb,var(--c) 52%,rgba(0,0,0,.28)),0 0 18px color-mix(in srgb,var(--c) 45%,transparent)}
+.tile.soft{--c:#4cc3ff;border:1.5px solid color-mix(in srgb,var(--c) 60%,#000 40%);background:linear-gradient(180deg,color-mix(in srgb,var(--c) 80%,#fff 20%),var(--c) 55%,color-mix(in srgb,var(--c) 86%,#000 14%));box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -3px 0 color-mix(in srgb,var(--c) 52%,#000 48%),0 10px 18px rgba(0,0,0,.38)}
+.tile.glass>svg,.tile.soft>svg{filter:drop-shadow(0 0 5px rgba(255,255,255,.55))}
+.tile.glass>span,.tile.soft>span{color:#fff;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.tile.glass .bdg,.tile.soft .bdg,.tile.glass .fav,.tile.soft .fav{background:rgba(10,19,34,.55)}
+/* Botón con imagen (1.9): la imagen ES la cara del botón — llena la
+   casilla (cover, centrada), sin tinte del color, igual con los
+   cinco estilos. El nombre se lee abajo, en blanco y negrita, sobre
+   una franja con degradado oscuro y con sombra en la letra. */
+.tile.conimg{padding:0;overflow:hidden;background:var(--tarjeta)}
+.tile.conimg>img.cara{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tile.conimg>span.nomimg{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:16px 6px 7px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.62));color:#fff;font-size:calc(var(--fs)*var(--f,1));font-weight:700;line-height:1.18;text-shadow:0 1px 3px rgba(0,0,0,.65)}
+.tile.conimg .fav,.tile.conimg .bdg{z-index:2;background:rgba(10,19,34,.55)}
+.opcEst{display:flex;align-items:center;gap:12px;margin-top:10px;border:1.5px solid var(--borde);border-radius:14px;padding:9px 11px;cursor:pointer}
+.opcEst.on{border-color:var(--ambar);background:rgba(246,183,60,.07)}
+.opcEst .mini{width:62px;height:54px;flex:none}
+.opcEst .mini svg{width:23px;height:23px}
+.opcEst .mini span{font-size:9px}
+.opcEst .txt{flex:1}
+.opcEst .txt b{font-size:14px;display:block}
+.opcEst .txt small{font-size:11.5px;color:var(--tenue);line-height:1.35;display:block;margin-top:2px}
+.opcEst .radio{width:21px;height:21px;flex:none;border-radius:99px;border:2px solid var(--borde2)}
+.opcEst.on .radio{border-color:var(--ambar);background:radial-gradient(circle,var(--ambar) 0 5.5px,transparent 6px)}
+.nota{text-align:center;font-size:11px;color:var(--tenue);padding:9px 4px 2px}
+.tile.destello{animation:destello .45s ease-out}
+@keyframes destello{0%{box-shadow:0 0 0 0 rgba(246,183,60,.0)}25%{box-shadow:0 0 0 3px var(--ambar),0 0 26px rgba(246,183,60,.55)}100%{box-shadow:0 0 0 0 rgba(246,183,60,0)}}
+.tile.hecho{border-color:var(--verde)!important;box-shadow:0 0 0 2px var(--verde)}
+/* Efecto al tocar (1.7.8): el efecto que se ve al tocar un botón se
+   escoge por equipo en Ajustes («Efecto al tocar», localStorage
+   «imandro_efecto») y nace en «destello», que es el de siempre: la
+   clase .destello de arriba y la marca .hecho quedan intactas.
+   Estos son los otros cinco efectos (de la demo aprobada). */
+.tile.fx-salto{animation:fxSalto .42s cubic-bezier(.28,.84,.42,1)}
+@keyframes fxSalto{0%{transform:translateY(0) scale(1)}32%{transform:translateY(-15px) scale(1.05)}55%{transform:translateY(0) scale(1)}76%{transform:translateY(-6px) scale(1.02)}100%{transform:translateY(0) scale(1)}}
+.tile.fx-pulso{animation:fxPulso .34s ease-out}
+@keyframes fxPulso{0%{transform:scale(1)}38%{transform:scale(1.09)}100%{transform:scale(1)}}
+.tile .anilloFx{position:absolute;inset:0;border-radius:inherit;pointer-events:none;border:2.5px solid rgba(150,200,255,.85);opacity:0}
+.tile .anilloFx.on{animation:fxAnillo .58s ease-out}
+@keyframes fxAnillo{0%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.28)}}
+.tile.fx-onda{overflow:hidden}
+.ondaFx{position:absolute;border-radius:50%;pointer-events:none;background:rgba(160,205,255,.45);transform:translate(-50%,-50%) scale(0);animation:fxOnda .65s ease-out forwards;z-index:3}
+@keyframes fxOnda{to{transform:translate(-50%,-50%) scale(1);opacity:0}}
+.marcaFx{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;z-index:3}
+.marcaFx.on{animation:fxMarca .62s ease-out}
+.marcaFx svg{width:52px;height:52px}
+@keyframes fxMarca{0%{opacity:0;transform:scale(.45)}25%{opacity:1;transform:scale(1.08)}42%{transform:scale(1)}72%{opacity:1}100%{opacity:0;transform:scale(1)}}
+/* Movimiento reducido (1.9.2, punto 20): si el sistema operativo
+   pide reducir el movimiento, las animaciones y transiciones del
+   panel se apagan; los efectos al tocar además ni se aplican
+   (aplicarEfecto lo mira en el código) y la confirmación del toque
+   pasa a ser la marca «hecho», que es quieta. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .tile:active{transform:none}
+}
+@media (orientation: landscape) and (max-height: 500px){
+  .app{padding-top:8px}
+  .logo{width:38px;height:38px;border-radius:11px}
+  .logo svg{width:30px;height:30px}
+  .nombre{font-size:16px}
+  .titulo{margin-top:6px}
+  .titulo h2{font-size:19px}
+  .grid{gap:8px;margin-top:8px}
+  .tile{height:74px;border-radius:14px;padding:6px}
+  body{--ic:23px}
+  body.tam-grande{--ic:30px;--fs:12.5px}
+  body.tam-muygrande{--ic:34px;--fs:13.5px}
+  body.vista-relleno .tile{min-height:0}
+  .dots{margin-top:5px}
+  .app{padding-bottom:8px}
+  .tf{padding:3px 2px 5px;font-size:11px}
+  .tf svg{width:19px;height:19px}
+  .nota{display:none}
+}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:#231600;color:#ffd97a;background:var(--ambar);color:#231600;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;max-width:88%;text-align:center;z-index:50}
+.toast.ver{opacity:1;transform:translateX(-50%) translateY(0)}
+/* conexión y ajustes */
+.tarjeta{background:var(--panel);border:1px solid var(--borde);border-radius:16px;padding:15px;margin-top:12px}
+#contenido>.tarjeta{flex:none}
+.tarjeta h3{font-size:15px;margin-bottom:5px}
+.tarjeta p{font-size:12.5px;color:var(--suave);line-height:1.55}
+.pcitem{display:flex;align-items:center;gap:11px;background:var(--panel2);border:1px solid var(--borde2);border-radius:13px;padding:12px 13px;margin-top:9px;cursor:pointer}
+.pcitem svg{width:21px;height:21px;color:#4cc3ff}
+.pcitem .n{font-weight:700;font-size:14.5px}
+.pcitem .d{font-size:11.5px;color:var(--suave)}
+.pcitem .flecha{margin-left:auto;color:var(--tenue);font-size:18px}
+.btn{display:block;text-align:center;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid transparent;margin-top:10px}
+.btn.prim{background:linear-gradient(135deg,#ffd97a,#f5a623);color:#231600}
+.btn.sec{background:transparent;border-color:var(--ambar);color:var(--ambar)}
+input[type=text]{background:var(--panel2);border:1px solid var(--borde2);border-radius:10px;color:var(--texto);padding:11px 12px;font-size:14px;width:100%}
+.seg{display:flex;border:1px solid var(--borde2);border-radius:10px;overflow:hidden;margin-top:8px}
+.seg button{flex:1;background:transparent;border:none;color:var(--suave);padding:10px 4px;font-size:13px;font-weight:700;cursor:pointer}
+.seg.muchos button{font-size:12px;padding-left:2px;padding-right:2px}
+.seg button.on{background:var(--ambar);color:#231600}
+.etq{font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--tenue);margin-top:14px}
+.oculto{display:none!important}
+.menuCtx{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;display:flex;align-items:center;justify-content:center;padding:22px}
+.menuCtx .tarjeta{margin-top:0;width:100%;max-width:420px;max-height:86%;overflow-y:auto}
+/* 1.7.4: la pantalla de conexión SÍ se desplaza. Antes .centro-v no
+   tenía overflow y, con la tarjeta «Emparejar» visible, parte del
+   contenido quedaba fuera sin forma de llegar (medido: 427 px
+   inaccesibles en 390×700). Ahora rueda como #contenido, y el
+   centrado es seguro: los márgenes automáticos del primer y último
+   hijo centran cuando el contenido cabe y se anulan cuando no. */
+.centro-v{flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
+.centro-v>*{flex:none}
+.centro-v>*:first-child{margin-top:auto}
+.centro-v>*:last-child{margin-bottom:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <!-- CONEXIÓN -->
+  <section id="pantallaConexion" class="oculto" style="display:flex;flex-direction:column;height:100%">
+    <div class="cab">
+      <div class="logo"><svg viewBox="0 0 96 96"><circle cx="29" cy="25" r="8" fill="#f5a623"/><rect x="21" y="41" width="16" height="39" rx="8" fill="#17203a"/><path d="M49 80V41l13 18 13-18v39" fill="none" stroke="#17203a" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M71 23l7-8M83 29l8-4" stroke="#3ddc97" stroke-width="6" stroke-linecap="round"/></svg></div>
+      <div><div class="nombre">iMandro</div><div class="sub">Conectar con tu PC</div></div>
+      <div class="pill"><span class="dot mal"></span><div><div class="t1">Sin conexión</div></div></div>
+    </div>
+    <div class="centro-v">
+      <div class="tarjeta">
+        <h3>Por Wi-Fi · La forma normal</h3>
+        <p>El teléfono y la PC tienen que estar en el <b>mismo Wi-Fi</b> (no hace falta internet). Tu PC aparece sola en esta lista:</p>
+        <div id="listaPCs"><p style="margin-top:9px">Buscando tu PC…</p></div>
+      </div>
+      <div class="tarjeta">
+        <h3>Por cable USB · Para emergencias</h3>
+        <p>Sin Wi-Fi ni Bluetooth: conecta el teléfono a la PC con el cable, activa la <b>depuración USB</b> en el teléfono (una sola vez) y deja iMandro abierto en la PC: ella prepara el cable sola.</p>
+        <a class="btn sec" id="btnCable">Conectar por cable USB</a>
+      </div>
+      <div class="tarjeta">
+        <h3>Por Bluetooth · Solo Android</h3>
+        <p>Solo desde la aplicación de Android, y la PC tiene que tener Bluetooth. Primero <b>empareja tu PC</b> en los Ajustes de Bluetooth de Android; después aparecerá aquí.</p>
+        <div id="listaBT"><p style="margin-top:9px">Todavía sin buscar.</p></div>
+        <a class="btn sec" id="btnBT">Buscar aparatos emparejados</a>
+      </div>
+      <div class="tarjeta oculto" id="tarjetaEmparejar">
+        <h3>Emparejar este teléfono</h3>
+        <p id="empDesc">Es la primera vez que este teléfono se conecta a esa PC.</p>
+        <p style="margin-top:7px">Abre el editor de iMandro en la PC: a la izquierda, la tarjeta <b>«Emparejamiento»</b> enseña un código de 6 dígitos. Escríbelo aquí: solo hay que hacerlo <b>una vez</b>.</p>
+        <div style="height:8px"></div>
+        <input type="text" id="codigoEmp" placeholder="Código de 6 dígitos" inputmode="numeric" maxlength="6">
+        <a class="btn prim" id="btnEmparejar">Emparejar</a>
+      </div>
+      <div class="tarjeta oculto" id="tarjetaConfirmarPC">
+        <h3>¿Es esta tu PC?</h3>
+        <p id="confPCDesc">Vas a emparejar este teléfono con tu PC.</p>
+        <a class="btn prim" id="btnConfPCSi">Sí, es mi PC</a>
+        <a class="btn sec" id="btnConfPCNo">Cancelar</a>
+      </div>
+      <div class="tarjeta oculto" id="tarjetaVersion">
+        <h3>Hay que actualizar iMandro</h3>
+        <p>Esta PC tiene una versión de iMandro que no coincide con la del teléfono: actualiza las dos a la 1.9.2 (la PC y el teléfono) y vuelve a tocar «Conectar».</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Escribir la dirección a mano</h3>
+        <p>Si no aparece, escribe la dirección que muestra el editor de la PC (ej.: 192.168.1.105).</p>
+        <div style="height:8px"></div>
+        <input type="text" id="ipManual" placeholder="192.168.1.105" inputmode="decimal">
+        <a class="btn prim" id="btnConectarManual">Conectar</a>
+      </div>
+      <p class="nota">Después de la primera vez, el teléfono encuentra tu PC solo.</p>
+    </div>
+  </section>
+
+  <!-- PANEL -->
+  <section id="pantallaPanel" class="oculto" style="display:flex;flex-direction:column;height:100%">
+    <div class="cab">
+      <div class="logo"><svg viewBox="0 0 96 96"><circle cx="29" cy="25" r="8" fill="#f5a623"/><rect x="21" y="41" width="16" height="39" rx="8" fill="#17203a"/><path d="M49 80V41l13 18 13-18v39" fill="none" stroke="#17203a" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M71 23l7-8M83 29l8-4" stroke="#3ddc97" stroke-width="6" stroke-linecap="round"/></svg></div>
+      <div><div class="nombre">iMandro</div><div class="sub" id="subPanel">Panel de control</div></div>
+      <div class="pill"><span class="dot" id="puntoConexion"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 10a13 13 0 0 1 18 0M6 13.5a8.5 8.5 0 0 1 12 0M8.8 17a4.5 4.5 0 0 1 6.4 0"/><circle cx="12" cy="19.5" r="1" fill="currentColor" stroke="none"/></svg><div><div class="t1" id="tipoConexion">Wi-Fi</div><div class="t2" id="nombrePC">PC</div></div></div>
+    </div>
+    <nav class="tabs oculto" id="tabsArriba" role="tablist" aria-label="Páginas"></nav>
+    <div id="contenido" style="flex:1;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y"></div>
+    <nav class="tabs oculto" id="tabsAbajo" role="tablist" aria-label="Páginas"></nav>
+  </section>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="menuCtx" class="menuCtx oculto" role="dialog" aria-modal="true" aria-label="Menú del botón"><div class="tarjeta" id="menuCtxCaja"></div></div>
+
+<script src="icons.js"></script>
+<script src="packs.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+// Escapa los textos que vienen de la configuración o de la red antes de
+// meterlos en HTML (1.7): un nombre con <, > o comillas ya no puede colar
+// código dentro del panel.
+function esc(s){ return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+// Protocolo PC <-> teléfono de esta versión. La PC lo anuncia en
+// /api/ping y en el «auth» de Bluetooth; si no coincide (PC 1.6.2 o
+// anterior, que ni lo trae, o una PC de otra versión), el panel enseña la
+// tarjeta «Hay que actualizar iMandro» en vez de fallar en silencio.
+const PROTOCOLO = 2;
+// Estrella dibujada (SVG, sin emoji) de los botones favoritos.
+const ESTRELLA_PANEL = '<svg viewBox="0 0 24 24" fill="#f6b73c" stroke="#f6b73c" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.6l2.5 5.2 5.7.7-4.2 3.9 1.1 5.6L12 16.3l-5.1 2.7L8 13.4 3.8 9.5l5.7-.7L12 3.6Z"/></svg>';
+function mostrarAvisoVersion(){ mostrarConexion(); $('#tarjetaVersion').classList.remove('oculto'); }
+// ---- emparejamiento (1.7): cada teléfono guarda el token de su PC y lo
+// envía en cada petición. El token se guarda en localStorage y, en la app
+// de Android, también en las preferencias de la app (puente AndroPC).
+function tokenDe(clave){
+  try { const m = JSON.parse(localStorage.getItem('imandro_tokens') || '{}'); if(m[clave]) return m[clave]; } catch(e){}
+  try { if(window.AndroPC && AndroPC.leerToken) return AndroPC.leerToken(clave) || ''; } catch(e){}
+  return '';
+}
+function guardaToken(clave, token){
+  try { const m = JSON.parse(localStorage.getItem('imandro_tokens') || '{}'); if(token) m[clave] = token; else delete m[clave]; localStorage.setItem('imandro_tokens', JSON.stringify(m)); } catch(e){}
+  try { if(window.AndroPC && AndroPC.guardarToken) AndroPC.guardarToken(clave, token || ''); } catch(e){}
+}
+function cabToken(clave){ const t = tokenDe(clave); return t ? {'X-iMandro-Token': t} : {}; }
+function nombreEquipo(){
+  try { if(window.AndroPC && AndroPC.nombreEquipo) return AndroPC.nombreEquipo() || 'Teléfono'; } catch(e){}
+  return 'Teléfono';
+}
+let pendEmp = null; // emparejamiento pendiente: {tipo:'http', base, nombre} o {tipo:'bt', mac}
+let macBT = '';
+let servidor = localStorage.getItem('imandro_server') || '';
+let cfg = null, paginaActual = null, subpagina = 0, pollTimer = null, ultimoFg = null;
+let tema = localStorage.getItem('imandro_tema') || 'oscuro';
+let barra = localStorage.getItem('imandro_barra') || 'abajo';
+let vista = localStorage.getItem('imandro_vista') || 'clasica';
+const encontradas = {}; // ip -> {ip, port, name}
+let btActivo = false;
+const btPend = {};
+let btSeq = 0;
+window.__btRespuesta = function(texto){
+  try { const r = JSON.parse(texto); const p = btPend[r.id]; if(p){ delete btPend[r.id]; p(r); } } catch(e){}
+};
+function solicitudBT(tipo, extra){
+  return new Promise((res, rej) => {
+    const id = ++btSeq; btPend[id] = res;
+    try { AndroBT.peticion(JSON.stringify(Object.assign({id: id, tipo: tipo}, extra || {})), id); }
+    catch(e){ delete btPend[id]; rej(e); return; }
+    setTimeout(() => { if(btPend[id]){ delete btPend[id]; rej(new Error("sin respuesta")); } }, 8000);
+  });
+}
+function vibrar(ms){
+  try { if(window.AndroPC && AndroPC.vibrar){ AndroPC.vibrar(ms); return; } } catch(e){}
+  try { if(navigator.vibrate) navigator.vibrate(ms); } catch(e){}
+}
+let pantalla = localStorage.getItem('imandro_pantalla') || 'si';
+let estilo = localStorage.getItem('imandro_estilo') || 'clasico';
+let tamano = localStorage.getItem('imandro_tamano') || 'normal';
+let efecto = localStorage.getItem('imandro_efecto') || 'destello';
+// 1.9.2 (punto 20): si el sistema pide reducir el movimiento, los
+// efectos al tocar no se aplican y la confirmación es la marca
+// «hecho», quieta. Se lee una vez al arrancar el panel.
+const MOVIMIENTO_REDUCIDO = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+function aplicaTamano(){
+  document.body.classList.toggle('tam-grande', tamano === 'grande');
+  document.body.classList.toggle('tam-muygrande', tamano === 'muygrande');
+}
+function aplicaVista(){
+  document.body.classList.toggle('vista-relleno', vista === 'relleno');
+}
+function ajustarProporcion(){
+  if(vista !== 'relleno'){ document.documentElement.style.setProperty('--f', '1'); return; }
+  const t = document.querySelector('#contenido .tile');
+  if(!t) return;
+  const h = t.getBoundingClientRect().height;
+  if(!h) return;
+  let f = h / 104; if(f < 1) f = 1; if(f > 1.9) f = 1.9;
+  document.documentElement.style.setProperty('--f', f.toFixed(3));
+}
+let wakeLock = null;
+async function pedirWakeLock(){
+  try { if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch(e){}
+}
+function aplicaPantalla(){
+  const on = pantalla === 'si';
+  try { if(window.AndroPC && AndroPC.pantallaSiempre) AndroPC.pantallaSiempre(on); } catch(e){}
+  if(on) pedirWakeLock();
+  else if(wakeLock){ try { wakeLock.release(); } catch(e){} wakeLock = null; }
+}
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible' && pantalla === 'si') pedirWakeLock(); });
+window.__irPagina = function(id){ paginaActual = id; subpagina = 0; pintarPanel(); };
+
+function aplicaTema(){
+  let t = tema;
+  if(t === 'auto') t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'claro' : 'oscuro';
+  document.documentElement.dataset.tema = t;
+}
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if(tema === 'auto') aplicaTema(); });
+
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('ver');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('ver'), 2600);
+}
+// ---- descubrimiento (lo rellena la aplicación de Android; en el navegador, la propia PC)
+window.__pcEncontrada = function(ip, port, name){
+  encontradas[ip] = {ip, port, name};
+  pintarListaPCs();
+};
+function pedirDescubiertas(){
+  try { if(window.AndroPC){ const lista = JSON.parse(window.AndroPC.buscar() || '[]'); lista.forEach(p => encontradas[p.ip] = p); pintarListaPCs(); } } catch(e){}
+}
+function pintarListaPCs(){
+  const el = $('#listaPCs'); if(!el) return;
+  const pcs = Object.values(encontradas);
+  if(!pcs.length){ el.innerHTML = '<p style="margin-top:9px">Buscando tu PC… (abre iMandro en la PC y ten los dos en el mismo Wi-Fi)</p>'; return; }
+  el.innerHTML = '';
+  pcs.forEach(p => {
+    const d = document.createElement('div'); d.className = 'pcitem';
+    d.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M9 20.5h6M12 16.5v4"/></svg><div><div class="n">' + esc(p.name) + '</div><div class="d">' + esc(p.ip) + '</div></div><span class="flecha">›</span>';
+    d.onclick = () => conectar('http://' + p.ip + ':' + p.port);
+    el.appendChild(d);
+  });
+}
+// fetch con tiempo de espera (1.7): ninguna petición del panel se queda
+// colgada esperando a una PC que no responde; a los ms dados se corta y
+// quien llamó lo trata como «sin conexión». Desde la 1.7.7 el corte
+// cubre también la LECTURA DEL CUERPO: antes el temporizador se apagaba
+// al llegar las cabeceras y un cuerpo que nunca terminaba de llegar
+// (r.json() sin ningún límite) congelaba el sondeo para siempre, sin
+// que ni la reconexión pudiera actuar. Ahora json()/text() heredan el
+// mismo límite: si el cuerpo no llega entero a tiempo, la promesa se
+// rechaza como un corte más y el flujo de reconexión sigue su curso.
+async function fetchT(url, opts, ms){
+  const c = new AbortController();
+  const limite = ms || 6000;
+  const temporizador = setTimeout(() => c.abort(), limite);
+  try {
+    const r = await fetch(url, Object.assign({}, opts || {}, {signal: c.signal}));
+    const leerConLimite = leer => new Promise((res, rej) => {
+      let listo = false;
+      const t2 = setTimeout(() => {
+        try { c.abort(); } catch(e){}
+        if(!listo){ listo = true; rej(new Error('cuerpo sin terminar')); }
+      }, limite);
+      leer().then(v => { if(!listo){ listo = true; clearTimeout(t2); res(v); } },
+                e => { if(!listo){ listo = true; clearTimeout(t2); rej(e); } });
+    });
+    return {
+      status: r.status, ok: r.ok, headers: r.headers,
+      json: () => leerConLimite(() => r.json()),
+      text: () => leerConLimite(() => r.text())
+    };
+  } finally { clearTimeout(temporizador); }
+}
+async function probar(base){
+  try { const r = await fetchT(base + '/api/ping', null, 4000); const j = await r.json(); return j && j.ok ? j : null; } catch(e){ return null; }
+}
+// ---- estado de conexión y reconexión automática (1.7, fase 4) ----
+// La pastilla de arriba enseña siempre el estado con lo que ya había:
+// el punto (verde/rojo) y el texto principal de la pastilla.
+// tipoReal guarda el tipo de conexión («Wi-Fi», «Cable USB», «Bluetooth»)
+// para devolverlo al texto cuando la conexión vuelve.
+let tipoReal = 'Wi-Fi';
+let panelMostrado = false;
+const recon = {activo: false, intento: 0, timer: null, base: ''};
+function marcarConexion(est){
+  const dot = $('#puntoConexion'); if(!dot) return;
+  if(est === 'ok'){ dot.classList.remove('mal'); $('#tipoConexion').textContent = tipoReal; }
+  else { dot.classList.add('mal'); $('#tipoConexion').textContent = (est === 'recon') ? 'Reconectando…' : 'Sin conexión'; }
+}
+function pararSondeo(){ if(pollTimer){ clearTimeout(pollTimer); pollTimer = null; } }
+function arrancarSondeo(){ pararSondeo(); pollTimer = setTimeout(sondeo, 3000); }
+async function sondeo(){
+  pollTimer = null;
+  if(!btActivo && !servidor) return;
+  if(btActivo){
+    // Bluetooth (solo Android): su transporte no tiene sondeo ligero;
+    // se pide la configuración como siempre.
+    const est = await cargarConfig(false);
+    if(est === 'ok') arrancarSondeo();
+    else if(est === 'error') entrarReconexion();
+    return;
+  }
+  // 1.7.7: sondeo ligero. Cada ~3 s se pregunta solo /api/estado
+  // (menos de 1 KB: versión, revisión de la configuración y programa
+  // en primer plano) en vez de bajar la configuración entera, que
+  // con los iconos propios en base64 puede pesar megabytes y era lo
+  // que dejaba el panel colgado. La completa solo baja si su _rev
+  // cambió; si solo cambió el programa en primer plano, se reevalúan
+  // las páginas visibles y el salto con la que ya se tiene.
+  let e = null, respondio = false;
+  try {
+    const r = await fetchT(servidor + '/api/estado', {headers: cabToken(servidor)}, 6000);
+    if(r.status === 401){ alPerderPermiso(); return; }
+    respondio = true;
+    e = await r.json();
+  } catch(err){ /* sin respuesta, o el cuerpo no terminó: corte */ }
+  if(!respondio){ marcarConexion('sin'); entrarReconexion(); return; }
+  if(!e || !e.ok || typeof e._rev !== 'number'){
+    // La PC no conoce /api/estado (versiones mezcladas): se sondea
+    // como antes, bajando la configuración.
+    const est = await cargarConfig(false);
+    if(est === 'ok') arrancarSondeo();
+    else if(est === 'error') entrarReconexion();
+    return;
+  }
+  marcarConexion('ok');
+  if(!cfg || e._rev !== cfg._rev){
+    const est = await cargarConfig(false);
+    if(est === 'error'){ entrarReconexion(); return; }
+    if(est !== 'ok') return; // 'sinpermiso' ya lo gestiona alPerderPermiso()
+  } else if((e._fg || '') !== (cfg._fg || '')){
+    aplicarSoloFg(e._fg || '');
+  }
+  arrancarSondeo();
+}
+function entrarReconexion(base){
+  if(base) recon.base = base;
+  if(recon.activo) return;
+  recon.activo = true; recon.intento = 0;
+  marcarConexion('recon');
+  pasoReconexion();
+}
+function pasoReconexion(){
+  if(!recon.activo) return;
+  // Espera creciente: 2 s, 5 s, 10 s y después cada 15 s hasta que vuelva.
+  const esperas = [2000, 5000, 10000, 15000];
+  const espera = esperas[Math.min(recon.intento, esperas.length - 1)];
+  recon.intento++;
+  recon.timer = setTimeout(async () => {
+    recon.timer = null;
+    if(!recon.activo) return;
+    const bien = await intentarVolver();
+    if(!recon.activo) return; // mientras tanto se quitó el permiso o se cambió de PC
+    if(bien === 'version'){ detenerReconexion(); mostrarAvisoVersion(); }
+    else if(bien) finReconexion();
+    else pasoReconexion();
+  }, espera);
+}
+function detenerReconexion(){
+  recon.activo = false;
+  if(recon.timer){ clearTimeout(recon.timer); recon.timer = null; }
+}
+function finReconexion(){
+  detenerReconexion();
+  marcarConexion('ok');
+  toast('Conexión recuperada');
+  arrancarSondeo();
+}
+async function intentarVolver(){
+  if(btActivo) return reconectarBT();
+  const base = servidor || recon.base;
+  if(!base) return false;
+  const ping = await probar(base);
+  if(!ping) return false;
+  if((ping.protocolo || 1) !== PROTOCOLO) return 'version'; // PC de otra versión: no reintentar en bucle
+  if(base !== servidor){ servidor = base; localStorage.setItem('imandro_server', base); }
+  const est = await cargarConfig(true);
+  if(est === 'ok' && !panelMostrado) mostrarPanel();
+  return est === 'ok';
+}
+// Reconexión Bluetooth: se vuelve a abrir el socket y se presenta el token
+// guardado; si la PC lo sigue aceptando, el panel sigue solo.
+function reconectarBT(){
+  return new Promise(res => {
+    if(!window.AndroBT || !macBT){ res(false); return; }
+    try { AndroBT.conectar(macBT); } catch(e){ res(false); return; }
+    let vistos = 0;
+    const iv = setInterval(async () => {
+      vistos++;
+      let est = 'no';
+      try { est = AndroBT.estado(); } catch(e){}
+      if(est === 'conectado'){
+        clearInterval(iv);
+        const tok = tokenDe('bt:' + macBT);
+        if(tok){
+          try {
+            const r = await solicitudBT('auth', {token: tok});
+            if(r && r.ok === false){ alPerderPermiso(); res(false); return; } // token revocado: a emparejar, no a reintentar
+            if(!(r && r.ok)){ res(false); return; }
+            if((r.protocolo || 1) !== PROTOCOLO){ detenerReconexion(); mostrarAvisoVersion(); res(false); return; }
+          }
+          catch(e){ res(false); return; }
+        }
+        const e2 = await cargarConfig(true);
+        if(e2 === 'ok' && !panelMostrado) mostrarPanel();
+        res(e2 === 'ok');
+      } else if(est.startsWith('error') || vistos > 30){ clearInterval(iv); res(false); }
+    }, 700);
+  });
+}
+async function conectar(base){
+  base = base.replace(/\/+$/, '');
+  const ping = await probar(base);
+  if(!ping){
+    toast('No se pudo conectar con esa PC');
+    // Arranque en frío con la PC apagada o caída: antes el panel se quedaba
+    // en una pantalla vacía. Ahora enseña la pantalla de conexión y lo
+    // sigue intentando solo hasta que la PC vuelva.
+    if(!panelMostrado){ recon.base = base; mostrarConexion(); entrarReconexion(base); }
+    return;
+  }
+  // Protocolo (1.7): si la PC es de una versión que no habla el mismo
+  // protocolo (1.6.2 o anterior, o una futura distinta), aviso claro en
+  // vez de conectar a medias y fallar después en silencio.
+  if((ping.protocolo || 1) !== PROTOCOLO){ mostrarAvisoVersion(); return; }
+  // Por cable (127.0.0.1) se intenta primero el token automático de la PC.
+  // Desde la 1.7.9 el servidor ya no lo entrega a orígenes «null» (el de
+  // este panel dentro de la aplicación), porque una página web hostil se
+  // presenta exactamente igual y no hay forma fiable de distinguirlos:
+  // si el token no llega, el flujo sigue y la pantalla de emparejar pide
+  // el código, como por Wi-Fi (y queda guardado, no se repite).
+  if(base.includes('127.0.0.1') && !tokenDe(base)){
+    try { const rt = await fetchT(base + '/api/token-local'); const jt = await rt.json(); if(jt && jt.ok && jt.token) guardaToken(base, jt.token); } catch(e){}
+  }
+  servidor = base; localStorage.setItem('imandro_server', base);
+  btActivo = false;
+  tipoReal = base.includes('127.0.0.1') ? 'Cable USB' : 'Wi-Fi';
+  $('#nombrePC').textContent = ping.pcName || 'Mi PC';
+  $('#tipoConexion').textContent = tipoReal;
+  const estado = await cargarConfig(true);
+  if(estado === 'sinpermiso'){ mostrarEmparejar({tipo:'http', base, nombre: ping.pcName}); return; }
+  mostrarPanel();
+  if(estado === 'error') entrarReconexion();
+  else arrancarSondeo();
+}
+function mostrarEmparejar(pend){
+  pendEmp = pend;
+  mostrarConexion();
+  $('#tarjetaEmparejar').classList.remove('oculto');
+  $('#empDesc').textContent = pend.tipo === 'bt'
+    ? 'Es la primera vez que este teléfono se conecta a esa PC por Bluetooth (o se le quitó el permiso).'
+    : 'Es la primera vez que este teléfono se conecta a ' + (pend.nombre || 'esa PC') + ' (o se le quitó el permiso).';
+  $('#codigoEmp').value = '';
+}
+function ocultarEmparejar(){ pendEmp = null; $('#tarjetaEmparejar').classList.add('oculto'); $('#tarjetaConfirmarPC').classList.add('oculto'); }
+function alPerderPermiso(){
+  $('#puntoConexion').classList.add('mal');
+  pararSondeo(); detenerReconexion();
+  if(btActivo) mostrarEmparejar({tipo:'bt', mac: macBT});
+  else if(servidor) mostrarEmparejar({tipo:'http', base: servidor, nombre: $('#nombrePC').textContent});
+  toast('Este teléfono ya no está autorizado: emparéjalo de nuevo con el código de la PC');
+}
+// 1.9.2 (punto 2): el aviso cuando el emparejamiento está pausado
+// en la PC. Es el mismo texto que manda el servidor; se fija aquí
+// para enseñarlo igual llegue por HTTP o por Bluetooth.
+const MSG_EMPAREJAR_PAUSADO = 'El emparejamiento está pausado. Ábrelo desde el editor de la PC.';
+// 1.9.2 (punto 3): la base (PC) ya confirmada en esta sesión; antes
+// de enviar el código a una PC encontrada en la red, el panel enseña
+// su nombre y su dirección y Liesky confirma que es la suya.
+let baseConfirmada = '';
+async function emparejarConCodigo(){
+  const codigo = ($('#codigoEmp').value || '').trim();
+  if(!pendEmp){ toast('Primero escoge tu PC en la lista'); return; }
+  if(codigo.length < 6){ toast('Escribe el código de 6 dígitos'); return; }
+  if(pendEmp.tipo === 'http' && baseConfirmada !== pendEmp.base){
+    mostrarConfirmarPC(codigo);
+    return;
+  }
+  enviarCodigo(codigo);
+}
+function mostrarConfirmarPC(codigo){
+  const ip = pendEmp.base.replace(/^https?:\/\//, '').split(':')[0];
+  $('#confPCDesc').textContent = 'Vas a emparejar este teléfono con «' + (pendEmp.nombre || 'tu PC') + '» (' + ip + '). Comprueba que es tu PC antes de enviarle el código.';
+  $('#tarjetaConfirmarPC').classList.remove('oculto');
+  $('#btnConfPCSi').onclick = () => { baseConfirmada = pendEmp.base; $('#tarjetaConfirmarPC').classList.add('oculto'); enviarCodigo(codigo); };
+  $('#btnConfPCNo').onclick = () => { $('#tarjetaConfirmarPC').classList.add('oculto'); };
+}
+async function enviarCodigo(codigo){
+  try {
+    if(pendEmp.tipo === 'bt'){
+      const r = await solicitudBT('emparejar', {codigo, nombre: nombreEquipo()});
+      if(r && r.ok && r.token){ guardaToken('bt:' + pendEmp.mac, r.token); ocultarEmparejar(); toast('Teléfono emparejado'); entrarPorBT(); }
+      else if(r && r.pausado) toast(MSG_EMPAREJAR_PAUSADO);
+      else toast((r && r.msg) || 'Código incorrecto');
+      return;
+    }
+    const r = await fetchT(pendEmp.base + '/api/emparejar', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({codigo, nombre: nombreEquipo()})}, 6000);
+    const j = await r.json();
+    if(j && j.ok && j.token){
+      guardaToken(pendEmp.base, j.token);
+      const base = pendEmp.base; ocultarEmparejar();
+      toast('Teléfono emparejado');
+      conectar(base);
+    } else if(j && j.pausado) toast(MSG_EMPAREJAR_PAUSADO);
+    else toast((j && j.msg) || 'Código incorrecto');
+  } catch(e){ toast('No se pudo emparejar: revisa la conexión'); }
+}
+// 1.7.7: la comparación página ↔ programa en primer plano es tolerante:
+// no distingue mayúsculas y vale con o sin la extensión «.exe». Así, una
+// página guardada con «Photoshop» a secas casa con el «Photoshop.exe»
+// que detecta la PC y se cura sola, sin tener que reeditarla.
+function appCasa(app, fg){
+  const norm = s => (s || '').trim().toLowerCase().replace(/\.exe$/, '');
+  return !!app && norm(app) !== '' && norm(app) === norm(fg);
+}
+function aplicarConfig(nueva, forzar){
+  marcarConexion('ok');
+  // Perfiles por programa: si el programa abierto en la PC cambió y alguna
+  // página está vinculada a él, el panel salta solo a esa página.
+  const fg = (nueva && nueva._fg) || '';
+  let saltar = false;
+  if(fg !== ultimoFg){
+    ultimoFg = fg;
+    if(fg){
+      const p = (nueva.pages || []).find(p => appCasa(p.app, fg));
+      if(p && p.id !== paginaActual){ paginaActual = p.id; subpagina = 0; saltar = true; }
+    }
+  }
+  if(forzar || saltar || !cfg || nueva._rev !== cfg._rev){
+    cfg = nueva;
+    const vis = paginasVisibles();
+    window.__primeraPagina = vis[0].id;
+    if(!paginaActual || !cfg.pages.find(p => p.id === paginaActual)) paginaActual = vis[0].id;
+    if(paginaActual !== '__ajustes' && !vis.find(p => p.id === paginaActual)){ paginaActual = vis[0].id; subpagina = 0; }
+    pintarPanel();
+  }
+}
+function aplicarSoloFg(fgNuevo){
+  // Solo cambió el programa en primer plano (sondeo ligero, 1.7.7):
+  // se actualiza el dato y se reevalúa qué páginas se ven y si toca
+  // saltar de página, SIN bajar la configuración. Es el mismo salto
+  // que hace aplicarConfig cuando llega una configuración nueva.
+  cfg._fg = fgNuevo;
+  if(fgNuevo !== ultimoFg){
+    ultimoFg = fgNuevo;
+    if(fgNuevo){
+      const p = cfg.pages.find(p => appCasa(p.app, fgNuevo));
+      if(p && p.id !== paginaActual){ paginaActual = p.id; subpagina = 0; }
+    }
+  }
+  const vis = paginasVisibles();
+  window.__primeraPagina = vis[0].id;
+  if(paginaActual !== '__ajustes' && !vis.find(p => p.id === paginaActual)){ paginaActual = vis[0].id; subpagina = 0; }
+  pintarPanel();
+}
+async function cargarConfig(forzar){
+  try {
+    if(btActivo){
+      const r = await solicitudBT('config');
+      if(r && r.sinpermiso){ alPerderPermiso(); return 'sinpermiso'; }
+      if(r && r.config) aplicarConfig(r.config, forzar);
+      return 'ok';
+    }
+    const r = await fetchT(servidor + '/api/config', {headers: cabToken(servidor)}, 6000);
+    if(r.status === 401){ alPerderPermiso(); return 'sinpermiso'; }
+    const nueva = await r.json();
+    aplicarConfig(nueva, forzar);
+    migrarFavoritosLocales();
+    return 'ok';
+  } catch(e){ marcarConexion('sin'); return 'error'; }
+}
+async function conectarBT(mac){
+  if(!window.AndroBT){ toast('El Bluetooth solo está en la aplicación de Android'); return; }
+  macBT = mac;
+  toast('Conectando por Bluetooth…');
+  try { AndroBT.conectar(mac); } catch(e){ toast('No se pudo iniciar el Bluetooth'); return; }
+  const espera = setInterval(async () => {
+    let est = 'no';
+    try { est = AndroBT.estado(); } catch(e){}
+    if(est === 'conectado'){
+      clearInterval(espera);
+      // Emparejamiento (1.7): primero se presenta el token guardado; si la
+      // PC no lo conoce, toca escribir el código de 6 dígitos una vez.
+      btActivo = true; // para poder hablar con la PC durante el emparejamiento
+      const tok = tokenDe('bt:' + mac);
+      if(tok){
+        try { const r = await solicitudBT('auth', {token: tok});
+          if(r && r.ok){
+            if((r.protocolo || 1) !== PROTOCOLO){ btActivo = false; mostrarAvisoVersion(); return; }
+            entrarPorBT(); return;
+          } } catch(e){}
+      }
+      mostrarEmparejar({tipo:'bt', mac});
+      toast('Primera vez por Bluetooth: escribe el código de la PC');
+    } else if(est.startsWith('error')){
+      clearInterval(espera);
+      toast(est.replace('error:', ''));
+    }
+  }, 800);
+  setTimeout(() => clearInterval(espera), 20000);
+}
+async function entrarPorBT(){
+  btActivo = true;
+  tipoReal = 'Bluetooth';
+  $('#nombrePC').textContent = 'Mi PC';
+  $('#tipoConexion').textContent = tipoReal;
+  await cargarConfig(true);
+  mostrarPanel();
+  arrancarSondeo();
+}
+function mostrarConexion(){
+  $('#tarjetaEmparejar').classList.add('oculto');
+  $('#tarjetaVersion').classList.add('oculto');
+  $('#pantallaPanel').classList.add('oculto'); $('#pantallaConexion').classList.remove('oculto');
+  pintarListaPCs(); pedirDescubiertas();
+}
+function mostrarPanel(){
+  panelMostrado = true;
+  $('#pantallaConexion').classList.add('oculto'); $('#pantallaPanel').classList.remove('oculto');
+  pintarPanel();
+}
+function iconoHTML(b, colorIcono){
+  if(b.icon && b.icon.startsWith('custom:')){
+    const d = (cfg.customIcons || {})[b.icon.slice(7)];
+    if(d) return '<img class="icimg" src="' + esc(d) + '" alt="">';
+  }
+  if(b.icon && b.icon.startsWith('pack:') && typeof PACK_ICONOS !== 'undefined'){
+    const pk = PACK_ICONOS[b.icon.slice(5)];
+    if(pk) return '<img class="icimg" src="' + esc(pk.d) + '" alt="">';
+  }
+  return svgIcono(b.icon || 'pagina', colorIcono || b.color || '#4cc3ff', '#171f30');
+}
+function paginasVisibles(){
+  // Desde la v1.6: si el programa abierto en la PC tiene páginas vinculadas,
+  // se enseñan solo esas y las páginas sin programa (las generales). Si ese
+  // programa no tiene ninguna página, se enseñan todas: nunca queda vacío.
+  // La comparación es la tolerante de la 1.7.7 (appCasa).
+  const fg = (cfg && cfg._fg) || '';
+  if(!fg) return cfg.pages;
+  if(!cfg.pages.some(p => appCasa(p.app, fg))) return cfg.pages;
+  return cfg.pages.filter(p => !(p.app || '') || appCasa(p.app, fg));
+}
+function paginasConAjustes(){
+  return [...paginasVisibles(), {id:'__ajustes', name:'Ajustes', icon:'engranaje'}];
+}
+function pintarTabs(){
+  const html = paginasConAjustes().map(p =>
+    '<div class="tf' + (p.id === paginaActual ? ' on' : '') + '" data-p="' + esc(p.id) + '" role="tab" aria-selected="' + (p.id === paginaActual ? 'true' : 'false') + '" aria-label="' + esc(p.name) + '">' +
+    svgIcono(p.icon || 'pagina', p.id === paginaActual ? '#f6b73c' : 'currentColor') + '<span>' + esc(p.name) + '</span></div>').join('');
+  const arriba = $('#tabsArriba'), abajo = $('#tabsAbajo');
+  arriba.innerHTML = html; abajo.innerHTML = html;
+  arriba.classList.toggle('oculto', barra !== 'arriba');
+  abajo.classList.toggle('oculto', barra !== 'abajo');
+  arriba.classList.toggle('arriba', true);
+  document.querySelectorAll('.tf').forEach(t => t.onclick = () => { paginaActual = t.dataset.p; subpagina = 0; pintarPanel(); });
+  document.querySelectorAll('.tf svg').forEach(s => { s.setAttribute('width','21'); s.setAttribute('height','21'); });
+}
+function pintarPanel(){
+  if(!cfg) return;
+  pintarTabs();
+  const cont = $('#contenido'); cont.innerHTML = '';
+  if(paginaActual === '__ajustes'){ pintarAjustes(cont); return; }
+  const p = cfg.pages.find(x => x.id === paginaActual); if(!p) return;
+  const cols = p.columns || 3;
+  const filas = window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches ? 3 : 6;
+  const porSub = cols * filas;
+  window.__paginaActual = paginaActual;
+  const subs = Math.max(1, Math.ceil(p.buttons.length / porSub));
+  window.__subsActual = subs;
+  if(subpagina >= subs) subpagina = subs - 1;
+  const tit = document.createElement('div'); tit.className = 'titulo';
+  tit.innerHTML = '<h2>' + esc(p.name) + '</h2>' + (subs > 1 ? '<div class="dots">' + Array.from({length: subs}, (_, i) => '<i data-s="' + i + '" class="' + (i === subpagina ? 'on' : '') + '" role="button" aria-label="Ir a la parte ' + (i + 1) + ' de ' + subs + '"></i>').join('') + '</div>' : '');
+  cont.appendChild(tit);
+  tit.querySelectorAll('.dots i').forEach(d => d.onclick = () => { subpagina = +d.dataset.s; pintarPanel(); });
+  const g = document.createElement('div'); g.className = 'grid';
+  g.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+  p.buttons.slice(subpagina * porSub, (subpagina + 1) * porSub).forEach((b, ii) => {
+    const idxBoton = subpagina * porSub + ii;
+    const t = document.createElement('div');
+    t.className = 'tile' + (b.action && b.action.type === 'none' ? ' vacio' : '') + (estilo !== 'clasico' ? ' ' + estilo : '');
+    // Botón con imagen (1.9): si el botón tiene una imagen de «Mis
+    // botones», la imagen es su cara — se ve igual con los cinco
+    // estilos, sin tinte del color, y el nombre va abajo sobre la
+    // franja oscura. Todo lo demás (toque, pulsación larga, efectos)
+    // es el de siempre: se engancha abajo, fuera de esta rama.
+    const cara = (b.img && (cfg.customButtons || {})[b.img]) || '';
+    if(cara){
+      t.classList.add('conimg');
+      let inner = (esFavBoton(b, p, idxBoton) ? '<span class="fav">' + ESTRELLA_PANEL + '</span>' : '') + '<img class="cara" src="' + esc(cara) + '" alt="">';
+      if(b.action && b.action.type === 'psaction') inner += '<i class="bdg"><svg viewBox="0 0 24 24" fill="#b18cff"><path d="M13 3.5 5.5 13.5H11L9.8 20.5 18 10h-5.5L13 3.5Z"/></svg></i>';
+      if(b.name) inner += '<span class="nomimg">' + esc(b.name) + '</span>';
+      t.innerHTML = inner;
+    } else {
+      if(estilo !== 'clasico'){ t.style.setProperty('--c', b.color || '#4cc3ff'); }
+      else if(b.color) t.style.background = 'linear-gradient(180deg,' + b.color + '2e,' + 'var(--tarjeta))';
+      // En Glass Tech y 3D Soft el fondo ES el color del botón: el
+      // icono dibujado va en blanco con resplandor, como en la maqueta.
+      let inner = (esFavBoton(b, p, idxBoton) ? '<span class="fav">' + ESTRELLA_PANEL + '</span>' : '') + iconoHTML(b, (estilo === 'glass' || estilo === 'soft') ? '#ffffff' : undefined);
+      if(b.action && b.action.type === 'psaction') inner += '<i class="bdg"><svg viewBox="0 0 24 24" fill="#b18cff"><path d="M13 3.5 5.5 13.5H11L9.8 20.5 18 10h-5.5L13 3.5Z"/></svg></i>';
+      inner += '<span>' + esc(b.name) + '</span>';
+      t.innerHTML = inner;
+    }
+    // Accesibilidad (1.9.2, punto 20): cada botón se anuncia como
+    // botón, con su nombre, y se puede alcanzar con el teclado.
+    t.setAttribute('role', 'button');
+    t.setAttribute('aria-label', b.name || 'Botón sin nombre');
+    t.tabIndex = 0;
+    t.onclick = ev => { if(suprimirTClick()) return; tocar(b, t, ev); };
+    ponerPulsacionLarga(t, () => abrirMenuBoton(b, p, idxBoton));
+    g.appendChild(t);
+  });
+  // El gesto de deslizar lo decide UN solo manejador (gestosPanel, sobre
+  // #contenido): la rejilla ya no tiene el suyo, que era el que hacía que un
+  // mismo deslizamiento cambiara de subpágina y de página a la vez.
+  cont.appendChild(g);
+  const nota = document.createElement('p'); nota.className = 'nota';
+  nota.textContent = 'Los botones se cambian desde la aplicación de la PC';
+  cont.appendChild(nota);
+  requestAnimationFrame(ajustarProporcion);
+}
+// ---- Efecto al tocar (1.7.8) ----
+// El efecto que se ve al tocar un botón se escoge por equipo en
+// Ajustes y vive en localStorage «imandro_efecto»; nace en «destello»,
+// que es el comportamiento de siempre, idéntico (la clase «destello»
+// al tocar y la marca «hecho» verde al salir bien). El efecto elegido
+// sustituye a esa animación: se engancha en el MISMO punto de tocar()
+// donde siempre se aplicó el destello, con los mismos eventos, así
+// que la pulsación larga y el deslizado no se enteran. La vibración
+// sigue su curso de siempre y el aviso de fallo es el de siempre:
+// el efecto es solo cosa del toque bueno.
+const MARCA_FX_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#3ddc97" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.2 5.2L20 6.5"/></svg>';
+function reiniciaFx(el, clase){
+  el.classList.remove(clase); void el.offsetWidth; el.classList.add(clase);
+}
+function aplicarEfecto(el, ev){
+  if(!el) return;
+  if(MOVIMIENTO_REDUCIDO) return; // 1.9.2: sin efectos animados
+  if(efecto === 'salto'){
+    reiniciaFx(el, 'fx-salto');
+    setTimeout(() => el.classList.remove('fx-salto'), 500);
+  } else if(efecto === 'pulso'){
+    reiniciaFx(el, 'fx-pulso');
+    setTimeout(() => el.classList.remove('fx-pulso'), 420);
+    let an = el.querySelector('.anilloFx');
+    if(!an){ an = document.createElement('i'); an.className = 'anilloFx'; el.appendChild(an); }
+    reiniciaFx(an, 'on');
+  } else if(efecto === 'onda'){
+    const r = el.getBoundingClientRect();
+    const d = Math.max(r.width, r.height) * 2.2;
+    const s = document.createElement('span');
+    s.className = 'ondaFx';
+    s.style.width = s.style.height = d + 'px';
+    s.style.left = ((ev && typeof ev.clientX === 'number') ? ev.clientX - r.left : r.width / 2) + 'px';
+    s.style.top = ((ev && typeof ev.clientY === 'number') ? ev.clientY - r.top : r.height / 2) + 'px';
+    el.classList.add('fx-onda');
+    s.addEventListener('animationend', () => { s.remove(); el.classList.remove('fx-onda'); });
+    el.appendChild(s);
+  } else if(efecto === 'marca'){
+    let m = el.querySelector('.marcaFx');
+    if(!m){ m = document.createElement('span'); m.className = 'marcaFx'; m.innerHTML = MARCA_FX_SVG; el.appendChild(m); }
+    reiniciaFx(m, 'on');
+  } else if(efecto === 'ninguno'){
+    // Sin animación alguna, a propósito.
+  } else {
+    // «destello»: el de siempre, tal cual estaba.
+    el.classList.remove('destello', 'hecho'); void el.offsetWidth; el.classList.add('destello');
+  }
+}
+// Deduplicación de toques (1.7): un mismo botón no se ejecuta dos veces
+// por toques repetidos mientras el toque anterior sigue en curso o acaba
+// de pasar (doble toque por impaciencia, rebote del dedo).
+const toquesEnCurso = {};
+const ultimoToque = {};
+async function tocar(b, el, ev){
+  const a = b.action || {type:'none'};
+  const claveToque = (paginaActual || '') + '|' + (b.name || '') + '|' + JSON.stringify(a);
+  const ahoraT = Date.now();
+  if(toquesEnCurso[claveToque]) return;
+  if(ultimoToque[claveToque] && ahoraT - ultimoToque[claveToque] < 600) return;
+  toquesEnCurso[claveToque] = true; ultimoToque[claveToque] = ahoraT;
+  try {
+    aplicarEfecto(el, ev);
+    vibrar(35);
+    if(a.type === 'page'){ const destino = a.page; if(paginasVisibles().find(p => p.id === destino)){ paginaActual = destino; subpagina = 0; pintarPanel(); } return; }
+    let j;
+    if(btActivo){
+      j = await solicitudBT('tap', {action: a});
+      if(j && j.sinpermiso){ alPerderPermiso(); return; }
+    } else {
+      // Las acciones de Photoshop pueden tardar (el servidor les da hasta
+      // 25 s): su espera es más larga; el resto se corta a los 6 s para
+      // que nada se quede colgado ni se declare fallida una acción que
+      // en realidad sí se ejecutó en la PC.
+      const msTap = ['psscript', 'psaction', 'pstool', 'multi'].includes(a.type) ? 25000 : 6000;
+      const r = await fetchT(servidor + '/api/tap', {method:'POST', headers:Object.assign({'Content-Type':'application/json'}, cabToken(servidor)), body: JSON.stringify({action: a})}, msTap);
+      if(r.status === 401){ alPerderPermiso(); return; }
+      j = await r.json();
+    }
+    if(j && j.ok){
+      // 1.7.7: el indicador de conexión ya no depende solo del sondeo:
+      // si un toque llega y se ejecuta, la conexión está viva y el
+      // punto se pone verde al instante.
+      marcarConexion('ok');
+      // La marca «hecho» verde es la otra mitad del Destello de
+      // siempre: solo acompaña a ese efecto. Con Salto, Pulso, Onda,
+      // Marca o Ninguno, el efecto elegido ES la confirmación visual.
+      // 1.9.2: con el movimiento reducido, la marca quieta acompaña
+      // a cualquier efecto elegido (menos a «ninguno», que es la
+      // elección expresa de no ver nada).
+      const confirmaQuieto = MOVIMIENTO_REDUCIDO && efecto !== 'ninguno';
+      if(el && (confirmaQuieto || (efecto !== 'salto' && efecto !== 'pulso' && efecto !== 'onda' && efecto !== 'marca' && efecto !== 'ninguno'))){ el.classList.add('hecho'); setTimeout(() => el.classList.remove('hecho'), 550); }
+    } else {
+      toast((j && j.msg) || 'Ese botón no se pudo ejecutar');
+      vibrar(90);
+    }
+  } catch(e){ toast('Sin conexión con la PC'); marcarConexion('sin'); vibrar(90); }
+  finally { delete toquesEnCurso[claveToque]; }
+}
+// Toque sencillo sin animación, para el menú de pulsación larga (Editar).
+async function tapSimple(a){
+  if(btActivo){
+    const j = await solicitudBT('tap', {action: a});
+    if(j && j.sinpermiso){ alPerderPermiso(); return null; }
+    return j;
+  }
+  const r = await fetchT(servidor + '/api/tap', {method:'POST', headers:Object.assign({'Content-Type':'application/json'}, cabToken(servidor)), body: JSON.stringify({action: a})}, 6000);
+  if(r.status === 401){ alPerderPermiso(); return null; }
+  return r.json();
+}
+// ---- Menú de pulsación larga (1.7, fase 5) ----
+// Mantener el dedo sobre un botón abre su menú SIN ejecutar su acción: al
+// abrirse, el «click» que llega después se suprime (suprimirTClick), igual
+// que ya se suprime el click tras deslizar.
+// ---- Favoritos de botones (decisión de la 1.7, unificados) ----
+// La estrella visible del panel sale de la CONFIGURACIÓN: el campo «fav»
+// del botón, que se marca desde el editor de la PC o desde este menú por
+// Wi-Fi/cable (guardando la configuración, como al duplicar). Así la
+// estrella es la misma en todos los teléfonos y viaja con la copia de
+// configuración. La marca por equipo de la fase 5 (localStorage
+// «imandro_favoritos») se conserva como respaldo: al conectar por
+// Wi-Fi/cable se promueve a la configuración una sola vez (migración de
+// abajo) y se limpia; por Bluetooth no se puede escribir la
+// configuración, así que allí la marca sigue siendo solo de este equipo.
+let favoritos = {};
+try { favoritos = JSON.parse(localStorage.getItem('imandro_favoritos') || '{}') || {}; } catch(e){ favoritos = {}; }
+function guardaFavoritos(){ try { localStorage.setItem('imandro_favoritos', JSON.stringify(favoritos)); } catch(e){} }
+function esFavBoton(b, pagina, idx){ return !!(b && b.fav) || !!favoritos[pagina.id + '#' + idx]; }
+let favMigrados = false;
+async function migrarFavoritosLocales(){
+  if(favMigrados || btActivo || !cfg) return;
+  const claves = Object.keys(favoritos || {});
+  favMigrados = true;
+  if(!claves.length) return;
+  const nueva = JSON.parse(JSON.stringify(cfg));
+  let cambios = 0;
+  claves.forEach(clave => {
+    const i = clave.lastIndexOf('#'); if(i < 0) return;
+    const pag = (nueva.pages || []).find(p => p.id === clave.slice(0, i));
+    const idx = parseInt(clave.slice(i + 1), 10);
+    if(pag && pag.buttons && pag.buttons[idx] && !pag.buttons[idx].fav){ pag.buttons[idx].fav = true; cambios++; }
+  });
+  favoritos = {}; guardaFavoritos();
+  if(!cambios) return;
+  try {
+    const r = await fetchT(servidor + '/api/config', {method: 'POST', headers: Object.assign({'Content-Type': 'application/json'}, cabToken(servidor)), body: JSON.stringify(nueva)}, 6000);
+    if(r.ok) await cargarConfig(true);
+  } catch(e){}
+}
+let lpSuprimir = 0;
+function suprimirTClick(){ if(Date.now() < lpSuprimir){ lpSuprimir = 0; return true; } return false; }
+function ponerPulsacionLarga(el, abrir){
+  let timer = null, abierto = false;
+  const cancelar = () => { if(timer){ clearTimeout(timer); timer = null; } };
+  const empezar = () => {
+    abierto = false; cancelar();
+    timer = setTimeout(() => {
+      timer = null; abierto = true;
+      lpSuprimir = Date.now() + 900; // el click posterior no ejecuta el botón
+      vibrar(60);
+      abrir();
+    }, 550);
+  };
+  el.addEventListener('touchstart', empezar, {passive: true});
+  el.addEventListener('touchmove', cancelar, {passive: true});
+  el.addEventListener('touchend', cancelar);
+  el.addEventListener('touchcancel', cancelar);
+  el.addEventListener('mousedown', empezar);
+  el.addEventListener('mouseup', cancelar);
+  el.addEventListener('mouseleave', cancelar);
+  el.addEventListener('contextmenu', e => e.preventDefault());
+}
+function detalleAccion(a){
+  a = a || {type: 'none'};
+  switch(a.type){
+    case 'hotkey': return 'Atajo de teclado: ' + (a.keys || 'sin definir');
+    case 'psaction': return 'Acción de Photoshop: ' + (a.name || 'sin nombre') + (a.set ? ' · Conjunto: ' + a.set : ' · Sin conjunto');
+    case 'psscript': return 'Script de Photoshop';
+    case 'pstool': return 'Herramienta de Photoshop: ' + (a.tool || '');
+    case 'open': return 'Abrir: ' + (a.target || '');
+    case 'media': return 'Multimedia: ' + (a.key || '');
+    case 'mouse': return 'Ratón: clic ' + (a.btn || 'left') + (a.mods ? ' con ' + a.mods : '');
+    case 'system': return 'Orden del sistema: ' + (a.cmd || '');
+    case 'page': return 'Ir a otra página de este panel';
+    case 'multi': return 'Varios pasos seguidos (' + ((a.steps || []).length) + ' pasos)';
+    default: return 'Todavía sin función asignada';
+  }
+}
+function nombreTipoAccion(a){
+  const n = {'hotkey': 'Atajo de teclado', 'psaction': 'Acción de Photoshop', 'psscript': 'Script de Photoshop',
+    'pstool': 'Herramienta de Photoshop', 'open': 'Abrir programa o carpeta', 'media': 'Multimedia',
+    'mouse': 'Ratón', 'system': 'Sistema', 'page': 'Cambiar de página', 'multi': 'Varios pasos', 'none': 'Sin función'};
+  return n[(a && a.type) || 'none'] || ((a && a.type) || 'Sin función');
+}
+function cerrarMenu(){
+  $('#menuCtx').classList.add('oculto');
+  lpSuprimir = Date.now() + 400;
+}
+let menuAbiertoEn = 0; // cuándo se abrió el menú (ver el guardián de abajo)
+function abrirMenuBoton(b, pagina, idx){
+  menuAbiertoEn = Date.now();
+  const caja = $('#menuCtxCaja');
+  const a = b.action || {type: 'none'};
+  const claveFav = pagina.id + '#' + idx;
+  const esFav = esFavBoton(b, pagina, idx);
+  caja.innerHTML = '<h3>' + esc(b.name || 'Botón') + '</h3><p>' + esc(detalleAccion(a)) + '</p>' +
+    '<a class="btn sec" id="mcEditar">Editar en la PC</a>' +
+    '<a class="btn sec" id="mcDuplicar">Duplicar botón</a>' +
+    '<a class="btn sec" id="mcFav">' + (esFav ? 'Quitar de favoritos' : 'Marcar como favorito') + '</a>' +
+    '<a class="btn sec" id="mcInfo">Información del botón</a>' +
+    '<a class="btn prim" id="mcCerrar">Cerrar</a>';
+  $('#menuCtx').classList.remove('oculto');
+  caja.querySelector('#mcCerrar').onclick = cerrarMenu;
+  caja.querySelector('#mcFav').onclick = async () => {
+    cerrarMenu();
+    // Favorito de la configuración («fav» del botón): por Wi-Fi/cable se
+    // guarda en la configuración y vale para todos los teléfonos.
+    if(b.fav){
+      if(btActivo){ toast('Ese favorito está en la configuración: quítalo desde el editor de la PC o por Wi-Fi'); return; }
+      if(!cfg) return;
+      const nueva = JSON.parse(JSON.stringify(cfg));
+      const pag = (nueva.pages || []).find(p => p.id === pagina.id);
+      if(!pag || !pag.buttons || !pag.buttons[idx]){ toast('Ese botón ya no está en la configuración'); return; }
+      delete pag.buttons[idx].fav;
+      delete favoritos[claveFav]; guardaFavoritos();
+      try {
+        const r = await fetchT(servidor + '/api/config', {method: 'POST', headers: Object.assign({'Content-Type': 'application/json'}, cabToken(servidor)), body: JSON.stringify(nueva)}, 6000);
+        if(r.status === 401){ alPerderPermiso(); return; }
+        const j = await r.json();
+        toast(j && j.ok ? 'Quitado de favoritos' : ((j && j.msg) || 'No se pudo quitar'));
+        await cargarConfig(true);
+      } catch(e){ toast('Sin conexión con la PC'); }
+      return;
+    }
+    if(favoritos[claveFav]){ delete favoritos[claveFav]; guardaFavoritos(); toast('Quitado de favoritos'); pintarPanel(); return; }
+    if(btActivo){
+      favoritos[claveFav] = true; guardaFavoritos();
+      toast('Marcado como favorito solo en este equipo (por Bluetooth no se guarda en la configuración)');
+      pintarPanel(); return;
+    }
+    if(!cfg) return;
+    const nueva = JSON.parse(JSON.stringify(cfg));
+    const pag = (nueva.pages || []).find(p => p.id === pagina.id);
+    if(!pag || !pag.buttons || !pag.buttons[idx]){ toast('Ese botón ya no está en la configuración'); return; }
+    pag.buttons[idx].fav = true;
+    try {
+      const r = await fetchT(servidor + '/api/config', {method: 'POST', headers: Object.assign({'Content-Type': 'application/json'}, cabToken(servidor)), body: JSON.stringify(nueva)}, 6000);
+      if(r.status === 401){ alPerderPermiso(); return; }
+      const j = await r.json();
+      if(j && j.ok){ toast('Marcado como favorito'); await cargarConfig(true); }
+      else { favoritos[claveFav] = true; guardaFavoritos(); toast('Marcado como favorito solo en este equipo'); pintarPanel(); }
+    } catch(e){ favoritos[claveFav] = true; guardaFavoritos(); toast('Marcado como favorito solo en este equipo'); pintarPanel(); }
+  };
+  caja.querySelector('#mcInfo').onclick = () => {
+    caja.innerHTML = '<h3>' + esc(b.name || 'Botón') + '</h3>' +
+      '<p>Página: <b>' + esc(pagina.name || '') + '</b></p>' +
+      '<p>Tipo: <b>' + esc(nombreTipoAccion(a)) + '</b></p>' +
+      '<p>' + esc(detalleAccion(a)) + '</p>' +
+      (b.fav ? '<p>Está marcado como favorito: enseña la estrella en todos los teléfonos.</p>' : (favoritos[claveFav] ? '<p>Está marcado como favorito solo en este equipo.</p>' : '')) +
+      '<a class="btn sec" id="mcVolver">Volver</a>' +
+      '<a class="btn prim" id="mcCerrar2">Cerrar</a>';
+    caja.querySelector('#mcCerrar2').onclick = cerrarMenu;
+    caja.querySelector('#mcVolver').onclick = () => abrirMenuBoton(b, pagina, idx);
+  };
+  caja.querySelector('#mcEditar').onclick = async () => {
+    cerrarMenu();
+    // «Editar» abre el editor en la propia PC (la acción Abrir de siempre,
+    // apuntando al editor del servidor). No salta al botón exacto: el
+    // editor no admite esa orden; el botón se localiza en su página.
+    try {
+      const j = await tapSimple({type: 'open', target: 'http://localhost:8931/'});
+      if(j && j.ok) toast('Editor abierto en la PC: busca este botón en su página');
+      else if(j) toast(j.msg || 'La PC no pudo abrir el editor');
+    } catch(e){ toast('Sin conexión con la PC'); }
+  };
+  caja.querySelector('#mcDuplicar').onclick = async () => {
+    cerrarMenu();
+    if(btActivo){ toast('Por Bluetooth no se puede duplicar: hazlo desde el editor de la PC'); return; }
+    if(!cfg) return;
+    // Duplicar = guardar la configuración con el botón repetido tras el
+    // original, por el mismo camino del editor (POST /api/config con la
+    // _rev: si otro editor la cambió, el servidor avisa con 409).
+    const nueva = JSON.parse(JSON.stringify(cfg));
+    const pag = (nueva.pages || []).find(p => p.id === pagina.id);
+    if(!pag || !pag.buttons || !pag.buttons[idx]){ toast('Ese botón ya no está en la configuración'); return; }
+    pag.buttons.splice(idx + 1, 0, JSON.parse(JSON.stringify(pag.buttons[idx])));
+    try {
+      const r = await fetchT(servidor + '/api/config', {method: 'POST', headers: Object.assign({'Content-Type': 'application/json'}, cabToken(servidor)), body: JSON.stringify(nueva)}, 6000);
+      if(r.status === 401){ alPerderPermiso(); return; }
+      const j = await r.json();
+      if(j && j.ok){ toast('Botón duplicado'); await cargarConfig(true); }
+      else { toast((j && j.msg) || 'No se pudo duplicar'); await cargarConfig(true); }
+    } catch(e){ toast('Sin conexión con la PC'); }
+  };
+}
+// El primer «click» tras la pulsación larga es el que fabrica el navegador
+// al levantar el dedo: cae sobre el fondo del menú (o sobre la tarjeta) y
+// cerraría el menú recién abierto o tocaría un botón suyo. Se ignora todo
+// click que llegue en los 600 ms siguientes a abrir el menú; los toques
+// de verdad siempre llegan después, leyendo el menú.
+$('#menuCtx').addEventListener('click', e => {
+  if(Date.now() - menuAbiertoEn < 600){ e.stopPropagation(); e.preventDefault(); return; }
+  if(e.target === $('#menuCtx')) cerrarMenu();
+}, true);
+
+function pintarAjustes(cont){
+  window.__subsActual = 1;
+  const tit = document.createElement('div'); tit.className = 'titulo'; tit.innerHTML = '<h2>Ajustes</h2>';
+  cont.appendChild(tit);
+  const mk = html => { const d = document.createElement('div'); d.innerHTML = html; return d.firstElementChild; };
+  const c1 = mk('<div class="tarjeta"><h3>Tema</h3><p>El aspecto de este teléfono. Automático sigue el tema que tenga el teléfono.</p><div class="seg" id="segTema"><button data-t="oscuro">Oscuro</button><button data-t="claro">Claro</button><button data-t="auto">Automático</button></div></div>');
+  cont.appendChild(c1);
+  c1.querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.t === tema);
+    b.onclick = () => { tema = b.dataset.t; localStorage.setItem('imandro_tema', tema); aplicaTema(); pintarAjustes(cont.parentElement ? $('#contenido') : cont); pintarPanel(); }; });
+  const c2 = mk('<div class="tarjeta"><h3>Barra de páginas</h3><p>Donde van Retoque, Color, Capas, Sistema y Ajustes en este teléfono.</p><div class="seg" id="segBarra"><button data-b="abajo">Abajo</button><button data-b="arriba">Arriba</button></div></div>');
+  cont.appendChild(c2);
+  c2.querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.b === barra);
+    b.onclick = () => { barra = b.dataset.b; localStorage.setItem('imandro_barra', barra); pintarPanel(); }; });
+  const c25 = mk('<div class="tarjeta"><h3>Pantalla encendida</h3><p>Marcado: este equipo no se bloquea mientras iMandro esté abierto. Desmarcado: se bloquea con el tiempo normal del equipo.</p><div class="seg" id="segPantalla"><button data-v="si">Marcado</button><button data-v="no">Desmarcado</button></div></div>');
+  cont.appendChild(c25);
+  c25.querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.v === pantalla);
+    b.onclick = () => { pantalla = b.dataset.v; localStorage.setItem('imandro_pantalla', pantalla); aplicaPantalla(); pintarPanel(); }; });
+  const c26 = mk('<div class="tarjeta"><h3>Estilo de los botones</h3><p>Toca el estilo que quieras: se aplica a todo el panel al momento y queda guardado en este equipo. El color de cada botón se cambia en el editor de la PC.</p></div>');
+  [['clasico','Clásico','El de ahora: tinte suave del color del botón. Sigue tu tema claro u oscuro.'],
+   ['brillante','Oscuro brillante','Fondo oscuro con degradado y brillo, teñido con el color de cada botón. Siempre oscuro.'],
+   ['plano','Oscuro plano','Fondo oscuro sin brillo, limpio y discreto, teñido con el color de cada botón. Siempre oscuro.'],
+   ['glass','Glass Tech','Cristal translúcido con el color de cada botón a plena saturación: brillo fuerte arriba y borde luminoso. Bien colorido.'],
+   ['soft','3D Soft','El color vivo de cada botón, sólido, con volumen: bisel claro arriba, borde oscuro abajo y sombras suaves. Bien colorido.']].forEach(([v, nom, desc]) => {
+    const op = document.createElement('div'); op.className = 'opcEst' + (estilo === v ? ' on' : '');
+    op.innerHTML = '<div class="tile mini ' + (v === 'clasico' ? '' : v) + '" style="--c:#4cc3ff' + (v === 'clasico' ? ';background:linear-gradient(180deg,#4cc3ff2e,var(--tarjeta))' : '') + '">' + svgIcono('pincel', (v === 'glass' || v === 'soft') ? '#ffffff' : '#4cc3ff', '#171f30') + '<span>Pincel</span></div><div class="txt"><b>' + nom + '</b><small>' + desc + '</small></div><div class="radio"></div>';
+    op.onclick = () => { estilo = v; localStorage.setItem('imandro_estilo', v); pintarPanel(); };
+    c26.appendChild(op);
+  });
+  cont.appendChild(c26);
+  const c27 = mk('<div class="tarjeta"><h3>Tamaño de iconos y texto</h3><p>El tamaño de los iconos y de la letra de los botones en este equipo. Se aplica al momento y queda guardado aquí.</p></div>');
+  [['normal','Normal','Como viene: icono de 30 px y letra de 12 px.', 23, 9],
+   ['grande','Grande','Icono de 40 px y letra de 14 px. Se lee mejor sin llenar el botón.', 30, 11],
+   ['muygrande','Muy grande','Icono de 48 px y letra de 16 px. Los nombres largos pasan a dos líneas.', 36, 13]].forEach(([v, nom, desc, pxI, pxT]) => {
+    const op = document.createElement('div'); op.className = 'opcEst' + (tamano === v ? ' on' : '');
+    const ejIcono = (typeof PACK_ICONOS !== 'undefined' && PACK_ICONOS['ps5/04_Pinceles_Retoque/046_pincel'])
+      ? '<img src="' + PACK_ICONOS['ps5/04_Pinceles_Retoque/046_pincel'].d + '" style="width:' + pxI + 'px;height:' + pxI + 'px;object-fit:contain" alt="">'
+      : svgIcono('pincel', '#4cc3ff', '#171f30');
+    op.innerHTML = '<div class="tile mini" style="background:linear-gradient(180deg,#4cc3ff2e,var(--tarjeta))">' + ejIcono + '<span style="font-size:' + pxT + 'px">Pincel</span></div><div class="txt"><b>' + nom + '</b><small>' + desc + '</small></div><div class="radio"></div>';
+    op.onclick = () => { tamano = v; localStorage.setItem('imandro_tamano', v); aplicaTamano(); pintarPanel(); };
+    c27.appendChild(op);
+  });
+  cont.appendChild(c27);
+  const c28 = mk('<div class="tarjeta"><h3>Vista de botones</h3><p>Cómo se ven los botones en este equipo.</p><div class="seg" id="segVista"><button data-v="clasica">Como siempre</button><button data-v="relleno">Rellenar pantalla</button></div><p style="margin-top:10px">Rellenar pantalla: los botones ocupan todo el alto de la pantalla y el icono y la letra crecen en la misma proporción. Como siempre: los botones quedan con el tamaño de siempre.</p></div>');
+  cont.appendChild(c28);
+  c28.querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.v === vista);
+    b.onclick = () => { vista = b.dataset.v; localStorage.setItem('imandro_vista', vista); aplicaVista(); pintarAjustes(cont.parentElement ? $('#contenido') : cont); pintarPanel(); }; });
+  const c29 = mk('<div class="tarjeta"><h3>Efecto al tocar</h3><p>El efecto que se ve al tocar un botón en este equipo. Se aplica al momento y queda guardado aquí.</p><div class="seg muchos" id="segEfecto"><button data-e="destello">Destello</button><button data-e="salto">Salto</button><button data-e="pulso">Pulso</button><button data-e="onda">Onda</button><button data-e="marca">Marca</button><button data-e="ninguno">Ninguno</button></div><p style="margin-top:10px">Destello es el de siempre. Salto: el botón se levanta y cae con un pequeño rebote. Pulso: crece un instante y suelta un anillo suave. Onda: una onda nace donde tocas y recorre el botón. Marca: la marca de «hecho» grande, sin movimiento. Ninguno: sin ningún efecto.</p></div>');
+  cont.appendChild(c29);
+  c29.querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.e === efecto);
+    b.onclick = () => { efecto = b.dataset.e; localStorage.setItem('imandro_efecto', efecto); pintarPanel(); }; });
+  const c3 = mk('<div class="tarjeta"><h3>Conexión</h3><p>Conectado por <b>' + (btActivo ? 'Bluetooth' : esc($('#tipoConexion').textContent || 'Wi-Fi')) + '</b> a <b>' + esc($('#nombrePC').textContent || 'tu PC') + '</b>' + (btActivo ? '' : ' (' + esc(servidor.replace('http://','')) + ')') + '.</p><a class="btn sec" id="btnCambiarPC">Cambiar de PC</a></div>');
+  cont.appendChild(c3);
+  c3.querySelector('#btnCambiarPC').onclick = () => { pararSondeo(); detenerReconexion(); panelMostrado = false; try { if(window.AndroBT) AndroBT.desconectar(); } catch(e){} btActivo = false; servidor = ''; localStorage.removeItem('imandro_server'); cfg = null; mostrarConexion(); };
+  const c4 = mk('<div class="tarjeta"><h3>Información</h3><p>iMandro v1.9.2<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3</p></div>');
+  cont.appendChild(c4);
+}
+$('#btnCable').onclick = () => conectar('http://127.0.0.1:8931');
+$('#btnEmparejar').onclick = emparejarConCodigo;
+// Lo llama la app de Android cuando el sistema responde al permiso de
+// Bluetooth (1.7): si se acepta, la lista se refresca sola sin volver a
+// tocar «Buscar»; si se deniega, aviso claro y la app no se cierra.
+window.__permisoBT = function(concedido){
+  if(concedido){ if(!$('#pantallaConexion').classList.contains('oculto')) refrescarListaBT(); }
+  else toast('Permiso de Bluetooth denegado: sin él no se puede buscar la PC por Bluetooth');
+};
+function refrescarListaBT(){
+  const el = $('#listaBT');
+  if(!window.AndroBT){ el.innerHTML = '<p style="margin-top:9px">El Bluetooth solo está dentro de la aplicación de Android.</p>'; return; }
+  let lista = [];
+  try { lista = JSON.parse(AndroBT.disponibles() || '[]'); } catch(e){}
+  if(lista && lista.error){ el.innerHTML = '<p style="margin-top:9px">' + esc(lista.error) + '</p>'; return; }
+  if(!lista.length){ el.innerHTML = '<p style="margin-top:9px">No hay aparatos emparejados: empareja tu PC primero en los Ajustes de Bluetooth de Android.</p>'; return; }
+  el.innerHTML = '';
+  lista.forEach(d => {
+    const it = document.createElement('div'); it.className = 'pcitem';
+    it.innerHTML = '<div><div class="n">' + esc(d.name) + '</div><div class="d">' + esc(d.mac) + '</div></div><span class="flecha">›</span>';
+    it.onclick = () => conectarBT(d.mac);
+    el.appendChild(it);
+  });
+}
+$('#btnBT').onclick = refrescarListaBT;
+$('#btnConectarManual').onclick = () => {
+  let ip = $('#ipManual').value.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+  if(!ip) return;
+  if(!ip.includes(':')) ip += ':8931';
+  conectar('http://' + ip);
+};
+let repintarTimer = null;
+window.addEventListener('resize', () => { clearTimeout(repintarTimer); repintarTimer = setTimeout(() => { if(cfg) pintarPanel(); }, 250); });
+window.addEventListener('resize', () => requestAnimationFrame(ajustarProporcion));
+window.addEventListener('orientationchange', () => setTimeout(ajustarProporcion, 350));
+// Deslizar el dedo a un lado (1.7): UN solo manejador decide el cambio.
+// Prioridad: si la página tiene subpáginas y el gesto puede cambiar de
+// subpágina, cambia la subpágina; solo al llegar al borde (primera o
+// última) el mismo gesto cambia de página. Antes la rejilla y #contenido
+// tenían cada uno su gesto y un mismo deslizamiento disparaba los dos.
+// El click que llega después del gesto se sigue suprimiendo (gestosPanel)
+// para que no queden «clicks fantasma» tras cambiar.
+let gestoX = null, deslizo = false;
+function cambiarPaginaDeslizando(dir){
+  const ps = paginasConAjustes();
+  const i = ps.findIndex(p => p.id === paginaActual);
+  const j = i + dir;
+  if(i < 0 || j < 0 || j >= ps.length) return false;
+  paginaActual = ps[j].id; subpagina = 0; pintarPanel();
+  return true;
+}
+function deslizarPanel(dx, dy){
+  if(Math.abs(dx) < 56 || Math.abs(dx) <= 1.6 * Math.abs(dy)) return false;
+  const dir = dx < 0 ? 1 : -1;
+  const subs = window.__subsActual || 1;
+  if(subs > 1 && paginaActual !== '__ajustes'){
+    if(dir === 1 && subpagina < subs - 1){ subpagina++; pintarPanel(); return true; }
+    if(dir === -1 && subpagina > 0){ subpagina--; pintarPanel(); return true; }
+  }
+  return cambiarPaginaDeslizando(dir);
+}
+(function gestosPanel(){
+  const zona = $('#contenido');
+  function inicio(x, y, desl){ gestoX = {x, y, desl}; }
+  function fin(x, y){
+    if(!gestoX) return;
+    const dx = x - gestoX.x, dy = y - gestoX.y, eraDesl = gestoX.desl;
+    gestoX = null;
+    if(eraDesl) return;
+    if(deslizarPanel(dx, dy)){
+      deslizo = true;
+      setTimeout(() => { deslizo = false; }, 400);
+    }
+  }
+  zona.addEventListener('touchstart', e => { const t = e.touches[0]; inicio(t.clientX, t.clientY, !!e.target.closest('input[type=range]')); }, {passive: true});
+  zona.addEventListener('touchend', e => { const t = e.changedTouches[0]; fin(t.clientX, t.clientY); });
+  zona.addEventListener('touchcancel', () => { gestoX = null; });
+  zona.addEventListener('pointerdown', e => { if(e.pointerType === 'mouse') inicio(e.clientX, e.clientY, !!e.target.closest('input[type=range]')); });
+  zona.addEventListener('pointerup', e => { if(e.pointerType === 'mouse') fin(e.clientX, e.clientY); });
+  zona.addEventListener('click', e => { if(deslizo){ e.stopPropagation(); e.preventDefault(); deslizo = false; } }, true);
+})();
+(function inicia(){
+  aplicaTema();
+  aplicaPantalla();
+  aplicaTamano();
+  aplicaVista();
+  if(servidor){ conectar(servidor); }
+  else if(location.protocol.startsWith('http')){ conectar(location.origin); }
+  else mostrarConexion();
+  setInterval(pedirDescubiertas, 3000);
+})();
+</script>
+</body>
+</html>
