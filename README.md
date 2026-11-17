@@ -25,8 +25,8 @@
 
 ## Instalación
 
-1. En la PC con Windows, instala **Instalar-iMandro-v1.9.2.exe** (está en la Release de esta versión).
-2. En el teléfono o la tableta Android, instala **iMandro-Android-v1.9.2.apk**.
+1. En la PC con Windows, instala **Instalar-iMandro-v1.9.3.exe** (está en la Release de esta versión).
+2. En el teléfono o la tableta Android, instala **iMandro-Android-v1.9.3.apk**.
 3. Abre iMandro en los dos equipos estando en la misma Wi-Fi, y empareja el teléfono con el código de 6 dígitos que enseña la PC.
 
 ## El código

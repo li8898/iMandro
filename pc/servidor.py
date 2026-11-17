@@ -122,13 +122,43 @@ queda para su propia versión posterior):
   ETag y must-revalidate en vez de no-store: el navegador los
   revalida y los cambios llegan igual de al instante, pero sin
   descargarlos enteros cada vez. El no-store queda solo en /api/*.
+
+1.9.3 — tres cambios aprobados por Liesky el 2026-11-17:
+- Punto 1 de la revisión externa (acción por referencia): el
+  teléfono ya no manda la acción entera del botón; manda solo la
+  referencia {página, botón} y el _rev de la configuración que
+  usó, y el servidor busca la acción en SU configuración guardada.
+  Si el _rev no coincide, contesta 409 y no se ejecuta nada (el
+  panel refresca su configuración). La acción cruda solo se acepta
+  con el token del editor (el «Probar ahora»); con un token de
+  emparejamiento se rechaza con el aviso de actualizar a la 1.9.3,
+  que es lo que recibe un panel de la 1.9.2 contra este servidor.
+  Cada botón lleva un «id» estable: migración única e idempotente
+  al primer arranque (marca «_ids193») que asigna los que falten
+  sin tocar nada más, y el mismo aseguramiento al guardar la
+  configuración (los botones nuevos y las copias reciben el suyo).
+  La misma semántica va por HTTP, Bluetooth y cable USB (que es
+  HTTP por adb reverse). «Editar en la PC» del menú del teléfono
+  ya no manda una acción cruda: pide por /api/abrir-editor (o el
+  tipo «abrir-editor» por Bluetooth) que el servidor abra SU
+  editor, sin llevar ninguna acción encima.
+- «Iniciar minimizado en la bandeja»: deslizador nuevo junto a
+  «Iniciar con Windows» (que también pasa a ser un deslizador).
+  El ajuste vive en imandro-arranque.json, junto a la
+  configuración. El acceso directo de Inicio trae la marca
+  «--inicio-windows» en sus argumentos: con el autoinicio puesto
+  y el minimizado activado, ese arranque deja el servidor
+  funcionando y el icono en la bandeja SIN abrir la ventana del
+  editor; el arranque a mano se comporta como siempre.
+- El punto verde del panel al reconectar: cosa del panel
+  (static/panel.html); el servidor no cambia en esto.
 """
 import base64, ctypes, glob, hashlib, json, os, secrets, shutil, socket, subprocess, sys, tempfile, threading, time
 from ctypes import wintypes
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
-VERSION = "1.9.2"
+VERSION = "1.9.3"
 # Identificador del protocolo PC <-> teléfono (1.7). La 1.6.2 y anteriores
 # no lo llevaban (para el panel cuentan como protocolo 1). Si el panel y la
 # PC no coinciden en protocolo, el panel avisa de que hay que actualizar
@@ -147,6 +177,9 @@ STATIC = os.path.join(BASE, "static")
 ARCHIVO_CONFIG = os.path.join(BASE, "imandro-config.json")
 ARCHIVO_DISPOSITIVOS = os.path.join(BASE, "imandro-dispositivos.json")
 ARCHIVO_LOG = os.path.join(BASE, "servidor.log")
+# 1.9.3: el ajuste «Iniciar minimizado en la bandeja», en su propio
+# archivo junto a la configuración (ver cargar_arranque()).
+ARCHIVO_ARRANQUE = os.path.join(BASE, "imandro-arranque.json")
 _candado_log = threading.Lock()
 
 def registra_servidor(texto):
@@ -619,6 +652,7 @@ def cargar_config():
             quitar_barras(CONFIG)
             migrar_v150()
             migrar_v172()
+            migrar_ids_botones()
             return
         except Exception as e:
             guardada = ""
@@ -646,6 +680,7 @@ def cargar_config():
                     guardar_config(subir_rev=False)
                     migrar_v150()
                     migrar_v172()
+                    migrar_ids_botones()
                     aviso2 = "Configuración recuperada de la copia .bak."
                     print("[iMandro] " + aviso2, flush=True)
                     registra_servidor(aviso2)
@@ -653,6 +688,8 @@ def cargar_config():
                 except Exception:
                     CONFIG = None
     CONFIG = config_por_defecto()
+    asegurar_ids_botones(CONFIG)
+    CONFIG["_ids193"] = True
     guardar_config(subir_rev=False)
 
 def guardar_config(subir_rev=True):
@@ -715,6 +752,49 @@ def migrar_v172():
             accion = b.get("action") or {}
             if accion.get("type") == "pstool" and accion.get("tool") in nuevos:
                 b["icon"] = nuevos[accion["tool"]]
+    guardar_config(subir_rev=False)
+
+def asegurar_ids_botones(cfg):
+    """1.9.3 (punto 1): cada botón de la configuración lleva un «id»
+    estable, que es lo que el teléfono manda al tocarlo (la acción ya
+    no viaja: la busca el servidor en su configuración guardada).
+    Aquí se asignan los ids que falten y se deshacen los duplicados
+    (una copia de un botón nace con el id de su original: el primero
+    conserva el suyo y la copia recibe uno nuevo). No se toca ningún
+    otro campo. Devuelve True si cambió algo; es idempotente: con
+    todos los ids puestos y sin duplicados no cambia nada."""
+    usados = set()
+    contador = [0]
+
+    def nuevo_id():
+        while True:
+            contador[0] += 1
+            candidato = "b%d" % contador[0]
+            if candidato not in usados:
+                usados.add(candidato)
+                return candidato
+
+    cambio = False
+    for pg in (cfg or {}).get("pages", []):
+        for b in pg.get("buttons", []):
+            bid = b.get("id")
+            if not bid or bid in usados:
+                b["id"] = nuevo_id()
+                cambio = True
+            else:
+                usados.add(bid)
+    return cambio
+
+def migrar_ids_botones():
+    """1.9.3 (punto 1): migración única al primer arranque de esta
+    versión — los botones de las configuraciones que ya existían
+    reciben su «id» estable (marca «_ids193», como las migraciones
+    de siempre). No sube la _rev ni toca nada más de la
+    configuración; los emparejamientos y los tokens no cambian."""
+    if CONFIG.get("_ids193"):
+        return
+    asegurar_ids_botones(CONFIG)
+    CONFIG["_ids193"] = True
     guardar_config(subir_rev=False)
 
 # ------------------------------------- Win32 declarado (1.9.1)
@@ -954,6 +1034,11 @@ def fg_elevado():
 
 def config_para_enviar():
     salida = dict(CONFIG)
+    # 1.9.3 (punto 1): la _rev que el panel usa en sus referencias es
+    # la que va aquí; se normaliza al mismo valor por defecto (1) que
+    # usa accion_por_referencia, para que una configuración sin _rev
+    # guardada no deje los toques en un 409 eterno.
+    salida["_rev"] = int(CONFIG.get("_rev", 1))
     salida["_fg"] = programa_en_primer_plano()
     # v1.6.1: sin barras deslizantes — tampoco salen si la configuración
     # que hubiera guardada aún las trajera.
@@ -1997,6 +2082,48 @@ def ejecutar(accion):
         return False, "orden del sistema no válida"
     return False, "tipo de acción no válido"
 
+# ------------------------------------- acción por referencia (1.9.3, punto 1)
+# El aviso que recibe un panel de la 1.9.2 (que manda la acción
+# entera con su token de emparejamiento) contra este servidor: un
+# rechazo claro que su aviso puede enseñar, no un fallo mudo.
+MSG_TAP_VERSION = ("Este teléfono tiene una versión anterior de iMandro: "
+                   "actualiza el teléfono y la PC a la " + VERSION +
+                   " para seguir usando los botones")
+
+def accion_por_referencia(datos):
+    """Busca la acción de un botón en la configuración GUARDADA del
+    servidor a partir de la referencia {pagina, boton} y el _rev que
+    el teléfono usó al enseñar ese botón. Devuelve (accion, None) o
+    (None, (codigo_http, cuerpo)). Si el _rev no coincide con el de
+    la configuración actual, no se devuelve acción alguna: 409, y el
+    panel refresca su configuración sin ejecutar nada. La misma
+    función sirve a HTTP (Wi-Fi y cable USB) y a Bluetooth."""
+    rev_actual = int(CONFIG.get("_rev", 1))
+    try:
+        rev = int(datos.get("_rev"))
+    except (TypeError, ValueError):
+        rev = None
+    if rev is None or rev != rev_actual:
+        return None, (409, {"ok": False, "conflicto": True, "rev": rev_actual,
+                            "msg": "La configuración cambió en la PC: el "
+                                   "teléfono la actualiza y este toque "
+                                   "no se ejecuta"})
+    pagina = None
+    for pg in CONFIG.get("pages", []):
+        if pg.get("id") == datos.get("pagina"):
+            pagina = pg
+            break
+    if pagina is None:
+        return None, (404, {"ok": False,
+                            "msg": "Esa página ya no está en la "
+                                   "configuración de la PC"})
+    for b in pagina.get("buttons", []):
+        if b.get("id") and b.get("id") == datos.get("boton"):
+            return b.get("action") or {"type": "none"}, None
+    return None, (404, {"ok": False,
+                        "msg": "Ese botón ya no está en la "
+                               "configuración de la PC"})
+
 # ------------------------------------------------------- Bluetooth y cable USB
 estado_bt = {"activo": False, "conectados": 0}
 estado_usb = {"estado": "nodisponible", "detalle": "sin comprobar"}
@@ -2074,8 +2201,27 @@ def atender_bt(conn):
             elif tipo == "config":
                 resp = {"id": rid, "ok": True, "protocolo": PROTOCOLO, "config": config_para_enviar()}
             elif tipo == "tap":
-                ok, msg = ejecutar(pet.get("action") or {})
-                resp = {"id": rid, "ok": ok, "msg": msg}
+                # 1.9.3 (punto 1): la misma semántica que por HTTP.
+                # La acción cruda se rechaza (por Bluetooth nunca hay
+                # token del editor); la referencia se busca en la
+                # configuración guardada, con su control de _rev.
+                if pet.get("action"):
+                    resp = {"id": rid, "ok": False, "msg": MSG_TAP_VERSION}
+                else:
+                    accion, error = accion_por_referencia(pet)
+                    if error is not None:
+                        resp = dict(error[1])
+                        resp["id"] = rid
+                    else:
+                        ok, msg = ejecutar(accion)
+                        resp = {"id": rid, "ok": ok, "msg": msg}
+            elif tipo == "abrir-editor":
+                # 1.9.3 (punto 1): «Editar en la PC» del menú del
+                # teléfono: la orden no lleva ninguna acción; el
+                # servidor abre SU editor, como hace la bandeja.
+                abrir_editor()
+                anota("Editor abierto a petición de un teléfono (Bluetooth)")
+                resp = {"id": rid, "ok": True, "msg": ""}
             else:
                 resp = {"id": rid, "ok": True, "msg": ""}
             conn.sendall((json.dumps(resp, ensure_ascii=False) + "\n").encode("utf-8"))
@@ -2476,7 +2622,7 @@ class Manejador(BaseHTTPRequestHandler):
                 return self._sin_permiso()
             return self._envia_json(200, {"ok": True, "version": VERSION,
                                           "protocolo": PROTOCOLO,
-                                          "_rev": CONFIG.get("_rev", 0),
+                                          "_rev": int(CONFIG.get("_rev", 1)),
                                           "_fg": programa_en_primer_plano(),
                                           # 1.9.1: True si ese programa
                                           # corre como administrador y
@@ -2499,7 +2645,10 @@ class Manejador(BaseHTTPRequestHandler):
         if ruta == "/api/autoinicio":
             if not self._autorizado():
                 return self._sin_permiso()
-            return self._envia_json(200, {"ok": True, "activo": autoinicio_estado()})
+            # 1.9.3: junto al estado del autoinicio viaja el ajuste
+            # «Iniciar minimizado en la bandeja».
+            return self._envia_json(200, {"ok": True, "activo": autoinicio_estado(),
+                                          "minimizado": arranque_minimizado()})
         if ruta in ("/", "/editor"):
             return self._archivo("editor.html", "text/html; charset=utf-8")
         if ruta == "/panel":
@@ -2612,12 +2761,30 @@ class Manejador(BaseHTTPRequestHandler):
             # Inicio con Windows (1.7.7): crea o quita el acceso
             # directo de la carpeta de Inicio. El estado que se
             # contesta es el real (si el acceso directo existe).
-            activo = bool(datos.get("activo"))
-            hecho, msg = autoinicio_fijar(activo)
-            registra_servidor("Inicio con Windows %s%s" % (
-                "activado" if activo else "desactivado",
-                "" if hecho else " — no se pudo: " + msg))
-            return self._envia_json(200, {"ok": hecho, "activo": autoinicio_estado(), "msg": msg})
+            # 1.9.3: el mismo endpoint guarda además el ajuste
+            # «Iniciar minimizado en la bandeja» (campo «minimizado»),
+            # que persiste en su archivo aunque el autoinicio no se
+            # toque. Cada campo se aplica solo si viene en el cuerpo.
+            hecho, msg = True, ""
+            if "minimizado" in datos:
+                fijar_arranque_minimizado(bool(datos.get("minimizado")))
+                registra_servidor("Iniciar minimizado en la bandeja %s" % (
+                    "activado" if arranque_minimizado() else "desactivado"))
+            if "activo" in datos:
+                activo = bool(datos.get("activo"))
+                hecho, msg = autoinicio_fijar(activo)
+                registra_servidor("Inicio con Windows %s%s" % (
+                    "activado" if activo else "desactivado",
+                    "" if hecho else " — no se pudo: " + msg))
+            elif autoinicio_estado():
+                # 1.9.3: si el autoinicio ya estaba puesto por una
+                # versión anterior, su acceso directo no trae la
+                # marca de arranque y «minimizado» no podría
+                # funcionar: se renueva solo, sin que Liesky tenga
+                # que apagar y encender el ajuste.
+                autoinicio_fijar(True)
+            return self._envia_json(200, {"ok": hecho, "activo": autoinicio_estado(),
+                                          "minimizado": arranque_minimizado(), "msg": msg})
         if ruta == "/api/config":
             global CONFIG
             nueva = datos.get("config") or datos
@@ -2625,6 +2792,11 @@ class Manejador(BaseHTTPRequestHandler):
                 return self._envia_json(400, {"ok": False, "msg": "configuración no válida"})
             nueva.pop("_fg", None)  # dato en vivo, no se guarda
             nueva.pop("_vals", None)  # idem
+            # 1.9.3 (punto 1): todo botón guardado lleva su «id»
+            # estable: los que el editor acaba de crear y las copias
+            # de otros botones reciben el suyo aquí, para que el
+            # teléfono pueda referirse a ellos al tocarlos.
+            asegurar_ids_botones(nueva)
             with candado_config:
                 # Control de versiones (1.7): si quien guarda trae una _rev
                 # más vieja que la del servidor, otro editor ya cambió la
@@ -2646,8 +2818,32 @@ class Manejador(BaseHTTPRequestHandler):
                 anota("Configuración guardada desde el editor (rev %d)" % CONFIG["_rev"])
                 return self._envia_json(200, {"ok": True, "rev": CONFIG["_rev"]})
         if ruta == "/api/tap":
-            ok, msg = ejecutar(datos.get("action") or {})
+            # 1.9.3 (punto 1): el teléfono manda solo la referencia
+            # del botón {pagina, boton} y el _rev de la configuración
+            # que usó; la acción la busca el servidor en la suya. La
+            # acción cruda solo se acepta con el token del editor (el
+            # «Probar ahora» del editor sigue como siempre); con un
+            # token de emparejamiento se rechaza con el aviso de
+            # versión, que es lo que recibe un panel de la 1.9.2
+            # contra este servidor: un rechazo claro, no un fallo mudo.
+            if datos.get("action"):
+                if not self._es_editor():
+                    return self._envia_json(403, {"ok": False, "msg": MSG_TAP_VERSION})
+                ok, msg = ejecutar(datos.get("action") or {})
+                return self._envia_json(200, {"ok": ok, "msg": msg})
+            accion, error = accion_por_referencia(datos)
+            if error is not None:
+                return self._envia_json(error[0], error[1])
+            ok, msg = ejecutar(accion)
             return self._envia_json(200, {"ok": ok, "msg": msg})
+        if ruta == "/api/abrir-editor":
+            # 1.9.3 (punto 1): «Editar en la PC» del menú del teléfono.
+            # La orden no lleva ninguna acción: el servidor abre SU
+            # editor, como hace la bandeja. Vale para cualquier token
+            # autorizado (no es una ruta de administración).
+            abrir_editor()
+            anota("Editor abierto a petición de un teléfono")
+            return self._envia_json(200, {"ok": True, "msg": ""})
         if ruta == "/api/buscar-ruta":
             ok, elegida, msg = buscar_ruta(datos.get("modo", "programa"))
             return self._envia_json(200, {"ok": ok, "ruta": elegida, "msg": msg})
@@ -2842,10 +3038,14 @@ def autoinicio_fijar(activo):
 
         def esc(s):
             return s.replace("'", "''")
+        # 1.9.3: el acceso directo trae la marca «--inicio-windows»
+        # en los argumentos: es como el servidor distingue, al
+        # arrancar, que viene del arranque de Windows y no de un
+        # doble clic a mano (para «Iniciar minimizado»).
         script = ("$s = New-Object -ComObject WScript.Shell; "
                   "$l = $s.CreateShortcut('%s'); "
                   "$l.TargetPath = '%s'; "
-                  "$l.Arguments = '\"%s\"'; "
+                  "$l.Arguments = '\"%s\" --inicio-windows'; "
                   "$l.WorkingDirectory = '%s'; "
                   "$l.Description = 'iMandro - servidor (arranque con Windows)'; "
                   "$l.Save()") % (esc(ruta), esc(pythonw), esc(servidor), esc(BASE))
@@ -2859,6 +3059,77 @@ def autoinicio_fijar(activo):
         return True, ""
     except Exception as e:
         return False, str(e)
+
+# ---------- Iniciar minimizado en la bandeja (1.9.3) ----------
+_arranque = {"minimizado": False}
+
+def cargar_arranque():
+    """Lee imandro-arranque.json (el ajuste «Iniciar minimizado»).
+    Con la red de siempre: si el archivo está dañado se conserva
+    renombrado «.corrupta-<fecha>», se avisa en servidor.log y se
+    sigue con el valor de fábrica (apagado). Sin archivo, apagado."""
+    global _arranque
+    _arranque = {"minimizado": False}
+    if not os.path.exists(ARCHIVO_ARRANQUE):
+        return
+    try:
+        with open(ARCHIVO_ARRANQUE, encoding="utf-8") as f:
+            datos = json.load(f)
+        if isinstance(datos, dict):
+            _arranque["minimizado"] = bool(datos.get("minimizado"))
+    except Exception as e:
+        try:
+            os.replace(ARCHIVO_ARRANQUE,
+                       ARCHIVO_ARRANQUE + ".corrupta-" + time.strftime("%Y%m%d-%H%M%S"))
+        except Exception:
+            pass
+        registra_servidor("AVISO: el archivo de arranque estaba dañado "
+                          "(%s); se sigue con «Iniciar minimizado» "
+                          "apagado." % e)
+
+def guardar_arranque():
+    """Guardado atómico (temporal + renombrar) con copia .bak, como
+    la configuración."""
+    if os.path.exists(ARCHIVO_ARRANQUE):
+        try:
+            shutil.copyfile(ARCHIVO_ARRANQUE, ARCHIVO_ARRANQUE + ".bak")
+        except Exception:
+            pass
+    tmp = ARCHIVO_ARRANQUE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(_arranque, f, ensure_ascii=False)
+        f.flush()
+        try:
+            os.fsync(f.fileno())
+        except Exception:
+            pass
+    os.replace(tmp, ARCHIVO_ARRANQUE)
+
+def arranque_minimizado():
+    return bool(_arranque.get("minimizado"))
+
+def fijar_arranque_minimizado(valor):
+    _arranque["minimizado"] = bool(valor)
+    guardar_arranque()
+    return arranque_minimizado()
+
+def debe_abrir_editor_al_arrancar(argv=None, entorno=None):
+    """La decisión de abrir el editor al arrancar el servidor,
+    separada para poder probarla sin Windows: se abre como siempre
+    SALVO que el arranque sea el de Windows (la marca
+    «--inicio-windows» del acceso directo de Inicio) con «Iniciar
+    minimizado» activado y el autoinicio puesto — entonces iMandro
+    se queda en la bandeja, con el servidor funcionando. El arranque
+    a mano (la ventana, el acceso directo del escritorio) no trae la
+    marca y se comporta como siempre; IMANDRO_NO_ABRIR (la ventana
+    propia ya abierta manda ella) sigue mandando sobre todo."""
+    argv = sys.argv if argv is None else argv
+    entorno = os.environ if entorno is None else entorno
+    if entorno.get("IMANDRO_NO_ABRIR") == "1":
+        return False
+    if "--inicio-windows" in argv and arranque_minimizado() and autoinicio_estado():
+        return False
+    return True
 
 def _anotar_bandeja():
     """Escribe en servidor.log cómo quedó la bandeja al arrancar: es
@@ -2916,6 +3187,7 @@ def main():
     _copias_previas_actualizacion()
     cargar_config()
     cargar_dispositivos()
+    cargar_arranque()
     threading.Thread(target=hilo_descubrimiento, daemon=True).start()
     threading.Thread(target=hilo_bluetooth, daemon=True).start()
     threading.Thread(target=hilo_usb, daemon=True).start()
@@ -2961,11 +3233,17 @@ def main():
         except Exception as e:
             print("[iMandro] Bandeja no disponible:", e, flush=True)
             registra_servidor("Bandeja: el módulo no cargó: %s" % e)
-    if os.environ.get("IMANDRO_NO_ABRIR") != "1":
+    if debe_abrir_editor_al_arrancar():
         def abre():
             time.sleep(1.0)
             abrir_editor()
         threading.Thread(target=abre, daemon=True).start()
+    elif "--inicio-windows" in sys.argv and arranque_minimizado():
+        # 1.9.3: arranque de Windows en modo minimizado: el servidor
+        # queda funcionando y el icono en la bandeja, sin ventana.
+        registra_servidor("Arranque con Windows en modo minimizado: "
+                          "el editor no se abre; iMandro queda en la "
+                          "bandeja.")
     registra_servidor("Servidor en marcha; editor en http://localhost:%d." % PUERTO)
     try:
         _bucle_servidor()

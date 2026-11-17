@@ -209,7 +209,7 @@ input[type=text]{background:var(--panel2);border:1px solid var(--borde2);border-
       </div>
       <div class="tarjeta oculto" id="tarjetaVersion">
         <h3>Hay que actualizar iMandro</h3>
-        <p>Esta PC tiene una versión de iMandro que no coincide con la del teléfono: actualiza las dos a la 1.9.2 (la PC y el teléfono) y vuelve a tocar «Conectar».</p>
+        <p>Esta PC tiene una versión de iMandro que no coincide con la del teléfono: actualiza las dos a la 1.9.3 (la PC y el teléfono) y vuelve a tocar «Conectar».</p>
       </div>
       <div class="tarjeta">
         <h3>Escribir la dirección a mano</h3>
@@ -408,6 +408,14 @@ let panelMostrado = false;
 const recon = {activo: false, intento: 0, timer: null, base: ''};
 function marcarConexion(est){
   const dot = $('#puntoConexion'); if(!dot) return;
+  // 1.9.3: mientras el panel está reconectando, el estado de
+  // reconexión manda sobre el punto. Un toque que acierta en esa
+  // ventana (la PC parpadea pero sigue caída) ya no lo deja en
+  // verde: ese verde quedaba «pegado» hasta que la reconexión
+  // resolviera, aunque la PC hubiera caído justo después. En estado
+  // normal, el verde al instante tras un toque con éxito (1.7.7)
+  // sigue exactamente igual.
+  if(est === 'ok' && recon.activo) est = 'recon';
   if(est === 'ok'){ dot.classList.remove('mal'); $('#tipoConexion').textContent = tipoReal; }
   else { dot.classList.add('mal'); $('#tipoConexion').textContent = (est === 'recon') ? 'Reconectando…' : 'Sin conexión'; }
 }
@@ -477,7 +485,10 @@ function pasoReconexion(){
     if(!recon.activo) return; // mientras tanto se quitó el permiso o se cambió de PC
     if(bien === 'version'){ detenerReconexion(); mostrarAvisoVersion(); }
     else if(bien) finReconexion();
-    else pasoReconexion();
+    // 1.9.3: la reconexión resolvió en fallo: el punto pasa a rojo
+    // en este mismo momento (el estado de reconexión se reafirma),
+    // sin esperar a ningún sondeo posterior.
+    else { marcarConexion('recon'); pasoReconexion(); }
   }, espera);
 }
 function detenerReconexion(){
@@ -907,17 +918,26 @@ async function tocar(b, el, ev){
     vibrar(35);
     if(a.type === 'page'){ const destino = a.page; if(paginasVisibles().find(p => p.id === destino)){ paginaActual = destino; subpagina = 0; pintarPanel(); } return; }
     let j;
+    // 1.9.3 (punto 1): el toque ya no manda la acción entera: manda
+    // solo la referencia del botón (su página y su «id») y el _rev de
+    // la configuración que este panel tiene; la PC busca la acción en
+    // su configuración guardada. Si su _rev ya no coincide (la
+    // configuración cambió entre tanto), la PC contesta 409 y no
+    // ejecuta nada: el panel refresca su configuración y avisa.
+    const refToque = {pagina: paginaActual, boton: b.id || '', _rev: (cfg && cfg._rev) || 0};
     if(btActivo){
-      j = await solicitudBT('tap', {action: a});
+      j = await solicitudBT('tap', refToque);
       if(j && j.sinpermiso){ alPerderPermiso(); return; }
+      if(j && j.conflicto){ await cargarConfig(true); toast('La configuración cambió en la PC: ya está actualizada; vuelve a tocar el botón'); return; }
     } else {
       // Las acciones de Photoshop pueden tardar (el servidor les da hasta
       // 25 s): su espera es más larga; el resto se corta a los 6 s para
       // que nada se quede colgado ni se declare fallida una acción que
       // en realidad sí se ejecutó en la PC.
       const msTap = ['psscript', 'psaction', 'pstool', 'multi'].includes(a.type) ? 25000 : 6000;
-      const r = await fetchT(servidor + '/api/tap', {method:'POST', headers:Object.assign({'Content-Type':'application/json'}, cabToken(servidor)), body: JSON.stringify({action: a})}, msTap);
+      const r = await fetchT(servidor + '/api/tap', {method:'POST', headers:Object.assign({'Content-Type':'application/json'}, cabToken(servidor)), body: JSON.stringify(refToque)}, msTap);
       if(r.status === 401){ alPerderPermiso(); return; }
+      if(r.status === 409){ await cargarConfig(true); toast('La configuración cambió en la PC: ya está actualizada; vuelve a tocar el botón'); return; }
       j = await r.json();
     }
     if(j && j.ok){
@@ -940,14 +960,17 @@ async function tocar(b, el, ev){
   } catch(e){ toast('Sin conexión con la PC'); marcarConexion('sin'); vibrar(90); }
   finally { delete toquesEnCurso[claveToque]; }
 }
-// Toque sencillo sin animación, para el menú de pulsación larga (Editar).
-async function tapSimple(a){
+// «Editar en la PC» del menú de pulsación larga (1.9.3, punto 1):
+// ya no manda una acción cruda de «abrir»: pide a la PC que abra SU
+// editor (la orden no lleva ninguna acción encima; la PC abre el
+// editor que ella misma conoce, como hace su bandeja).
+async function abrirEditorPC(){
   if(btActivo){
-    const j = await solicitudBT('tap', {action: a});
+    const j = await solicitudBT('abrir-editor', {});
     if(j && j.sinpermiso){ alPerderPermiso(); return null; }
     return j;
   }
-  const r = await fetchT(servidor + '/api/tap', {method:'POST', headers:Object.assign({'Content-Type':'application/json'}, cabToken(servidor)), body: JSON.stringify({action: a})}, 6000);
+  const r = await fetchT(servidor + '/api/abrir-editor', {method:'POST', headers:Object.assign({'Content-Type':'application/json'}, cabToken(servidor)), body: '{}'}, 6000);
   if(r.status === 401){ alPerderPermiso(); return null; }
   return r.json();
 }
@@ -1107,11 +1130,12 @@ function abrirMenuBoton(b, pagina, idx){
   };
   caja.querySelector('#mcEditar').onclick = async () => {
     cerrarMenu();
-    // «Editar» abre el editor en la propia PC (la acción Abrir de siempre,
-    // apuntando al editor del servidor). No salta al botón exacto: el
-    // editor no admite esa orden; el botón se localiza en su página.
+    // «Editar» abre el editor en la propia PC (la PC abre SU editor,
+    // sin que el teléfono mande ninguna acción). No salta al botón
+    // exacto: el editor no admite esa orden; el botón se localiza en
+    // su página.
     try {
-      const j = await tapSimple({type: 'open', target: 'http://localhost:8931/'});
+      const j = await abrirEditorPC();
       if(j && j.ok) toast('Editor abierto en la PC: busca este botón en su página');
       else if(j) toast(j.msg || 'La PC no pudo abrir el editor');
     } catch(e){ toast('Sin conexión con la PC'); }
@@ -1199,7 +1223,7 @@ function pintarAjustes(cont){
   const c3 = mk('<div class="tarjeta"><h3>Conexión</h3><p>Conectado por <b>' + (btActivo ? 'Bluetooth' : esc($('#tipoConexion').textContent || 'Wi-Fi')) + '</b> a <b>' + esc($('#nombrePC').textContent || 'tu PC') + '</b>' + (btActivo ? '' : ' (' + esc(servidor.replace('http://','')) + ')') + '.</p><a class="btn sec" id="btnCambiarPC">Cambiar de PC</a></div>');
   cont.appendChild(c3);
   c3.querySelector('#btnCambiarPC').onclick = () => { pararSondeo(); detenerReconexion(); panelMostrado = false; try { if(window.AndroBT) AndroBT.desconectar(); } catch(e){} btActivo = false; servidor = ''; localStorage.removeItem('imandro_server'); cfg = null; mostrarConexion(); };
-  const c4 = mk('<div class="tarjeta"><h3>Información</h3><p>iMandro v1.9.2<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3</p></div>');
+  const c4 = mk('<div class="tarjeta"><h3>Información</h3><p>iMandro v1.9.3<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3</p></div>');
   cont.appendChild(c4);
 }
 $('#btnCable').onclick = () => conectar('http://127.0.0.1:8931');

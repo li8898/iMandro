@@ -57,6 +57,16 @@ select:focus,input:focus,textarea:focus{outline:2px solid var(--ambar);outline-o
 .seg{display:flex;border:1px solid var(--borde2);border-radius:9px;overflow:hidden}
 .seg button{background:transparent;border:none;color:var(--suave);padding:6px 11px;font-size:12.5px;font-weight:700;cursor:pointer}
 .seg button.on{background:var(--ambar);color:#231600}
+/* Deslizador unificado tipo iOS 26 (1.9.3): EL deslizador de las
+   opciones sí/no, el mismo de las demás aplicaciones de Liesky; en
+   la PC va pequeño (38×22), proporcionado al ratón. Pista con
+   brillo de cristal, botón blanco y verde al encender. */
+.ios26{width:38px;height:22px;border-radius:12px;position:relative;flex:none;border:none;cursor:pointer;padding:0;background:linear-gradient(180deg,#E9EDF3,#D9DEE8);box-shadow:inset 0 1px 2px rgba(255,255,255,.9), inset 0 -1px 3px rgba(32,52,77,.12), 0 1px 2px rgba(32,52,77,.10)}
+.ios26::after{content:'';position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:linear-gradient(180deg,#FFFFFF,#F1F4F9);box-shadow:0 2px 5px rgba(32,52,77,.28), inset 0 1px 1px rgba(255,255,255,1), inset 0 -2px 3px rgba(32,52,77,.08)}
+.ios26.on{background:linear-gradient(180deg,#4BD964,#28B843);box-shadow:inset 0 1px 2px rgba(255,255,255,.55), inset 0 -2px 4px rgba(0,80,20,.25), 0 1px 3px rgba(20,120,40,.35)}
+.ios26.on::after{left:auto;right:2px}
+.ios26:disabled{opacity:.35;cursor:default}
+.filaDesl{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px;font-size:13.5px}
 .grid{display:grid;gap:10px;margin-top:14px}
 .tile{position:relative;height:104px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;cursor:pointer;border:1px solid var(--borde2);background:linear-gradient(180deg,var(--tarjeta2),var(--tarjeta));text-align:center}
 .tile svg{width:29px;height:29px}
@@ -210,14 +220,16 @@ input[type=color]{width:40px;height:29px;border:1px solid var(--borde2);border-r
     <h3>ACTIVIDAD RECIENTE</h3>
     <div class="act" id="actividad">—</div>
     <div class="sep"></div>
-    <div class="tarjeta"><b>Información</b><br>iMandro v1.9.2<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3
+    <div class="tarjeta"><b>Información</b><br>iMandro v1.9.3<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3
       <div class="campo" style="margin-top:10px"><label>RUTA DE PHOTOSHOP (OPCIONAL)</label><input type="text" id="rutaPhotoshop" placeholder="Automática"></div>
       <div class="campo"><label>RUTA DE LIGHTROOM CLASSIC (OPCIONAL)</label><input type="text" id="rutaLightroom" placeholder="Automática"></div>
       <p style="font-size:11.5px;line-height:1.5">Si están en una carpeta rara, escribe aquí la ruta de su programa (.exe). En vacío, iMandro los busca solo — también en el registro de Windows — y usa el más nuevo.</p>
     </div>
-    <div class="tarjeta"><b>Novedades de la versión 1.9.2</b><br><b>Emparejar, solo cuando tú lo abras:</b> el emparejamiento está pausado y se abre durante 2 minutos con el botón «Permitir emparejar» de la tarjeta EMPAREJAMIENTO; fuera de ese rato, ningún teléfono nuevo puede entrar.<br><b>Photoshop y Lightroom se encuentran mejor:</b> también se buscan en el registro de Windows, se usa el más nuevo por su número de versión, y puedes fijar su ruta en la tarjeta de Información.<br><b>El selector «Buscar…» ya no usa PowerShell:</b> es el diálogo de Windows llamado directamente.<br><b>Diseño y accesibilidad:</b> los nombres de página se leen enteros en la lista, el botón «Añadir desde la PC» ya no sale recortado, la acción elegida se marca en ámbar, el texto de CONEXIÓN es más corto, las pestañas del teléfono se leen mejor, el panel respeta «reducir movimiento» y ya no bloquea el zoom del teléfono.<br>Y en Android, los permisos guardados de tus teléfonos quedan cifrados con la llave del propio teléfono, y antes de enviar el código a una PC encontrada, el panel te enseña su nombre y su dirección para que confirmes que es la tuya.</div>
+    <div class="tarjeta"><b>Novedades de la versión 1.9.3</b><br><b>Los botones se ejecutan por referencia:</b> el teléfono ya no manda la acción entera de cada botón; manda solo qué botón tocaste y la PC busca la acción en tu configuración guardada. Si la configuración cambió entre tanto, ese toque no se ejecuta y el teléfono se actualiza solo. El «Probar ahora» de este editor sigue igual que siempre.<br><b>Iniciar minimizado en la bandeja:</b> en la tarjeta «Iniciar con Windows» hay un deslizador nuevo: con los dos activados, al encender la PC iMandro arranca solo en la bandeja, sin abrir la ventana. «Iniciar con Windows» también pasa a ser un deslizador, como las demás opciones sí/no.<br><b>El punto de conexión dice la verdad al reconectar:</b> si la PC cae mientras el teléfono está reconectando, el punto pasa a rojo en ese momento; ya no se queda en verde por un toque que acertó justo antes de la caída.</div>
     <div class="tarjeta"><b>Iniciar con Windows</b><br>Si lo activas, iMandro arranca solo al encender la PC y los teléfonos pueden conectar sin que tengas que abrir nada primero. Nace apagado.
-      <div class="seg" id="segAutoinicio" style="margin-top:8px"><button data-a="1">Activado</button><button data-a="0">Apagado</button></div>
+      <div class="filaDesl"><span>Iniciar con Windows</span><button type="button" class="ios26" id="deslAutoinicio" role="switch" aria-checked="false" aria-label="Iniciar con Windows"></button></div>
+      <div class="filaDesl"><span>Iniciar minimizado en la bandeja</span><button type="button" class="ios26" id="deslMinimizado" role="switch" aria-checked="false" aria-label="Iniciar minimizado en la bandeja"></button></div>
+      <p style="margin-top:7px">Con los dos activados, al encender la PC iMandro arranca solo en la bandeja, sin abrir la ventana; el editor se abre desde la bandeja como siempre. Si «Iniciar con Windows» está apagado, el minimizado queda sin efecto.</p>
       <div id="estadoAutoinicio" style="margin-top:6px"></div>
     </div>
   </aside>
@@ -1159,25 +1171,41 @@ async function refrescarDelante(){
 // 1.7.7: el interruptor de «Iniciar con Windows». El estado que se
 // enseña sale de la existencia real del acceso directo en la carpeta
 // de Inicio (lo contesta el servidor), no de lo último que se tocó.
+// 1.9.3: los dos ajustes son deslizadores (el unificado tipo iOS 26)
+// y se suma «Iniciar minimizado en la bandeja»: su estado también lo
+// contesta el servidor (GET/POST /api/autoinicio), y su deslizador
+// queda desactivado a la vista mientras el autoinicio esté apagado.
 let autoinicioVisto = null;
+function pintarDeslizador(el, valor){
+  el.classList.toggle('on', !!valor);
+  el.setAttribute('aria-checked', valor ? 'true' : 'false');
+}
 async function refrescarAutoinicio(){
   try {
     const r = await api('/api/autoinicio'); const j = await r.json();
-    if(!j.ok || j.activo === autoinicioVisto) return;
-    autoinicioVisto = j.activo;
-    document.querySelectorAll('#segAutoinicio button').forEach(b => b.classList.toggle('on', (b.dataset.a === '1') === j.activo));
-    $('#estadoAutoinicio').textContent = j.activo ? 'Ahora mismo: activado — iMandro arranca con Windows.' : 'Ahora mismo: apagado.';
+    if(!j.ok) return;
+    const clave = (j.activo ? '1' : '0') + '|' + (j.minimizado ? '1' : '0');
+    if(clave === autoinicioVisto) return;
+    autoinicioVisto = clave;
+    pintarDeslizador($('#deslAutoinicio'), j.activo);
+    pintarDeslizador($('#deslMinimizado'), j.minimizado);
+    $('#deslMinimizado').disabled = !j.activo;
+    $('#estadoAutoinicio').textContent = j.activo
+      ? 'Ahora mismo: activado — iMandro arranca con Windows' + (j.minimizado ? ', minimizado en la bandeja.' : '.')
+      : 'Ahora mismo: apagado.';
   } catch(e){}
 }
-document.querySelectorAll('#segAutoinicio button').forEach(b => b.onclick = async () => {
+async function cambiarAutoinicio(cuerpo){
   try {
-    const r = await api('/api/autoinicio', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({activo: b.dataset.a === '1'})});
+    const r = await api('/api/autoinicio', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(cuerpo)});
     const j = await r.json();
     autoinicioVisto = null;
     if(!j.ok) $('#estadoAutoinicio').textContent = 'No se pudo cambiar: ' + (j.msg || 'inténtalo otra vez');
     refrescarAutoinicio();
   } catch(e){ $('#estadoAutoinicio').textContent = 'No se pudo cambiar: sin respuesta de la PC'; }
-});
+}
+$('#deslAutoinicio').onclick = () => cambiarAutoinicio({activo: !$('#deslAutoinicio').classList.contains('on')});
+$('#deslMinimizado').onclick = () => cambiarAutoinicio({minimizado: !$('#deslMinimizado').classList.contains('on')});
 const COLORES_AVA = ['#2f6db3','#7a4fd0','#1f9d74','#c2622a','#b03a5b','#3a7bd5','#5b8c2a','#8a6d1f'];
 function inicialesApp(n){ const p = (n || '?').trim().split(/\s+/); return ((p[0][0] || '?') + (p.length > 1 ? (p[1][0] || '') : (p[0][1] || ''))).toUpperCase(); }
 function colorAva(n){ let s = 0; for(const c of (n || '')) s = (s * 31 + c.charCodeAt(0)) >>> 0; return COLORES_AVA[s % COLORES_AVA.length]; }

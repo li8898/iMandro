@@ -1,18 +1,18 @@
-; Instalador de iMandro v1.9.2 (PC) - Creador: Liesky Vazquez
+; Instalador de iMandro v1.9.3 (PC) - Creador: Liesky Vazquez
 Unicode true
 !include "MUI2.nsh"
 
 Name "iMandro"
-OutFile "..\entrega\Instalar-iMandro-v1.9.2.exe"
+OutFile "..\entrega\Instalar-iMandro-v1.9.3.exe"
 InstallDir "$LOCALAPPDATA\iMandro"
 RequestExecutionLevel user
 SetCompressor /SOLID lzma
 Icon "icono.ico"
 UninstallIcon "icono.ico"
-VIProductVersion "1.9.2.0"
+VIProductVersion "1.9.3.0"
 VIAddVersionKey "ProductName" "iMandro"
 VIAddVersionKey "FileDescription" "Panel de control para la PC desde el telefono (tipo Stream Deck)"
-VIAddVersionKey "FileVersion" "1.9.2.0"
+VIAddVersionKey "FileVersion" "1.9.3.0"
 VIAddVersionKey "CompanyName" "Liesky Vazquez"
 VIAddVersionKey "LegalCopyright" "(c) 2026 Liesky Vazquez"
 
@@ -77,7 +77,7 @@ Section "Instalar"
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\iMandro" "UninstallString" "$\"$INSTDIR\Desinstalar.exe$\""
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\iMandro" "DisplayIcon" "$INSTDIR\icono.ico"
     WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\iMandro" "Publisher" "Liesky Vazquez"
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\iMandro" "DisplayVersion" "1.9.2"
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\iMandro" "DisplayVersion" "1.9.3"
 SectionEnd
 
 Section "Uninstall"
