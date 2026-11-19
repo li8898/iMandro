@@ -62,7 +62,7 @@ import android.util.Base64;
  *  - Bluetooth: las líneas que llegan tienen un tope generoso de
  *    8 MB (D4), igual que en el servidor. */
 public class MainActivity extends Activity {
-    public static final String VERSION_APP = "1.9.3";
+    public static final String VERSION_APP = "1.9.4";
     public static final String CREADOR = "Liesky Vázquez";
     private static final int PUERTO_AVISO = 8933;    // la PC anuncia aquí
     private static final int PUERTO_BUSCAR = 8932;  // aquí se le pregunta

@@ -5,36 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>iMandro</title>
 <style>
-:root{--fondo:#0b0f16;--panel:#101623;--panel2:#0d1420;--tarjeta:#171f30;--tarjeta2:#1e2739;--borde:#222c42;--borde2:#2c3852;--texto:#eef2f8;--suave:#8b98b0;--tenue:#728198;--ambar:#f6b73c;--verde:#3ddc97;--rojo:#ff7a7a;--ic:30px;--fs:12px}
-[data-tema="claro"]{--fondo:#eef2f7;--panel:#ffffff;--panel2:#f7fafc;--tarjeta:#f2f5fa;--tarjeta2:#e8eef6;--borde:#d3dce8;--borde2:#c3d0e0;--texto:#17203a;--suave:#5a6b84;--tenue:#71809a}
+:root{--fondo:#111318;--panel:rgba(21,23,29,.72);--panel2:rgba(255,255,255,.05);--tarjeta:rgba(32,36,48,.62);--tarjeta2:rgba(52,58,78,.62);--borde:rgba(178,154,255,.20);--borde2:rgba(178,154,255,.34);--texto:#F4F2FF;--suave:#A79FD1;--tenue:#8B84B8;--ambar:#f6b73c;--verde:#3ddc97;--rojo:#ff7a7a;--acento:#895CFF;--aurora1:rgba(137,92,255,.34);--aurora2:rgba(85,185,233,.20);--aurora3:rgba(236,72,153,.13);--sombra:0 22px 55px rgba(0,0,0,.50);--sombra-suave:0 10px 28px rgba(0,0,0,.35);--sombra-tile:0 6px 16px rgba(0,0,0,.22);--ic:30px;--fs:12px}
+[data-tema="claro"]{--fondo:#F2F0FA;--panel:rgba(250,248,254,.78);--panel2:rgba(90,70,160,.05);--tarjeta:rgba(255,255,255,.75);--tarjeta2:rgba(233,229,248,.85);--borde:rgba(90,70,160,.18);--borde2:rgba(90,70,160,.30);--texto:#221D33;--suave:#6E6790;--tenue:#8A84A8;--aurora1:rgba(137,92,255,.20);--aurora2:rgba(85,185,233,.16);--aurora3:rgba(236,72,153,.10);--sombra:0 22px 55px rgba(74,62,130,.22);--sombra-suave:0 10px 28px rgba(74,62,130,.14);--sombra-tile:0 6px 16px rgba(74,62,130,.12)}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{background:var(--fondo);color:var(--texto);overflow:hidden}
+body{background:radial-gradient(720px 480px at 12% -6%,var(--aurora1),transparent 62%),radial-gradient(820px 560px at 96% 8%,var(--aurora2),transparent 60%),radial-gradient(700px 520px at 55% 112%,var(--aurora3),transparent 60%),var(--fondo);color:var(--texto);overflow:hidden}
 .app{height:100%;display:flex;flex-direction:column;padding:14px 14px 8px;max-width:760px;margin:0 auto}
 .cab{display:flex;align-items:center;gap:11px}
-.logo{width:46px;height:46px;border-radius:14px;background:#f4f7fc;border:1px solid var(--borde);display:flex;align-items:center;justify-content:center;flex:none}
+.logo{width:46px;height:46px;border-radius:15px;background:#f4f7fc;border:1px solid var(--borde);box-shadow:var(--sombra-suave);display:flex;align-items:center;justify-content:center;flex:none}
 .logo svg{width:37px;height:37px}
 .nombre{font-size:19px;font-weight:800;line-height:1.1}
 .sub{font-size:11.5px;color:var(--suave)}
-.pill{margin-left:auto;display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--borde2);border-radius:999px;padding:6px 11px 6px 9px;flex:none;max-width:46%}
+.pill{margin-left:auto;display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--borde);border-radius:999px;padding:6px 11px 6px 9px;flex:none;max-width:46%;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sombra-suave)}
 .pill svg{width:14px;height:14px;color:#4cc3ff;flex:none}
 .pill .t1{font-size:11px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pill .t2{font-size:9px;color:var(--suave);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--verde);flex:none}
-.dot.mal{background:var(--rojo)}
-.tabs{display:flex;border-top:1px solid var(--borde);padding-top:8px;margin-top:auto}
-.tabs.arriba{border-top:none;border-bottom:1px solid var(--borde);padding:8px 0 10px;margin:2px 0 4px}
-.tf{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:600;color:var(--suave);padding:5px 2px;cursor:pointer;text-align:center;min-width:0}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--verde);box-shadow:0 0 7px var(--verde);flex:none}
+.dot.mal{background:var(--rojo);box-shadow:0 0 7px var(--rojo)}
+.tabs{display:flex;gap:2px;background:var(--panel);border:1px solid var(--borde);border-radius:24px;padding:6px;margin-top:auto;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sombra-suave)}
+.tabs.arriba{padding:6px;margin:2px 0 4px}
+.tf{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:600;color:var(--suave);padding:6px 2px;cursor:pointer;text-align:center;min-width:0;border-radius:16px}
 .tf span{line-height:1.2;overflow-wrap:break-word;max-width:100%}
 .tf svg{width:21px;height:21px}
-.tf.on{color:var(--ambar)}
+.tf.on{color:var(--texto);background:color-mix(in srgb,var(--acento) 26%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acento) 40%,transparent)}
+.tf.on svg{stroke:#CDBFFF}
+[data-tema="claro"] .tf.on svg{stroke:#5B2BE0}
 .titulo{display:flex;align-items:center;margin:12px 2px 2px}
 .titulo h2{font-size:22px;font-weight:800}
 .dots{margin-left:auto;display:flex;gap:6px}
 .dots i{width:7px;height:7px;border-radius:99px;background:var(--borde2);cursor:pointer}
-.dots i.on{width:20px;background:var(--ambar)}
-.grid{display:grid;gap:10px;margin-top:12px}
-.tile{position:relative;height:104px;border-radius:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;cursor:pointer;border:1px solid var(--borde2);background:linear-gradient(180deg,var(--tarjeta2),var(--tarjeta));text-align:center;user-select:none}
+.dots i.on{width:20px;background:var(--acento)}
+.grid{display:grid;gap:10px;margin-top:12px;perspective:1100px}
+.tile{position:relative;height:104px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;cursor:pointer;border:1px solid var(--borde);background:linear-gradient(180deg,var(--tarjeta2),var(--tarjeta));text-align:center;user-select:none;backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);box-shadow:var(--sombra-tile)}
 .tile>svg{width:calc(var(--ic)*var(--f,1));height:calc(var(--ic)*var(--f,1))}
 .tile>img.icimg{width:calc(var(--ic)*var(--f,1));height:calc(var(--ic)*var(--f,1));object-fit:contain}
 .tile>span{font-size:calc(var(--fs)*var(--f,1));font-weight:600;line-height:1.18;color:var(--texto)}
@@ -70,8 +72,8 @@ body.vista-relleno .tile{height:auto;min-height:104px;gap:calc(7px*var(--f,1))}
 .tile.conimg>img.cara{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .tile.conimg>span.nomimg{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:16px 6px 7px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.62));color:#fff;font-size:calc(var(--fs)*var(--f,1));font-weight:700;line-height:1.18;text-shadow:0 1px 3px rgba(0,0,0,.65)}
 .tile.conimg .fav,.tile.conimg .bdg{z-index:2;background:rgba(10,19,34,.55)}
-.opcEst{display:flex;align-items:center;gap:12px;margin-top:10px;border:1.5px solid var(--borde);border-radius:14px;padding:9px 11px;cursor:pointer}
-.opcEst.on{border-color:var(--ambar);background:rgba(246,183,60,.07)}
+.opcEst{display:flex;align-items:center;gap:12px;margin-top:10px;border:1.5px solid var(--borde);border-radius:16px;padding:9px 11px;cursor:pointer}
+.opcEst.on{border-color:var(--acento);background:color-mix(in srgb,var(--acento) 8%,transparent)}
 .opcEst .mini{width:62px;height:54px;flex:none}
 .opcEst .mini svg{width:23px;height:23px}
 .opcEst .mini span{font-size:9px}
@@ -79,7 +81,7 @@ body.vista-relleno .tile{height:auto;min-height:104px;gap:calc(7px*var(--f,1))}
 .opcEst .txt b{font-size:14px;display:block}
 .opcEst .txt small{font-size:11.5px;color:var(--tenue);line-height:1.35;display:block;margin-top:2px}
 .opcEst .radio{width:21px;height:21px;flex:none;border-radius:99px;border:2px solid var(--borde2)}
-.opcEst.on .radio{border-color:var(--ambar);background:radial-gradient(circle,var(--ambar) 0 5.5px,transparent 6px)}
+.opcEst.on .radio{border-color:var(--acento);background:radial-gradient(circle,var(--acento) 0 5.5px,transparent 6px)}
 .nota{text-align:center;font-size:11px;color:var(--tenue);padding:9px 4px 2px}
 .tile.destello{animation:destello .45s ease-out}
 @keyframes destello{0%{box-shadow:0 0 0 0 rgba(246,183,60,.0)}25%{box-shadow:0 0 0 3px var(--ambar),0 0 26px rgba(246,183,60,.55)}100%{box-shadow:0 0 0 0 rgba(246,183,60,0)}}
@@ -111,6 +113,7 @@ body.vista-relleno .tile{height:auto;min-height:104px;gap:calc(7px*var(--f,1))}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .tile:active{transform:none}
+  .volteo-capa{display:none!important}
 }
 @media (orientation: landscape) and (max-height: 500px){
   .app{padding-top:8px}
@@ -127,30 +130,31 @@ body.vista-relleno .tile{height:auto;min-height:104px;gap:calc(7px*var(--f,1))}
   body.vista-relleno .tile{min-height:0}
   .dots{margin-top:5px}
   .app{padding-bottom:8px}
-  .tf{padding:3px 2px 5px;font-size:11px}
+  .tf{padding:3px 2px 5px;font-size:11.5px}
   .tf svg{width:19px;height:19px}
   .nota{display:none}
 }
 .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:#231600;color:#ffd97a;background:var(--ambar);color:#231600;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;max-width:88%;text-align:center;z-index:50}
 .toast.ver{opacity:1;transform:translateX(-50%) translateY(0)}
 /* conexión y ajustes */
-.tarjeta{background:var(--panel);border:1px solid var(--borde);border-radius:16px;padding:15px;margin-top:12px}
+.tarjeta{background:var(--panel);border:1px solid var(--borde);border-radius:22px;padding:15px;margin-top:12px;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sombra-suave)}
 #contenido>.tarjeta{flex:none}
 .tarjeta h3{font-size:15px;margin-bottom:5px}
 .tarjeta p{font-size:12.5px;color:var(--suave);line-height:1.55}
-.pcitem{display:flex;align-items:center;gap:11px;background:var(--panel2);border:1px solid var(--borde2);border-radius:13px;padding:12px 13px;margin-top:9px;cursor:pointer}
+.pcitem{display:flex;align-items:center;gap:11px;background:var(--tarjeta);border:1px solid var(--borde);border-radius:16px;padding:12px 13px;margin-top:9px;cursor:pointer}
 .pcitem svg{width:21px;height:21px;color:#4cc3ff}
 .pcitem .n{font-weight:700;font-size:14.5px}
 .pcitem .d{font-size:11.5px;color:var(--suave)}
 .pcitem .flecha{margin-left:auto;color:var(--tenue);font-size:18px}
-.btn{display:block;text-align:center;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid transparent;margin-top:10px}
-.btn.prim{background:linear-gradient(135deg,#ffd97a,#f5a623);color:#231600}
-.btn.sec{background:transparent;border-color:var(--ambar);color:var(--ambar)}
-input[type=text]{background:var(--panel2);border:1px solid var(--borde2);border-radius:10px;color:var(--texto);padding:11px 12px;font-size:14px;width:100%}
-.seg{display:flex;border:1px solid var(--borde2);border-radius:10px;overflow:hidden;margin-top:8px}
+.btn{display:block;text-align:center;padding:12px;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid transparent;margin-top:10px}
+.btn.prim{background:var(--acento);color:#fff;box-shadow:0 6px 16px color-mix(in srgb,var(--acento) 40%,transparent)}
+.btn.sec{background:transparent;border-color:var(--acento);color:var(--acento)}
+input[type=text]{background:var(--panel2);border:1px solid var(--borde);border-radius:12px;color:var(--texto);padding:11px 12px;font-size:14px;width:100%}
+input[type=text]:focus{outline:none;border-color:var(--acento)}
+.seg{display:flex;border:1px solid var(--borde);border-radius:12px;overflow:hidden;margin-top:8px;background:var(--panel2)}
 .seg button{flex:1;background:transparent;border:none;color:var(--suave);padding:10px 4px;font-size:13px;font-weight:700;cursor:pointer}
 .seg.muchos button{font-size:12px;padding-left:2px;padding-right:2px}
-.seg button.on{background:var(--ambar);color:#231600}
+.seg button.on{background:var(--acento);color:#fff}
 .etq{font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--tenue);margin-top:14px}
 .oculto{display:none!important}
 .menuCtx{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;display:flex;align-items:center;justify-content:center;padding:22px}
@@ -165,6 +169,17 @@ input[type=text]{background:var(--panel2);border:1px solid var(--borde2);border-
 .centro-v>*{flex:none}
 .centro-v>*:first-child{margin-top:auto}
 .centro-v>*:last-child{margin-bottom:auto}
+.menuCtx .tarjeta{box-shadow:var(--sombra)}
+/* Volteo al cambiar de página (piel «Signature»): la capa saliente es
+   una copia fija sobre la rejilla vieja y la entrante es la rejilla
+   nueva ya pintada; los tiempos y las curvas viven en iniciarVolteo(),
+   calcados de la referencia aprobada. La rejilla lleva perspective
+   (regla .grid) y la capa la suya. Con el movimiento reducido del
+   sistema no hay volteo: el cambio es instantáneo, como los efectos
+   al tocar (pedirVolteo lo mira en el código). */
+.volteo-capa{position:fixed;z-index:40;pointer-events:none;display:grid;perspective:1100px}
+.volteo-capa .tile{pointer-events:none;margin:0}
+#contenido .grid.volteando .tile{will-change:transform,opacity,filter}
 </style>
 </head>
 <body>
@@ -209,7 +224,7 @@ input[type=text]{background:var(--panel2);border:1px solid var(--borde2);border-
       </div>
       <div class="tarjeta oculto" id="tarjetaVersion">
         <h3>Hay que actualizar iMandro</h3>
-        <p>Esta PC tiene una versión de iMandro que no coincide con la del teléfono: actualiza las dos a la 1.9.3 (la PC y el teléfono) y vuelve a tocar «Conectar».</p>
+        <p>Esta PC tiene una versión de iMandro que no coincide con la del teléfono: actualiza las dos a la 1.9.4 (la PC y el teléfono) y vuelve a tocar «Conectar».</p>
       </div>
       <div class="tarjeta">
         <h3>Escribir la dirección a mano</h3>
@@ -787,15 +802,148 @@ function pintarTabs(){
   arriba.classList.toggle('oculto', barra !== 'arriba');
   abajo.classList.toggle('oculto', barra !== 'abajo');
   arriba.classList.toggle('arriba', true);
-  document.querySelectorAll('.tf').forEach(t => t.onclick = () => { paginaActual = t.dataset.p; subpagina = 0; pintarPanel(); });
+  document.querySelectorAll('.tf').forEach(t => t.onclick = () => { pedirVolteo(); paginaActual = t.dataset.p; subpagina = 0; pintarPanel(); });
   document.querySelectorAll('.tf svg').forEach(s => { s.setAttribute('width','21'); s.setAttribute('height','21'); });
 }
+/* ---- Volteo al cambiar de página (piel «Signature») ----
+   Al cambiar de página por un gesto del usuario (toque en una
+   pestaña, botón de tipo «page» o gesto de deslizar), las tarjetas
+   salientes giran rotateY hasta 88° con un escalonado de 22 ms por
+   tarjeta y un fundido de brillo y opacidad, y las entrantes parten
+   de rotateY(−88°) con 185 ms de desplazamiento y el mismo
+   escalonado, hasta quedar planas: los tiempos y las curvas son los
+   de la referencia aprobada (animaciones.html, modo «volteo»).
+   Solo rejilla → rejilla: si el origen o el destino es «__ajustes»,
+   el cambio sigue siendo instantáneo. Y solo a petición del usuario:
+   la bandera «volteoPedido» la ponen únicamente esos tres caminos
+   (pintarTabs, el tipo «page» de tocar y cambiarPaginaDeslizando);
+   pintarPanel la consume al entrar. Un refresco de configuración
+   (cargarConfig, sondeo, reconexión) jamás la pone: repinta sin
+   animación aunque cambie la página visible, y de paso cancela el
+   volteo en curso. Cada volteo lleva su número de secuencia: al
+   empezar uno nuevo (o al repintar sin él) el anterior se cancela
+   entero — capa fuera, estilos limpiados — y al final siempre queda
+   visible y completa la última página pedida. Con el movimiento
+   reducido del sistema no hay volteo, con el mismo criterio que los
+   efectos al tocar (MOVIMIENTO_REDUCIDO). */
+let volteoPedido = false;
+let volteoSeq = 0;
+let volteoActivo = null;
+let ultimaPaginaPintada = null;
+const clampVolteo = (v, a, b) => v < a ? a : v > b ? b : v;
+const easeInCubVolteo = x => x * x * x;
+const easeOutCubVolteo = x => 1 - Math.pow(1 - x, 3);
+function pedirVolteo(){ if(!MOVIMIENTO_REDUCIDO) volteoPedido = true; }
+function limpiarTilesVolteo(tiles){ (tiles || []).forEach(t => { t.style.transform = ''; t.style.opacity = ''; t.style.filter = ''; }); }
+function cancelarVolteo(){
+  volteoSeq++;
+  if(!volteoActivo) return;
+  const v = volteoActivo; volteoActivo = null;
+  if(v.raf) cancelAnimationFrame(v.raf);
+  if(v.timer) clearTimeout(v.timer);
+  if(v.capa) v.capa.remove();
+  if(v.grid) v.grid.classList.remove('volteando');
+  limpiarTilesVolteo(v.tiles);
+}
+function iniciarVolteo(cap, gridNueva){
+  const entrantes = Array.from(gridNueva.querySelectorAll('.tile'));
+  if(!entrantes.length || !cap.clones.length || !window.requestAnimationFrame) return;
+  const capa = document.createElement('div');
+  capa.className = 'volteo-capa';
+  capa.setAttribute('aria-hidden', 'true');
+  capa.style.left = cap.left + 'px';
+  capa.style.top = cap.top + 'px';
+  capa.style.width = cap.width + 'px';
+  capa.style.gridTemplateColumns = cap.cols;
+  capa.style.gap = cap.gap;
+  cap.clones.forEach((c, i) => { c.style.height = cap.alturas[i] + 'px'; capa.appendChild(c); });
+  document.body.appendChild(capa);
+  gridNueva.classList.add('volteando');
+  // Las entrantes nacen ya giradas y ocultas, antes del primer pintado:
+  // la página nueva nunca se ve plana ni un instante antes de voltear.
+  entrantes.forEach(t => { t.style.transform = 'rotateY(-88deg)'; t.style.opacity = '0'; });
+  const salientes = cap.clones;
+  const total = Math.max((salientes.length - 1) * 22 + 210, (entrantes.length - 1) * 22 + 185 + 235);
+  const seq = ++volteoSeq;
+  const estado = {raf: 0, timer: 0, capa: capa, grid: gridNueva, tiles: entrantes, seq: seq};
+  volteoActivo = estado;
+  const terminar = () => {
+    if(volteoActivo !== estado || seq !== volteoSeq) return;
+    volteoActivo = null;
+    if(estado.timer) clearTimeout(estado.timer);
+    capa.remove();
+    gridNueva.classList.remove('volteando');
+    limpiarTilesVolteo(entrantes);
+  };
+  estado.fin = terminar;
+  let inicio = null;
+  const paso = ahora => {
+    if(volteoActivo !== estado || seq !== volteoSeq) return;
+    if(inicio === null) inicio = ahora;
+    const ms = ahora - inicio;
+    salientes.forEach((tl, i) => {
+      const q = clampVolteo((ms - i * 22) / 210, 0, 1);
+      tl.style.transform = 'rotateY(' + (88 * easeInCubVolteo(q)).toFixed(1) + 'deg)';
+      tl.style.opacity = (1 - .85 * q).toFixed(3);
+      tl.style.filter = 'brightness(' + (1 - .3 * Math.sin(q * Math.PI)).toFixed(3) + ')';
+    });
+    entrantes.forEach((tl, i) => {
+      const q = clampVolteo((ms - i * 22 - 185) / 235, 0, 1);
+      if(q <= 0){ tl.style.opacity = '0'; tl.style.transform = 'rotateY(-88deg)'; }
+      else {
+        tl.style.transform = 'rotateY(' + (-88 * (1 - easeOutCubVolteo(q))).toFixed(1) + 'deg)';
+        tl.style.opacity = Math.min(1, q * 2.4).toFixed(3);
+        tl.style.filter = 'brightness(' + (1 - .3 * Math.sin(q * Math.PI)).toFixed(3) + ')';
+      }
+    });
+    if(ms < total) estado.raf = requestAnimationFrame(paso);
+    else terminar();
+  };
+  estado.raf = requestAnimationFrame(paso);
+  // Red de seguridad: si los cuadros se paran (pestaña en segundo
+  // plano), el volteo se cierra igual y la página queda limpia.
+  estado.timer = setTimeout(terminar, total + 400);
+}
 function pintarPanel(){
-  if(!cfg) return;
+  if(!cfg){ volteoPedido = false; return; }
+  const quiereVolteo = volteoPedido; volteoPedido = false;
+  // La rejilla saliente se localiza y se mide ANTES de repintar, y
+  // solo si el cambio puede voltear: rejilla → rejilla, otra página.
+  let gVieja = null, tilesViejas = [], geoVolteo = null;
+  if(quiereVolteo && !MOVIMIENTO_REDUCIDO && ultimaPaginaPintada && ultimaPaginaPintada !== '__ajustes' && paginaActual !== '__ajustes' && ultimaPaginaPintada !== paginaActual){
+    gVieja = document.querySelector('#contenido .grid');
+    if(gVieja){
+      tilesViejas = Array.from(gVieja.querySelectorAll('.tile'));
+      if(tilesViejas.length){
+        const gr = gVieja.getBoundingClientRect();
+        const cs = getComputedStyle(gVieja);
+        geoVolteo = {left: gr.left, top: gr.top, width: gr.width, cols: cs.gridTemplateColumns, gap: cs.columnGap || cs.gap || '10px', alturas: tilesViejas.map(t => t.getBoundingClientRect().height)};
+      }
+    }
+  }
+  // Todo repintado cancela el volteo anterior: si era un refresco a
+  // mitad de volteo, la página que queda es la nueva, limpia entera.
+  cancelarVolteo();
+  let capVolteo = null;
+  if(geoVolteo){
+    // Se clona DESPUÉS de cancelar, con los estilos ya limpios, para
+    // que la copia saliente nazca plana aunque hubiera un volteo a
+    // medias. La copia vive fuera de #contenido (en <body>), así que
+    // no duplica botones a ojos del panel ni de la accesibilidad.
+    capVolteo = Object.assign({}, geoVolteo, {clones: tilesViejas.map(t => {
+      const c = t.cloneNode(true);
+      c.removeAttribute('id');
+      c.setAttribute('aria-hidden', 'true');
+      c.removeAttribute('tabindex');
+      c.classList.remove('destello', 'fx-salto', 'fx-pulso', 'fx-onda');
+      return c;
+    })});
+    limpiarTilesVolteo(capVolteo.clones);
+  }
   pintarTabs();
   const cont = $('#contenido'); cont.innerHTML = '';
-  if(paginaActual === '__ajustes'){ pintarAjustes(cont); return; }
-  const p = cfg.pages.find(x => x.id === paginaActual); if(!p) return;
+  if(paginaActual === '__ajustes'){ ultimaPaginaPintada = paginaActual; pintarAjustes(cont); return; }
+  const p = cfg.pages.find(x => x.id === paginaActual); if(!p){ ultimaPaginaPintada = paginaActual; return; }
   const cols = p.columns || 3;
   const filas = window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches ? 3 : 6;
   const porSub = cols * filas;
@@ -851,6 +999,8 @@ function pintarPanel(){
   const nota = document.createElement('p'); nota.className = 'nota';
   nota.textContent = 'Los botones se cambian desde la aplicación de la PC';
   cont.appendChild(nota);
+  ultimaPaginaPintada = paginaActual;
+  if(capVolteo) iniciarVolteo(capVolteo, g);
   requestAnimationFrame(ajustarProporcion);
 }
 // ---- Efecto al tocar (1.7.8) ----
@@ -916,7 +1066,7 @@ async function tocar(b, el, ev){
   try {
     aplicarEfecto(el, ev);
     vibrar(35);
-    if(a.type === 'page'){ const destino = a.page; if(paginasVisibles().find(p => p.id === destino)){ paginaActual = destino; subpagina = 0; pintarPanel(); } return; }
+    if(a.type === 'page'){ const destino = a.page; if(paginasVisibles().find(p => p.id === destino)){ pedirVolteo(); paginaActual = destino; subpagina = 0; pintarPanel(); } return; }
     let j;
     // 1.9.3 (punto 1): el toque ya no manda la acción entera: manda
     // solo la referencia del botón (su página y su «id») y el _rev de
@@ -1223,7 +1373,7 @@ function pintarAjustes(cont){
   const c3 = mk('<div class="tarjeta"><h3>Conexión</h3><p>Conectado por <b>' + (btActivo ? 'Bluetooth' : esc($('#tipoConexion').textContent || 'Wi-Fi')) + '</b> a <b>' + esc($('#nombrePC').textContent || 'tu PC') + '</b>' + (btActivo ? '' : ' (' + esc(servidor.replace('http://','')) + ')') + '.</p><a class="btn sec" id="btnCambiarPC">Cambiar de PC</a></div>');
   cont.appendChild(c3);
   c3.querySelector('#btnCambiarPC').onclick = () => { pararSondeo(); detenerReconexion(); panelMostrado = false; try { if(window.AndroBT) AndroBT.desconectar(); } catch(e){} btActivo = false; servidor = ''; localStorage.removeItem('imandro_server'); cfg = null; mostrarConexion(); };
-  const c4 = mk('<div class="tarjeta"><h3>Información</h3><p>iMandro v1.9.3<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3</p></div>');
+  const c4 = mk('<div class="tarjeta"><h3>Información</h3><p>iMandro v1.9.4<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3</p></div>');
   cont.appendChild(c4);
 }
 $('#btnCable').onclick = () => conectar('http://127.0.0.1:8931');
@@ -1274,7 +1424,7 @@ function cambiarPaginaDeslizando(dir){
   const i = ps.findIndex(p => p.id === paginaActual);
   const j = i + dir;
   if(i < 0 || j < 0 || j >= ps.length) return false;
-  paginaActual = ps[j].id; subpagina = 0; pintarPanel();
+  pedirVolteo(); paginaActual = ps[j].id; subpagina = 0; pintarPanel();
   return true;
 }
 function deslizarPanel(dx, dy){

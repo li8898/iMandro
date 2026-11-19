@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""iMandro 1.9.3 — ventana propia de la aplicación de PC.
+"""iMandro 1.9.4 — ventana propia de la aplicación de PC.
 
 Abre el editor de iMandro en su propia ventana de escritorio (con su
 icono y su título, sin navegador), como un programa aparte. Por dentro

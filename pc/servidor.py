@@ -158,7 +158,7 @@ from ctypes import wintypes
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
-VERSION = "1.9.3"
+VERSION = "1.9.4"
 # Identificador del protocolo PC <-> teléfono (1.7). La 1.6.2 y anteriores
 # no lo llevaban (para el panel cuentan como protocolo 1). Si el panel y la
 # PC no coinciden en protocolo, el panel avisa de que hay que actualizar

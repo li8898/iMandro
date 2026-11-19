@@ -5,22 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>iMandro — Editor</title>
 <style>
-.chipmod{flex:1;text-align:center;padding:7px 0;border:1px solid var(--borde2);border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--suave);background:var(--panel2)}
-.chipmod.on{background:#2f6db3;border-color:#2f6db3;color:#fff}
-:root{--fondo:#0b0f16;--panel:#101623;--panel2:#0d1420;--tarjeta:#171f30;--tarjeta2:#1b2740;--borde:#222c42;--borde2:#2c3852;--texto:#eef2f8;--suave:#8b98b0;--tenue:#728198;--ambar:#f6b73c;--ambar2:#f5a623;--verde:#3ddc97;--rojo:#ff7a7a}
-[data-tema="claro"]{--fondo:#eef2f7;--panel:#ffffff;--panel2:#f7fafc;--tarjeta:#f2f5fa;--tarjeta2:#e8eef6;--borde:#d3dce8;--borde2:#c3d0e0;--texto:#17203a;--suave:#5a6b84;--tenue:#71809a}
+/* ============================================================
+   Piel «Signature» de LYSSY aplicada al editor de iMandro (1.9.3).
+   Solo cambia la ropa: mismos selectores, ids y clases que usa el
+   JS; la lógica no se toca. Tema oscuro fiel a la maqueta aprobada
+   (carbón #111318, tres auroras, cristal con desenfoque) y tema
+   claro con el mismo lenguaje de cristal en tonos claros.
+   El ámbar funcional se queda donde ya era ámbar: la acción
+   elegida en «QUÉ HACE» (#fTipos div.on, #f6b73c), el aviso, la
+   estrella de favoritos, los anillos de iconos/imágenes elegidos
+   y el destino del arrastre. El violeta #895CFF manda en la
+   navegación y la selección general: página elegida como pastilla
+   teñida, botón elegido con anillo, segmentos, pestañas y botones.
+   Sin transiciones nuevas: el cambio de página sigue instantáneo.
+   ============================================================ */
+.chipmod{flex:1;text-align:center;padding:7px 0;border:1px solid var(--borde);border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--suave);background:var(--tarjeta2)}
+.chipmod.on{background:color-mix(in srgb,var(--acento) 30%,transparent);border-color:color-mix(in srgb,var(--acento) 55%,transparent);color:var(--texto)}
+:root{--acento:#895CFF;--fondo:#111318;--panel:rgba(21,23,29,.72);--panel2:rgba(32,36,48,.62);--tarjeta:rgba(32,36,48,.62);--tarjeta2:rgba(255,255,255,.05);--borde:rgba(178,154,255,.20);--borde2:rgba(178,154,255,.34);--texto:#F4F2FF;--suave:#A79FD1;--tenue:#8B84B0;--ambar:#f6b73c;--ambar2:#f5a623;--verde:#3ddc97;--rojo:#ff7a7a;--sombra:0 22px 55px rgba(0,0,0,.50);--sombra-suave:0 10px 28px rgba(0,0,0,.35);--sombra-tarjeta:0 8px 22px rgba(0,0,0,.25);--aurora1:rgba(137,92,255,.34);--aurora2:rgba(85,185,233,.20);--aurora3:rgba(236,72,153,.13);--sec-texto:#CDBFFF}
+[data-tema="claro"]{--fondo:#F2F0FA;--panel:rgba(250,248,254,.78);--panel2:rgba(255,255,255,.75);--tarjeta:rgba(255,255,255,.75);--tarjeta2:rgba(90,70,160,.05);--borde:rgba(90,70,160,.18);--borde2:rgba(90,70,160,.30);--texto:#221D33;--suave:#6E6790;--tenue:#7A7396;--sombra:0 22px 55px rgba(74,62,130,.22);--sombra-suave:0 10px 28px rgba(74,62,130,.14);--sombra-tarjeta:0 8px 22px rgba(74,62,130,.12);--aurora1:rgba(137,92,255,.20);--aurora2:rgba(85,185,233,.16);--aurora3:rgba(236,72,153,.10);--sec-texto:#6D4BD8}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
-body{background:var(--fondo);color:var(--texto);height:100vh;overflow:hidden}
-.barra{height:54px;background:var(--panel);border-bottom:1px solid var(--borde);display:flex;align-items:center;padding:0 16px;gap:12px}
-.logo{width:34px;height:34px;border-radius:9px;background:#f4f7fc;border:1px solid var(--borde);display:flex;align-items:center;justify-content:center;flex:none}
+body{background:radial-gradient(720px 480px at 12% -6%,var(--aurora1),transparent 62%),radial-gradient(820px 560px at 96% 8%,var(--aurora2),transparent 60%),radial-gradient(700px 520px at 55% 112%,var(--aurora3),transparent 60%),var(--fondo);color:var(--texto);height:100vh;overflow:hidden;display:flex;flex-direction:column;padding:12px;gap:10px}
+.barra{height:54px;flex:none;background:var(--panel);border:1px solid var(--borde);border-radius:20px;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sombra-suave);display:flex;align-items:center;padding:0 16px;gap:12px}
+.logo{width:34px;height:34px;border-radius:12px;background:#f4f7fc;border:1px solid var(--borde);display:flex;align-items:center;justify-content:center;flex:none}
 .logo svg{width:26px;height:26px}
 .barra h1{font-size:16px;font-weight:700}
 .barra .der{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--suave)}
-select,input[type=text],input[type=number],textarea{background:var(--panel2);border:1px solid var(--borde2);border-radius:9px;color:var(--texto);padding:8px 10px;font-size:13.5px;width:100%}
+select,input[type=text],input[type=number],textarea{background:var(--tarjeta2);border:1px solid var(--borde);border-radius:12px;color:var(--texto);padding:8px 12px;font-size:13.5px;width:100%}
 select:focus,input:focus,textarea:focus{outline:2px solid var(--ambar);outline-offset:0}
-.cuerpo{display:flex;height:calc(100vh - 54px - 30px)}
-.lateral{width:270px;background:var(--panel);border-right:1px solid var(--borde);padding:14px 12px;overflow-y:auto;flex:none}
-.lateral h3,.derecha h3{font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--tenue);margin:4px 2px 8px}
+.cuerpo{display:flex;flex:1;min-height:0}
+.lateral{width:270px;background:var(--panel);border:1px solid var(--borde);border-radius:24px;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sombra-suave);padding:16px 14px;overflow-y:auto;flex:none}
+.lateral h3,.derecha h3{font-size:10.5px;font-weight:700;letter-spacing:1.4px;color:var(--tenue);margin:4px 2px 8px}
 .lateral h3{letter-spacing:1px;white-space:nowrap}
 .dato{padding:7px 0;border-top:1px solid var(--borde)}
 .dato:first-child{border-top:none;padding-top:1px}
@@ -29,34 +43,34 @@ select:focus,input:focus,textarea:focus{outline:2px solid var(--ambar);outline-o
 .dato .val.grande{font-size:18px;letter-spacing:.4px}
 .lateral .tarjeta p{margin-top:9px}
 .botonesCopia{display:flex;flex-direction:column;gap:8px;margin-top:10px}
-.pag{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:11px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid transparent;margin-bottom:3px;color:var(--suave)}
+.pag{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:14px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid transparent;margin-bottom:3px;color:var(--suave)}
 .pag svg{width:17px;height:17px;flex:none}
 .pag .mv{margin-left:auto;display:flex;gap:3px;flex:none}
-.pag .mv button{width:24px;height:24px;border-radius:7px;border:1px solid var(--borde2);background:transparent;color:var(--suave);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.pag .mv button{width:24px;height:24px;border-radius:8px;border:1px solid var(--borde);background:var(--tarjeta2);color:var(--suave);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 .pag .mv button svg{width:13px;height:13px}
-.pag .mv button:hover{color:#f6b73c;border-color:#f6b73c}
+.pag .mv button:hover{color:var(--acento);border-color:var(--acento)}
 .pag .mv button.off{opacity:.28;pointer-events:none}
-.pag.on{background:var(--tarjeta2);color:var(--texto);border-color:var(--borde2);box-shadow:inset 3px 0 0 var(--ambar)}
-.nueva{border:1.5px dashed var(--borde2);border-radius:11px;padding:9px;text-align:center;font-size:13px;color:var(--suave);cursor:pointer;margin-top:6px}
+.pag.on{background:color-mix(in srgb,var(--acento) 24%,transparent);color:var(--texto);border-color:color-mix(in srgb,var(--acento) 38%,transparent);box-shadow:0 6px 18px color-mix(in srgb,var(--acento) 22%,transparent)}
+.nueva{border:1.5px dashed color-mix(in srgb,var(--acento) 45%,transparent);border-radius:14px;padding:9px;text-align:center;font-size:13px;color:var(--suave);cursor:pointer;margin-top:6px}
 .sep{height:1px;background:var(--borde);margin:14px 2px}
-.tarjeta{background:var(--panel2);border:1px solid var(--borde);border-radius:13px;padding:11px 12px;font-size:12.5px;color:var(--suave);line-height:1.55;margin-bottom:10px}
+.tarjeta{background:var(--tarjeta);border:1px solid var(--borde);border-radius:18px;backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);box-shadow:var(--sombra-tarjeta);padding:12px 13px;font-size:12.5px;color:var(--suave);line-height:1.55;margin-bottom:10px}
 .tarjeta b{color:var(--texto)}
-.btn{display:block;text-align:center;padding:10px;border-radius:11px;font-size:13.5px;font-weight:700;cursor:pointer;border:1px solid transparent;width:100%}
-.btn.prim{background:linear-gradient(135deg,#ffd97a,var(--ambar2));color:#231600}
-.btn.sec{background:transparent;border-color:var(--ambar);color:var(--ambar)}
-.btn.peligro{background:transparent;border-color:var(--rojo);color:var(--rojo)}
-.btn.chico{padding:7px;font-size:12.5px}
+.btn{display:block;text-align:center;padding:10px;border-radius:16px;font-size:13.5px;font-weight:700;cursor:pointer;border:1px solid transparent;width:100%}
+.btn.prim{background:var(--acento);color:#fff;box-shadow:0 8px 20px color-mix(in srgb,var(--acento) 40%,transparent)}
+.btn.sec{background:var(--tarjeta2);border-color:color-mix(in srgb,var(--acento) 45%,transparent);color:var(--sec-texto)}
+.btn.peligro{background:var(--tarjeta2);border-color:rgba(255,122,122,.45);color:var(--rojo)}
+.btn.chico{padding:7px;font-size:12.5px;border-radius:13px}
 .fila{display:flex;gap:8px}.fila>*{flex:1}
-.centro{flex:1;padding:16px 18px;overflow-y:auto}
-.cab-pag{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.centro{flex:1;min-width:0;padding:2px 4px 2px 6px;overflow-y:auto}
+.cab-pag{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--borde);border-radius:20px;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sombra-suave);padding:12px 16px}
 .cab-pag h2{font-size:21px}
-.chip{font-size:11.5px;color:var(--suave);border:1px solid var(--borde2);padding:5px 10px;border-radius:99px}
+.chip{font-size:11.5px;color:var(--suave);border:1px solid var(--borde);background:var(--tarjeta2);padding:5px 11px;border-radius:999px}
 .cab-pag .der{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--suave)}
 .opcionesPag .btn{flex:0 0 auto;width:auto}
-.opcionesPag{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;background:var(--panel);border:1px solid var(--borde);border-radius:12px;padding:9px 12px;margin:10px 0 2px;font-size:12.5px;color:var(--suave)}
-.seg{display:flex;border:1px solid var(--borde2);border-radius:9px;overflow:hidden}
-.seg button{background:transparent;border:none;color:var(--suave);padding:6px 11px;font-size:12.5px;font-weight:700;cursor:pointer}
-.seg button.on{background:var(--ambar);color:#231600}
+.opcionesPag{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;background:var(--panel);border:1px solid var(--borde);border-radius:20px;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sombra-suave);padding:11px 16px;margin:10px 0 2px;font-size:12.5px;color:var(--suave)}
+.seg{display:flex;background:var(--tarjeta2);border:1px solid var(--borde);border-radius:999px;padding:3px;gap:3px}
+.seg button{background:transparent;border:none;color:var(--suave);padding:5px 12px;font-size:12.5px;font-weight:700;cursor:pointer;border-radius:999px}
+.seg button.on{background:var(--acento);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--acento) 45%,transparent)}
 /* Deslizador unificado tipo iOS 26 (1.9.3): EL deslizador de las
    opciones sí/no, el mismo de las demás aplicaciones de Liesky; en
    la PC va pequeño (38×22), proporcionado al ratón. Pista con
@@ -68,12 +82,12 @@ select:focus,input:focus,textarea:focus{outline:2px solid var(--ambar);outline-o
 .ios26:disabled{opacity:.35;cursor:default}
 .filaDesl{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px;font-size:13.5px}
 .grid{display:grid;gap:10px;margin-top:14px}
-.tile{position:relative;height:104px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;cursor:pointer;border:1px solid var(--borde2);background:linear-gradient(180deg,var(--tarjeta2),var(--tarjeta));text-align:center}
+.tile{position:relative;height:104px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;cursor:pointer;border:1px solid var(--borde);background:var(--tarjeta);backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);box-shadow:0 6px 16px rgba(0,0,0,.22);text-align:center}
 .tile svg{width:29px;height:29px}
 .tile img.icimg{width:29px;height:29px;object-fit:contain}
 .tile span{font-size:12px;font-weight:600;line-height:1.18;color:var(--texto)}
-.tile.sel{border-color:var(--ambar);box-shadow:0 0 0 1px var(--ambar),0 8px 20px rgba(246,183,60,.20)}
-.tile .bdg{position:absolute;top:7px;right:7px;width:17px;height:17px;border-radius:50%;background:var(--tarjeta2);display:flex;align-items:center;justify-content:center}
+.tile.sel{border-color:var(--acento);box-shadow:0 0 0 1px var(--acento),0 10px 24px color-mix(in srgb,var(--acento) 28%,transparent)}
+.tile .bdg{position:absolute;top:7px;right:7px;width:17px;height:17px;border-radius:50%;background:var(--tarjeta);display:flex;align-items:center;justify-content:center}
 .tile .bdg svg{width:10px;height:10px}
 .tile.vacio{opacity:.45;border-style:dashed}
 /* Botón con imagen (1.9): en la rejilla del editor la imagen es la
@@ -86,70 +100,70 @@ select:focus,input:focus,textarea:focus{outline:2px solid var(--ambar);outline-o
 /* Miniaturas de la biblioteca «Mis botones» (1.9): la imagen entera
    de cara, más anchas que las de iconos; la elegida lleva el anillo
    ámbar, como en la maqueta aprobada. */
-.btile{width:64px;height:56px;border-radius:10px;overflow:hidden;background:var(--panel2);border:2px solid var(--borde2);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;padding:0}
+.btile{width:64px;height:56px;border-radius:12px;overflow:hidden;background:var(--tarjeta);border:2px solid var(--borde2);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;padding:0}
 .btile img{width:100%;height:100%;object-fit:cover;display:block}
 .btile.on{border-color:var(--ambar);box-shadow:0 0 0 1px var(--ambar)}
-.btile.add{border:1.5px dashed var(--ambar);color:var(--ambar);flex-direction:column;font-size:9.5px;font-weight:700;line-height:1.25;text-align:center;gap:1px;padding:2px}
+.btile.add{border:1.5px dashed var(--ambar);color:var(--ambar);background:var(--tarjeta2);flex-direction:column;font-size:9.5px;font-weight:700;line-height:1.25;text-align:center;gap:1px;padding:2px}
 .tile.arrastrando{opacity:.4}
-.aviso{display:flex;gap:9px;margin-top:16px;background:rgba(246,183,60,.08);border:1px solid rgba(246,183,60,.35);border-radius:12px;padding:11px 13px;font-size:12.5px;color:#e8d9b8;line-height:1.5}
+.aviso{display:flex;gap:9px;margin-top:16px;background:rgba(246,183,60,.08);border:1px solid rgba(246,183,60,.35);border-radius:16px;padding:11px 13px;font-size:12.5px;color:#e8d9b8;line-height:1.5}
 [data-tema="claro"] .aviso{color:#8a6d1f}
 .aviso svg{width:17px;height:17px;flex:none;margin-top:1px}
-.derecha{width:336px;background:var(--panel);border-left:1px solid var(--borde);padding:13px 14px;overflow-y:auto;flex:none}
+.derecha{width:336px;background:var(--panel);border:1px solid var(--borde);border-radius:24px;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sombra-suave);padding:16px;overflow-y:auto;flex:none}
 .campo{margin-bottom:10px}
 .campo label{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--tenue);margin-bottom:5px}
-.pestanas{display:flex;gap:6px;margin-bottom:11px}
-.pestanas button{flex:1;padding:8px;border-radius:9px;border:1px solid var(--borde2);background:transparent;color:var(--suave);font-weight:700;font-size:12.5px;cursor:pointer}
-.pestanas button.on{background:var(--ambar);border-color:var(--ambar);color:#231600}
+.pestanas{display:flex;background:var(--tarjeta2);border:1px solid var(--borde);border-radius:999px;padding:3px;gap:3px;margin-bottom:12px}
+.pestanas button{flex:1;padding:6px 0;border-radius:999px;border:0;background:transparent;color:var(--suave);font-weight:700;font-size:12.5px;cursor:pointer}
+.pestanas button.on{background:var(--acento);border-color:var(--acento);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--acento) 45%,transparent)}
 .colores{display:flex;gap:7px;flex-wrap:wrap}
 .muestra{width:29px;height:29px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .muestra.on{border-color:var(--texto);box-shadow:0 0 0 2px var(--panel),0 0 0 4px currentColor}
-input[type=color]{width:40px;height:29px;border:1px solid var(--borde2);border-radius:8px;background:var(--panel2);padding:2px;cursor:pointer}
+input[type=color]{width:40px;height:29px;border:1px solid var(--borde);border-radius:10px;background:var(--tarjeta2);padding:2px;cursor:pointer}
 .paquetes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.pk{font-size:11px;font-weight:700;padding:5px 10px;border-radius:99px;border:1px solid var(--borde2);color:var(--suave);cursor:pointer}
-.pk.on{background:var(--ambar);border-color:var(--ambar);color:#231600}
+.pk{font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;border:1px solid var(--borde);background:var(--tarjeta2);color:var(--suave);cursor:pointer}
+.pk.on{background:var(--acento);border-color:var(--acento);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--acento) 45%,transparent)}
 .igrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-.itile{height:42px;border-radius:10px;background:var(--panel2);border:1px solid var(--borde2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--suave)}
+.itile{height:42px;border-radius:12px;background:var(--tarjeta2);border:1px solid var(--borde);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--suave)}
 .itile svg{width:21px;height:21px}
 .itile img{width:23px;height:23px;object-fit:contain}
 .itile.on{border-color:var(--ambar);color:var(--ambar);box-shadow:0 0 0 1px var(--ambar)}
 .misrow{display:flex;gap:6px;flex-wrap:wrap}
-.mtile{width:52px;height:52px;border-radius:10px;background:var(--panel2);border:1px solid var(--borde2);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.mtile{width:52px;height:52px;border-radius:12px;background:var(--tarjeta2);border:1px solid var(--borde);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
 .mtile img{width:27px;height:27px;object-fit:contain}
 .mtile.on{border-color:var(--ambar);box-shadow:0 0 0 1px var(--ambar)}
 .mtile.add{border:1.5px dashed var(--ambar);color:var(--ambar);flex-direction:column;font-size:10px;font-weight:700;gap:2px;width:52px}
 .nota{font-size:11.5px;color:var(--tenue);line-height:1.55;margin-top:9px}
-.estado{height:30px;background:var(--panel);border-top:1px solid var(--borde);display:flex;align-items:center;padding:0 14px;font-size:11.5px;color:var(--suave)}
-.estado .dot{width:8px;height:8px;border-radius:50%;background:var(--verde);margin-right:8px}
+.estado{height:34px;flex:none;background:var(--panel);border:1px solid var(--borde);border-radius:999px;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sombra-suave);display:flex;align-items:center;padding:0 16px;font-size:11.5px;color:var(--suave)}
+.estado .dot{width:8px;height:8px;border-radius:50%;background:var(--verde);box-shadow:0 0 8px var(--verde);margin-right:8px}
 .estado .der{margin-left:auto}
 .act{font-size:11.5px;color:var(--tenue);line-height:1.7}
 .grabando{background:var(--rojo)!important;color:#fff!important;border-color:var(--rojo)!important}
 /* Fase 6 (1.7): buscador de acciones, favoritos y estrella, como en la maqueta aprobada */
-.tipos{border:1px solid var(--borde2);border-radius:9px;background:var(--panel2);overflow:hidden;margin-top:7px}
-.tipos div{padding:7px 10px;font-size:13.5px;color:var(--suave);cursor:pointer;border-top:1px solid var(--borde)}
+.tipos{border:1px solid var(--borde);border-radius:14px;background:var(--tarjeta2);overflow:hidden;margin-top:7px}
+.tipos div{padding:7px 12px;font-size:13.5px;color:var(--suave);cursor:pointer;border-top:1px solid var(--borde)}
 .tipos div:first-child{border-top:none}
 .tipos div.on{background:var(--ambar);color:#231600;font-weight:700}
 .buscaWrap{position:relative}
-.buscaWrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:15px;height:15px}
+.buscaWrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--suave);stroke:var(--suave)}
 .buscaWrap input{padding-left:30px}
 .itile{position:relative}
 .itile .st,.mtile .st{position:absolute;top:3px;right:3px;width:13px;height:13px;display:flex;opacity:0;transition:opacity .15s;z-index:2}
 .itile:hover .st,.mtile:hover .st{opacity:.9}
 .itile .st svg,.mtile .st svg{width:13px;height:13px}
 .itile.favtile .st,.mtile.favtile .st{opacity:1}
-.tile .fav{position:absolute;top:7px;left:7px;width:19px;height:19px;border-radius:50%;background:var(--tarjeta2);display:flex;align-items:center;justify-content:center}
+.tile .fav{position:absolute;top:7px;left:7px;width:19px;height:19px;border-radius:50%;background:var(--tarjeta);display:flex;align-items:center;justify-content:center}
 .tile .fav svg{width:11px;height:11px}
 /* Elegir aplicación (1.7.4): ventana con la lista de aplicaciones instaladas */
-.modalApps{position:fixed;inset:0;background:rgba(2,6,16,.72);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
-.modalApps .caja{background:var(--panel);border:1px solid var(--borde2);border-radius:16px;width:620px;max-width:100%;max-height:88%;display:flex;flex-direction:column;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.modalApps{position:fixed;inset:0;background:rgba(2,6,16,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
+.modalApps .caja{background:var(--panel);border:1px solid var(--borde);border-radius:24px;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);width:620px;max-width:100%;max-height:88%;display:flex;flex-direction:column;padding:20px;box-shadow:var(--sombra)}
 .modalApps h2{font-size:19px;margin:0}
 .modalApps .sub2{color:var(--suave);font-size:13px;margin:5px 0 13px}
-.listaApps{overflow-y:auto;border:1px solid var(--borde);border-radius:12px;margin-top:12px}
+.listaApps{overflow-y:auto;border:1px solid var(--borde);border-radius:14px;background:var(--tarjeta2);margin-top:12px}
 .appFila{display:flex;align-items:center;gap:11px;padding:10px 12px;border-top:1px solid var(--borde);cursor:pointer}
 .appFila:first-child{border-top:none}
 .appFila:hover{background:var(--panel2)}
-.appFila.sel{background:rgba(245,166,35,.14);outline:1px solid var(--ambar);outline-offset:-1px}
+.appFila.sel{background:color-mix(in srgb,var(--acento) 14%,transparent);outline:1px solid var(--acento);outline-offset:-1px}
 .appFila.no{opacity:.55}
-.appFila .ava{width:34px;height:34px;flex:none;border-radius:9px;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.appFila .ava{width:34px;height:34px;flex:none;border-radius:10px;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
 .appFila .nom{font-weight:600;font-size:14.5px}
 .appFila .det{color:var(--suave);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:390px}
 .chipApp{margin-left:auto;flex:none;font-size:10px;font-weight:700;letter-spacing:.6px;padding:4px 8px;border-radius:20px;border:1px solid var(--ambar);color:var(--ambar)}
@@ -159,19 +173,20 @@ input[type=color]{width:40px;height:29px;border:1px solid var(--borde2);border-r
 .tirador{width:8px;flex:none;cursor:ew-resize;touch-action:none;position:relative;margin:0 -4px;z-index:6}
 .tirador::after{content:"";position:absolute;top:0;bottom:0;left:3px;width:2px;background:transparent;transition:background .15s}
 .tirador:hover::after,.tirador.activo::after{background:var(--ambar)}
-.pag .nomp{flex:1;min-width:0;line-height:1.3;overflow-wrap:break-word}
+.pag .nomp{flex:1;min-width:0;line-height:1.3;white-space:nowrap;overflow:visible;text-overflow:clip}
 /* Mover/copiar botones entre páginas (1.7.10, maqueta aprobada): contador en cada página, destino iluminado al arrastrar, selector de destino y fantasma del arrastre táctil */
-.pag .cuenta{margin-left:auto;background:var(--tarjeta2);border:1px solid var(--borde2);border-radius:20px;font-size:11px;padding:1px 8px;color:var(--suave);font-weight:700;flex:none}
+.pag .cuenta{margin-left:auto;background:var(--tarjeta);border:1px solid var(--borde);border-radius:999px;font-size:11px;padding:1px 8px;color:var(--suave);font-weight:700;flex:none}
+.pag.on .cuenta{color:var(--texto);border-color:color-mix(in srgb,var(--acento) 45%,transparent)}
 .pag .cuenta + .mv{margin-left:0}
 .pag.destino{border-color:var(--ambar);background:rgba(246,183,60,.13);color:var(--texto)}
 .pag.destino .cuenta{border-color:var(--ambar);color:var(--ambar)}
-.dest{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:11px 12px;border:1px solid var(--borde2);border-radius:10px;background:var(--panel2);color:var(--texto);font-size:13.5px;font-weight:600;cursor:pointer;margin-bottom:7px}
-.dest .cuenta{margin-left:auto;background:var(--tarjeta2);border:1px solid var(--borde2);border-radius:20px;font-size:11px;padding:1px 8px;color:var(--suave)}
+.dest{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:11px 12px;border:1px solid var(--borde);border-radius:14px;background:var(--tarjeta2);color:var(--texto);font-size:13.5px;font-weight:600;cursor:pointer;margin-bottom:7px}
+.dest .cuenta{margin-left:auto;background:var(--tarjeta);border:1px solid var(--borde);border-radius:999px;font-size:11px;padding:1px 8px;color:var(--suave)}
 .dest.aqui{opacity:.45;cursor:default}
 .dest .marca{margin-left:auto;font-size:11.5px;color:var(--ambar);font-weight:700}
 .tile{touch-action:none}
 .tile.fantasma{opacity:.35}
-.flotante{position:fixed;z-index:95;pointer-events:none;width:150px;height:104px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;border:1px solid var(--ambar);background:linear-gradient(180deg,var(--tarjeta2),var(--tarjeta));text-align:center;box-shadow:0 14px 30px rgba(0,0,0,.5);opacity:.94}
+.flotante{position:fixed;z-index:95;pointer-events:none;width:150px;height:104px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;border:1px solid var(--ambar);background:var(--tarjeta);backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);text-align:center;box-shadow:0 14px 30px rgba(0,0,0,.5);opacity:.94}
 .flotante svg{width:29px;height:29px}
 .flotante img.icimg{width:29px;height:29px;object-fit:contain}
 .flotante span{font-size:12px;font-weight:600;color:var(--texto)}
@@ -220,12 +235,12 @@ input[type=color]{width:40px;height:29px;border:1px solid var(--borde2);border-r
     <h3>ACTIVIDAD RECIENTE</h3>
     <div class="act" id="actividad">—</div>
     <div class="sep"></div>
-    <div class="tarjeta"><b>Información</b><br>iMandro v1.9.3<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3
+    <div class="tarjeta"><b>Información</b><br>iMandro v1.9.4<br>Creador: Liesky Vázquez<br>© 2026 Liesky Vázquez · Todos los derechos reservados<br>Software libre · Licencia GPLv3
       <div class="campo" style="margin-top:10px"><label>RUTA DE PHOTOSHOP (OPCIONAL)</label><input type="text" id="rutaPhotoshop" placeholder="Automática"></div>
       <div class="campo"><label>RUTA DE LIGHTROOM CLASSIC (OPCIONAL)</label><input type="text" id="rutaLightroom" placeholder="Automática"></div>
       <p style="font-size:11.5px;line-height:1.5">Si están en una carpeta rara, escribe aquí la ruta de su programa (.exe). En vacío, iMandro los busca solo — también en el registro de Windows — y usa el más nuevo.</p>
     </div>
-    <div class="tarjeta"><b>Novedades de la versión 1.9.3</b><br><b>Los botones se ejecutan por referencia:</b> el teléfono ya no manda la acción entera de cada botón; manda solo qué botón tocaste y la PC busca la acción en tu configuración guardada. Si la configuración cambió entre tanto, ese toque no se ejecuta y el teléfono se actualiza solo. El «Probar ahora» de este editor sigue igual que siempre.<br><b>Iniciar minimizado en la bandeja:</b> en la tarjeta «Iniciar con Windows» hay un deslizador nuevo: con los dos activados, al encender la PC iMandro arranca solo en la bandeja, sin abrir la ventana. «Iniciar con Windows» también pasa a ser un deslizador, como las demás opciones sí/no.<br><b>El punto de conexión dice la verdad al reconectar:</b> si la PC cae mientras el teléfono está reconectando, el punto pasa a rojo en ese momento; ya no se queda en verde por un toque que acertó justo antes de la caída.</div>
+    <div class="tarjeta"><b>Novedades de la versión 1.9.4</b><br><b>La cara nueva de iMandro:</b> el editor y el panel del teléfono estrenan la visual web de LYSSY: cristal que desenfoca el fondo de auroras, sombras suaves y todo redondeado. Es solo la ropa: las funciones, tu configuración y el emparejamiento quedan exactamente como estaban.<br><b>El panel se mueve al cambiar de página:</b> en el teléfono, al tocar otra página las tarjetas se voltean como cartas y al abrirse ya enseñan la página nueva. Si tu teléfono tiene activado «reducir movimiento», el cambio sigue siendo instantáneo, como antes.</div>
     <div class="tarjeta"><b>Iniciar con Windows</b><br>Si lo activas, iMandro arranca solo al encender la PC y los teléfonos pueden conectar sin que tengas que abrir nada primero. Nace apagado.
       <div class="filaDesl"><span>Iniciar con Windows</span><button type="button" class="ios26" id="deslAutoinicio" role="switch" aria-checked="false" aria-label="Iniciar con Windows"></button></div>
       <div class="filaDesl"><span>Iniciar minimizado en la bandeja</span><button type="button" class="ios26" id="deslMinimizado" role="switch" aria-checked="false" aria-label="Iniciar minimizado en la bandeja"></button></div>
